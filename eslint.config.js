@@ -13,7 +13,7 @@ export default defineConfig([
 		files: ["**/*.{ts,tsx}"],
 		extends: [
 			js.configs.recommended,
-			tseslint.configs.recommended,
+			...tseslint.configs.recommended,
 			reactHooks.configs.flat.recommended,
 			reactRefresh.configs.vite,
 			reactPlugin.configs.flat.recommended,
@@ -28,5 +28,19 @@ export default defineConfig([
 				version: "detect",
 			},
 		},
+		rules: {
+      "@typescript-eslint/explicit-function-return-type": "warn",
+      '@typescript-eslint/explicit-module-boundary-types': 'warn',
+      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/no-non-null-assertion': 'error',
+      '@typescript-eslint/consistent-type-assertions': [
+        'error',
+        { assertionStyle: 'never' },
+      ],
+      '@typescript-eslint/consistent-indexed-object-style': 'error',
+      "prefer-const": "warn",
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      eqeqeq: ["error", "always"],
+    },
 	},
 ]);
