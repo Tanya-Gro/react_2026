@@ -1,3 +1,3 @@
 export function getID(url: string): string {
-  return url.split('/').at(-2);
+  return url.split('/').at(-2) ?? '';
 }

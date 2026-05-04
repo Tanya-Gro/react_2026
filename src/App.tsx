@@ -10,20 +10,27 @@ type AppState = {
   errorMessage: string;
   cards: Card[];
   isLoading: boolean;
+  shouldThrow: boolean;
 };
 
 export class App extends Component<object, AppState> {
   state = {
-    searchQuery: localStorage.getItem(LS_KEY) || '',
+    searchQuery: localStorage.getItem(LS_KEY) ?? '',
     hasError: false,
     errorMessage: '',
     cards: [],
     isLoading: false,
+    shouldThrow: false,
   };
 
   handleSearchQueryChange = (searchQuery: string): void => {
+    if (searchQuery === this.state.searchQuery) return;
     this.setState({ searchQuery });
     localStorage.setItem(LS_KEY, searchQuery);
+  };
+
+  handleErrorButtonClick = (): void => {
+    this.setState({ shouldThrow: true, errorMessage: 'This is a test error.' });
   };
 
   fetchData = async (): Promise<void> => {
@@ -58,20 +65,36 @@ export class App extends Component<object, AppState> {
   }
 
   render(): ReactNode {
-    const { cards, hasError, errorMessage, isLoading } = this.state;
+    const { cards, hasError, errorMessage, isLoading, shouldThrow } =
+      this.state;
+
+    if (shouldThrow) {
+      throw new Error(errorMessage);
+    }
 
     return (
       <>
+        <h1 className="text-4xl font-bold text-center p-6 text-mist-700 bg-mist-50 border-b-2 border-b-mist-300">
+          Star Wars Characters
+        </h1>
         <SearchArea
           searchQuery={this.state.searchQuery}
           onSearchQueryChange={this.handleSearchQueryChange}
         />
         {hasError ? (
-          <p>Error: {errorMessage}</p>
-        ) : isLoading ? (
-          <Loader />
+          <p className="flex-1">Error: {errorMessage}</p>
         ) : (
-          <ResultsArea cards={cards} />
+          <>
+            {isLoading ? <Loader /> : <ResultsArea cards={cards} />}
+            <div className="p-4 flex justify-end bg-mist-50 border-t-2 border-t-mist-300">
+              <button
+                onClick={this.handleErrorButtonClick}
+                className="bg-mauve-300 hover:bg-mauve-400 cursor-pointer rounded h-10 w-30 border border-mist-500"
+              >
+                Throw Error
+              </button>
+            </div>
+          </>
         )}
       </>
     );
