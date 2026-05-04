@@ -6,7 +6,13 @@ type DataProps = {
   cards: Card[];
 };
 
-const TABLE_HEADERS = [
+type TableHeader = {
+  label: string;
+  key: keyof Card;
+  className?: string;
+};
+
+const TABLE_HEADERS: TableHeader[] = [
   { label: 'Name', key: 'name', className: 'col-span-2' },
   { label: 'Gender', key: 'gender' },
   { label: 'Height', key: 'height' },
