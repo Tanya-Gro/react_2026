@@ -27,8 +27,8 @@ export type Card = {
 };
 
 export type DataType = {
-  "count": number,
-  "next": string | null,
-  "previous": string | null,
-  "results": Card[],
-}
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Card[];
+};

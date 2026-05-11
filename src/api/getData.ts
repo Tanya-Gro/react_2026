@@ -1,8 +1,8 @@
-import { LINKS} from "../app/";
-import type { DataType, FetchError } from "../app/";
+import { LINKS } from '../app/';
+import type { DataType, FetchError } from '../app/';
 
 export async function getData(
-  searchQuery: string,
+  searchQuery: string
 ): Promise<DataType | FetchError> {
   try {
     const url = new URL(LINKS.characters);
