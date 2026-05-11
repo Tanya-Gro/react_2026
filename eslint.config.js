@@ -43,4 +43,7 @@ export default defineConfig([
       eqeqeq: ['error', 'always'],
     },
   },
+  {
+    ignores: ['node_modules', 'dist', 'coverage'],
+  },
 ]);
