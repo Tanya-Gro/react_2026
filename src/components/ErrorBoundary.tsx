@@ -1,4 +1,4 @@
-import { Component, type ReactNode } from 'react';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 type ErrorBoundaryProps = {
   children: ReactNode;
@@ -19,6 +19,20 @@ export class ErrorBoundary extends Component<
     return { shouldThrow: true, errorMessage: error.message };
   }
 
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    console.error('ErrorBoundary caught an error:', error);
+    console.error('Component stack:', errorInfo.componentStack);
+  }
+
+  componentDidUpdate(prevProps: ErrorBoundaryProps): void {
+    if (prevProps.children !== this.props.children && this.state.shouldThrow) {
+      this.setState({
+        shouldThrow: false,
+        errorMessage: '',
+      });
+    }
+  }
+
   handleDismissButtonClick = (): void => {
     this.setState({ shouldThrow: false, errorMessage: '' });
   };
@@ -26,9 +40,13 @@ export class ErrorBoundary extends Component<
   render(): ReactNode {
     if (this.state.shouldThrow) {
       return (
-        <div className="flex flex-col items-center flex-1 justify-center">
+        <article
+          role="alert"
+          aria-live="assertive"
+          className="flex flex-col items-center flex-1 justify-center"
+        >
           <h2 className="text-3xl font-bold">Something went wrong</h2>
-          <p className="text-xl m-5">I am regretting the inconvenience.</p>
+          <p className="text-xl m-5">I regret the inconvenience.</p>
           <p className="text-lg m-2">{this.state.errorMessage}</p>
           <p className="text-lg m-2">Please, try Dismiss.</p>
           <div className="p-4 mt-10 justify-end">
@@ -39,7 +57,7 @@ export class ErrorBoundary extends Component<
               Dismiss
             </button>
           </div>
-        </div>
+        </article>
       );
     }
     return this.props.children;
