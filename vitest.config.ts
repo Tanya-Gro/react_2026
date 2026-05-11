@@ -1,12 +1,12 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vitest/config';
-import react from "@vitejs/plugin-react";
+import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://vite.dev/config/
 export default defineConfig({
-	plugins: [react(), tailwindcss()],
-	test: {
+  plugins: [react(), tailwindcss()],
+  test: {
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/__tests__/setupTests.ts',
@@ -16,6 +16,7 @@ export default defineConfig({
       exclude: [
         'src/**/index.ts',
         'src/__tests__/**/*',
+        'src/mocks/**',
         'src/**/*.d.ts',
         'src/**/constants.ts',
         'src/**/types.ts',
