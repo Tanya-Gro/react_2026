@@ -6,6 +6,12 @@ import { HttpResponse, http } from 'msw';
 import { LS_KEY } from '../app/';
 
 describe('App', () => {
+  const testStor = {
+    query: 'Luke',
+    page: 1,
+    countP: 9,
+  };
+
   it('renders error button and handles click', async () => {
     const user = userEvent.setup();
 
@@ -49,8 +55,6 @@ describe('App', () => {
   it('updates localStorage when search query changes', async () => {
     const user = userEvent.setup();
 
-    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
-
     render(<App />);
 
     const input = screen.getByPlaceholderText(/search/i);
@@ -62,13 +66,16 @@ describe('App', () => {
     await user.type(input, 'Luke');
     await user.click(button);
 
-    expect(setItemSpy).toHaveBeenLastCalledWith(LS_KEY, 'Luke');
+    const storedData = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+
+    expect(storedData.query).toBe('Luke');
+    expect(storedData.page).toBe(1);
   });
 
   it('does not update localStorage when query is unchanged', async () => {
     const user = userEvent.setup();
 
-    localStorage.setItem(LS_KEY, 'Luke');
+    localStorage.setItem(LS_KEY, JSON.stringify(testStor));
 
     const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
 
@@ -84,6 +91,6 @@ describe('App', () => {
     await user.type(input, 'Luke');
     await user.click(button);
 
-    expect(setItemSpy).not.toHaveBeenCalledWith(LS_KEY, 'Luke');
+    expect(setItemSpy).not.toHaveBeenCalledWith(LS_KEY, testStor);
   });
 });
