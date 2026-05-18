@@ -1,5 +1,7 @@
 export type Url = {
   readonly characters: string;
+  readonly RSS: string;
+  readonly GitHub: string;
 };
 
 export type FetchError = {
