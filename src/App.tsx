@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react';
 import { SearchArea, ResultsArea, Loader } from './components';
 import { getData } from './api/';
 import { isFetchError } from './helpers';
+import { useLocalStorage } from './hooks';
 import {
   CARDS_PER_PAGE,
   LS_KEY,
@@ -9,37 +10,30 @@ import {
   type DataType,
   type FetchError,
 } from './app/';
+import { useNavigate } from '@tanstack/react-router';
+import { Route } from './routes';
 
 type AppState = {
-  searchQuery: string;
   hasError: boolean;
   errorMessage: string;
   cards: Card[];
   isLoading: boolean;
   shouldThrow: boolean;
-  currentPage: number;
   countPages: number;
 };
 
 type AppAction =
-  | { type: 'change_search_query'; payload: string }
   | { type: 'start_loading' }
   | { type: 'fetch_success'; payload: { results: Card[]; count: number } }
   | { type: 'fetch_failed'; payload: string }
-  | { type: 'list_page'; payload: number }
   | { type: 'throw_error' };
 
 type StoredState = {
   query: string;
-  page: number;
-  countP: number;
 };
 
 function reducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
-    case 'change_search_query': {
-      return { ...state, searchQuery: action.payload, currentPage: 1 };
-    }
     case 'start_loading': {
       return { ...state, isLoading: true, hasError: false, errorMessage: '' };
     }
@@ -49,7 +43,10 @@ function reducer(state: AppState, action: AppAction): AppState {
         isLoading: false,
         cards: action.payload.results,
         hasError: false,
-        countPages: Math.ceil(action.payload.count / CARDS_PER_PAGE),
+        countPages: Math.max(
+          1,
+          Math.ceil(action.payload.count / CARDS_PER_PAGE)
+        ),
       };
     }
     case 'fetch_failed': {
@@ -59,12 +56,6 @@ function reducer(state: AppState, action: AppAction): AppState {
         hasError: true,
         errorMessage: action.payload,
         cards: [],
-      };
-    }
-    case 'list_page': {
-      return {
-        ...state,
-        currentPage: action.payload,
       };
     }
     case 'throw_error': {
@@ -80,47 +71,39 @@ function reducer(state: AppState, action: AppAction): AppState {
 }
 
 export const App = (): React.JSX.Element => {
-  function getStoredState(): StoredState {
-    const initStor = {
-      query: '',
-      page: 1,
-      countP: 1,
-    };
-    try {
-      const storedData = localStorage.getItem(LS_KEY);
-      if (!storedData) return initStor;
-      return JSON.parse(storedData);
-    } catch {
-      return initStor;
-    }
-  }
-  const {
-    query: storedQuery,
-    page: storedPage,
-    countP: storedCountPages,
-  } = getStoredState();
+  const navigate = useNavigate({ from: '/' });
+  const { search = '', page = 1 } = Route.useSearch();
 
-  const [state, dispatch] = useReducer(reducer, {
-    searchQuery: storedQuery,
+  const [lsState, setLsStore] = useLocalStorage<StoredState>(LS_KEY, {
+    query: '',
+  });
+
+  const initialState = {
     hasError: false,
     errorMessage: '',
     cards: [],
     isLoading: false,
     shouldThrow: false,
-    currentPage: storedPage,
-    countPages: storedCountPages,
-  });
+    countPages: 1,
+  };
 
-  const {
-    cards,
-    hasError,
-    errorMessage,
-    isLoading,
-    shouldThrow,
-    searchQuery,
-    currentPage,
-    countPages,
-  } = state;
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const { cards, hasError, errorMessage, isLoading, shouldThrow, countPages } =
+    state;
+
+  useEffect(() => {
+    if (!search && lsState.query) {
+      navigate({
+        to: '/',
+        search: {
+          search: lsState.query,
+          page: 1,
+        },
+        replace: true,
+      });
+    }
+  });
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
@@ -128,10 +111,7 @@ export const App = (): React.JSX.Element => {
         type: 'start_loading',
       });
 
-      const data: DataType | FetchError = await getData(
-        searchQuery,
-        currentPage
-      );
+      const data: DataType | FetchError = await getData(search, page);
 
       if (isFetchError(data)) {
         dispatch({
@@ -147,35 +127,30 @@ export const App = (): React.JSX.Element => {
     };
 
     fetchData();
-  }, [searchQuery, currentPage]);
+  }, [search, page]);
 
   useEffect(() => {
-    localStorage.setItem(
-      LS_KEY,
-      JSON.stringify({
-        query: searchQuery,
-        page: currentPage,
-        countP: countPages,
-      })
-    );
-  }, [searchQuery, currentPage, countPages]);
+    setLsStore({ query: search });
+  }, [search, setLsStore]);
 
   const handleSearchQueryChange = (newSearchQuery: string): void => {
-    if (newSearchQuery !== searchQuery) {
-      dispatch({
-        type: 'change_search_query',
-        payload: newSearchQuery,
-      });
-    }
+    navigate({
+      to: '/',
+      search: {
+        search: newSearchQuery,
+        page: 1,
+      },
+    });
   };
 
   const handlePageChange = (newPage: number): void => {
-    if (newPage !== currentPage) {
-      dispatch({
-        type: 'list_page',
-        payload: newPage,
-      });
-    }
+    navigate({
+      to: '/',
+      search: {
+        search: search,
+        page: newPage,
+      },
+    });
   };
 
   const handleErrorButtonClick = (): void => {
@@ -194,7 +169,7 @@ export const App = (): React.JSX.Element => {
         Star Wars Characters
       </h1>
       <SearchArea
-        searchQuery={state.searchQuery}
+        searchQuery={search}
         onSearchQueryChange={handleSearchQueryChange}
       />
       {hasError ? (
@@ -206,7 +181,7 @@ export const App = (): React.JSX.Element => {
           ) : (
             <ResultsArea
               cards={cards}
-              currentPage={currentPage}
+              currentPage={page}
               countPages={countPages}
               onPageChange={handlePageChange}
             />

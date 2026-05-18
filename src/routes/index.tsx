@@ -1,6 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Home } from '../pages';
 
+type SearchParams = {
+  search?: string;
+  page?: number;
+};
+
 export const Route = createFileRoute('/')({
+  validateSearch: (search: Record<string, unknown>): SearchParams => ({
+    search: typeof search.search === 'string' ? search.search : '',
+    page: Number(search.page) > 0 ? Number(search.page) : 1,
+  }),
   component: Home,
 });
