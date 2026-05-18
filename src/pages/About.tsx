@@ -1,6 +1,6 @@
 import { LINKS } from '../app/';
 
-export const About = () => {
+export const About = (): React.JSX.Element => {
   return (
     <main className="flex flex-1 flex-col bg-mist-50 text-mist-800">
       <section className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">

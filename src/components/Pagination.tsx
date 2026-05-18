@@ -9,14 +9,14 @@ export const Pagination = ({
   countPages,
   onPageChange,
 }: PaginationProps): React.JSX.Element => {
-  const prevPage = () => {
+  const prevPage = (): void => {
     if (currentPage === 1) {
       return;
     }
     onPageChange(currentPage - 1);
   };
 
-  const nextPage = () => {
+  const nextPage = (): void => {
     if (currentPage !== countPages) {
       onPageChange(currentPage + 1);
     }
