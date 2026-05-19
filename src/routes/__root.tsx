@@ -1,6 +1,6 @@
 import { createRootRoute } from '@tanstack/react-router';
-import { NotFound } from '../pages';
-import { RootLayout } from '../components';
+import { RootLayout } from 'components/RootLayout';
+import { NotFound } from 'pages';
 
 export const Route = createRootRoute({
   component: RootLayout,

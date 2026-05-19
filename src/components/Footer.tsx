@@ -1,4 +1,4 @@
-import { LINKS } from '../app/';
+import { LINKS } from 'core';
 
 export const Footer = (): React.JSX.Element => {
   return (
