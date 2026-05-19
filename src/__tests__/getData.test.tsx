@@ -1,11 +1,10 @@
-// import { describe, expect, it, vi, afterEach } from 'vitest';
-import { getData } from '../api';
+import { getData } from 'api';
 
 describe('getData', () => {
   it('returns fetch error from catch block', async () => {
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('Network Error'));
 
-    const result = await getData('');
+    const result = await getData('', 1);
 
     expect(result).toEqual({
       hasError: true,
@@ -19,7 +18,7 @@ describe('getData', () => {
       .mockResolvedValue(new Response(JSON.stringify({ results: [] })));
 
     const searchQuery = 'Luke';
-    await getData(searchQuery);
+    await getData(searchQuery, 1);
 
     const [[calledUrl]] = fetchMock.mock.calls;
     const url = new URL(String(calledUrl));
@@ -32,7 +31,7 @@ describe('getData', () => {
       .spyOn(globalThis, 'fetch')
       .mockResolvedValue(new Response(JSON.stringify({ results: [] })));
 
-    await getData('');
+    await getData('', 1);
 
     const [[calledUrl]] = fetchMock.mock.calls;
     const url = new URL(String(calledUrl));
