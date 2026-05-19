@@ -1,17 +1,12 @@
 import { useEffect, useReducer } from 'react';
-import { SearchArea, ResultsArea, Loader } from './components';
-import { getData } from './api/';
-import { isFetchError } from './helpers';
-import { useLocalStorage } from './hooks';
-import {
-  CARDS_PER_PAGE,
-  LS_KEY,
-  type Card,
-  type DataType,
-  type FetchError,
-} from './app/';
 import { useNavigate } from '@tanstack/react-router';
-import { Route } from './routes';
+import { SearchArea, ResultsArea, Loader } from 'components';
+import { getData } from 'api';
+import { isFetchError } from 'helpers';
+import { useLocalStorage } from 'hooks';
+import type { Card, DataType, FetchError } from 'core';
+import { CARDS_PER_PAGE, LS_KEY } from 'core';
+import { Route } from 'routes';
 
 type AppState = {
   hasError: boolean;
@@ -27,10 +22,6 @@ type AppAction =
   | { type: 'fetch_success'; payload: { results: Card[]; count: number } }
   | { type: 'fetch_failed'; payload: string }
   | { type: 'throw_error' };
-
-type StoredState = {
-  query: string;
-};
 
 function reducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
@@ -74,9 +65,7 @@ export const App = (): React.JSX.Element => {
   const navigate = useNavigate({ from: '/' });
   const { search = '', page = 1 } = Route.useSearch();
 
-  const [lsState, setLsStore] = useLocalStorage<StoredState>(LS_KEY, {
-    query: '',
-  });
+  const [, setLsStore] = useLocalStorage<string>(LS_KEY, search);
 
   const initialState = {
     hasError: false,
@@ -91,19 +80,6 @@ export const App = (): React.JSX.Element => {
 
   const { cards, hasError, errorMessage, isLoading, shouldThrow, countPages } =
     state;
-
-  useEffect(() => {
-    if (!search && lsState.query) {
-      navigate({
-        to: '/',
-        search: {
-          search: lsState.query,
-          page: 1,
-        },
-        replace: true,
-      });
-    }
-  });
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
@@ -130,7 +106,7 @@ export const App = (): React.JSX.Element => {
   }, [search, page]);
 
   useEffect(() => {
-    setLsStore({ query: search });
+    setLsStore(search);
   }, [search, setLsStore]);
 
   const handleSearchQueryChange = (newSearchQuery: string): void => {
@@ -164,7 +140,7 @@ export const App = (): React.JSX.Element => {
   }
 
   return (
-    <>
+    <section className="flex flex-col p-4">
       <h1 className="text-4xl font-bold text-center p-6 text-mist-700 bg-mist-50 border-b-2 border-b-mist-300">
         Star Wars Characters
       </h1>
@@ -197,6 +173,6 @@ export const App = (): React.JSX.Element => {
           </div>
         </>
       )}
-    </>
+    </section>
   );
 };
