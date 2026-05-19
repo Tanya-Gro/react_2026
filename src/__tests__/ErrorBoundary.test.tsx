@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ErrorBoundary } from '../components';
-import type { ReactNode } from 'react';
+import { ErrorBoundary } from 'components/ErrorBoundary';
 
 describe('ErrorBoundary', () => {
   beforeEach(() => {
@@ -12,7 +11,7 @@ describe('ErrorBoundary', () => {
     shouldThrow,
   }: {
     shouldThrow: boolean;
-  }): ReactNode | null {
+  }): React.JSX.Element | null {
     if (shouldThrow) {
       throw new Error('Woops....');
     }
