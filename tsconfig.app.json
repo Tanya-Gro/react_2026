@@ -20,7 +20,21 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "strict": true
+    "strict": true,
+    "paths": {
+      "components": ["./src/components/index.ts"],
+      "components/*": ["./src/components/*"],
+      "pages": ["./src/pages/index.ts"],
+      "pages/*": ["./src/pages/*"],
+      "routes": ["./src/routes/index.tsx"],
+      "routes/*": ["./src/routes/*"],
+      "api": ["./src/api/index.ts"],
+      "core": ["./src/core/index.ts"],
+      "mocks": ["./src/mocks/index.ts"],
+      "helpers": ["./src/helpers/index.ts"],
+      "hooks": ["./src/hooks/index.ts"],
+      "app/*": ["./src/*"]
+    }
   },
   "include": ["src", "vite-env.d.ts"]
 }
