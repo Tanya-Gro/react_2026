@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 
 type SearchFormProps = {
   searchQuery: string;
@@ -8,7 +8,7 @@ type SearchFormProps = {
 export const SearchArea = ({
   searchQuery,
   onSearchQueryChange,
-}: SearchFormProps): ReactNode => {
+}: SearchFormProps): React.JSX.Element => {
   const [localQuery, setLocalQuery] = useState(searchQuery);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {

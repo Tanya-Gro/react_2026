@@ -1,6 +1,4 @@
-import type { FC, ReactNode } from 'react';
-
-export const Loader: FC = (): ReactNode => {
+export const Loader = (): React.JSX.Element => {
   return (
     <div className="flex flex-1 justify-center items-center">
       <svg
