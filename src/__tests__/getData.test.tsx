@@ -1,6 +1,8 @@
 import { getData } from 'api';
 
 describe('getData', () => {
+  const searchQuery = 'Luke';
+
   it('returns fetch error from catch block', async () => {
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('Network Error'));
 
@@ -17,7 +19,6 @@ describe('getData', () => {
       .spyOn(globalThis, 'fetch')
       .mockResolvedValue(new Response(JSON.stringify({ results: [] })));
 
-    const searchQuery = 'Luke';
     await getData(searchQuery, 1);
 
     const [[calledUrl]] = fetchMock.mock.calls;
@@ -37,5 +38,29 @@ describe('getData', () => {
     const url = new URL(String(calledUrl));
 
     expect(url.searchParams.has('search')).toBe(false);
+  });
+
+  it('returns timeout error object when request times out', async () => {
+    vi.stubEnv('DEV', true);
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const timeoutError = new DOMException(
+      'The operation timed out.',
+      'TimeoutError'
+    );
+
+    vi.spyOn(globalThis, 'fetch').mockRejectedValue(timeoutError);
+
+    const result = await getData(searchQuery, 1);
+
+    expect(result).toEqual({
+      hasError: true,
+      message: 'Your request timed out. Please try again.',
+    });
+
+    expect(consoleSpy).toHaveBeenCalledWith('Fetch crashed:', timeoutError);
+
+    consoleSpy.mockRestore();
+    vi.unstubAllEnvs();
   });
 });
