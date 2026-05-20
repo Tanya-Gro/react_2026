@@ -5,12 +5,19 @@ import { detail } from 'mocks';
 
 describe('getDetails', () => {
   it('returns fetch error from catch block', async () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockRejectedValue(() => {});
+
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('Network Error'));
+
     const result = await getDetails('1');
+
     expect(result).toEqual({
       hasError: true,
       message: 'Error: Network Error',
     });
+    expect(consoleSpy).toHaveBeenCalledWith('Fetch error:', expect.any(Error));
+
+    consoleSpy.mockRestore();
   });
 
   it('returns data successfully when response is ok', async () => {
