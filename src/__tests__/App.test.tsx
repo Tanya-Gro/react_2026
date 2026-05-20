@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { HttpResponse, http } from 'msw';
 import { server } from 'mocks';
-import { LS_KEY } from 'core';
+import { LS_KEY } from 'app';
 import { renderWithRouter } from './test-utils/renderWithRouter';
 
 describe('App', () => {

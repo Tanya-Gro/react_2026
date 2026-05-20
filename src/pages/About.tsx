@@ -1,4 +1,4 @@
-import { LINKS } from 'core';
+import { LINKS } from 'app';
 
 export const About = (): React.JSX.Element => {
   return (

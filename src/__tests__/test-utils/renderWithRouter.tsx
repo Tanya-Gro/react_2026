@@ -1,6 +1,6 @@
 import { RouterProvider, createMemoryHistory } from '@tanstack/react-router';
 import { render, type RenderResult } from '@testing-library/react';
-import { router } from 'core';
+import { router } from 'app';
 
 type Options = {
   route?: string;

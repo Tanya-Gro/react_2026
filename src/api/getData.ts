@@ -1,4 +1,4 @@
-import { type DataType, type FetchError, LINKS } from 'core';
+import { type DataType, type FetchError, LINKS } from 'app';
 
 export async function getData(
   searchQuery: string,

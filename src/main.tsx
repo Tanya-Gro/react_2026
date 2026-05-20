@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { RouterProvider } from '@tanstack/react-router';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'components';
-import { router } from 'core';
+import { router } from 'app';
 import './index.css';
 
 const rootElement = document.getElementById('root');

@@ -1,4 +1,4 @@
-import { type Details, type FetchError, LINKS } from 'core';
+import { type Details, type FetchError, LINKS } from 'app';
 
 export async function getDetails(id: string): Promise<Details | FetchError> {
   try {

@@ -5,7 +5,7 @@ import { getDetails } from 'api';
 import { isFetchError } from 'helpers';
 import { Loader } from 'components';
 import { Route } from 'routes';
-import type { Details } from 'core';
+import type { Details } from 'app';
 
 type DetailFieldProps = {
   label: string;

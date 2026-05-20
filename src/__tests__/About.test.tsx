@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react';
-import { router } from 'core';
+import { router } from 'app';
 import { renderWithRouter } from './test-utils/renderWithRouter';
 
 describe('About Component', () => {
@@ -9,7 +9,7 @@ describe('About Component', () => {
     await renderWithRouter({ route: '/about' });
 
     expect(
-      screen.getByRole('link', { name: /Rolling Scopes School/i })
+      await screen.findByRole('link', { name: /Rolling Scopes School/i })
     ).toBeInTheDocument();
 
     navigateSpy.mockRestore();

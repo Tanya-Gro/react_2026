@@ -4,8 +4,8 @@ import { SearchArea, ResultsArea, Loader } from 'components';
 import { getData } from 'api';
 import { isFetchError } from 'helpers';
 import { useLocalStorage } from 'hooks';
-import type { Card, DataType, FetchError } from 'core';
-import { CARDS_PER_PAGE, LS_KEY } from 'core';
+import type { Card, DataType, FetchError } from 'app';
+import { CARDS_PER_PAGE, LS_KEY } from 'app';
 import { Route } from 'routes';
 
 type AppState = {

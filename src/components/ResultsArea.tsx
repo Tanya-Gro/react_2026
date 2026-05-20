@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import type { Card } from 'core';
+import type { Card } from 'app';
 import { Route } from 'routes';
 import { getID } from 'helpers';
 import { Detail, Pagination } from 'components';

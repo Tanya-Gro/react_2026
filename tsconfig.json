@@ -15,11 +15,11 @@
       "routes": ["./src/routes/index.tsx"],
       "routes/*": ["./src/routes/*"],
       "api": ["./src/api/index.ts"],
-      "core": ["./src/core/index.ts"],
+      "app": ["./src/app/index.ts"],
       "mocks": ["./src/mocks/index.ts"],
       "helpers": ["./src/helpers/index.ts"],
       "hooks": ["./src/hooks/index.ts"],
-      "app/*": ["./src/*"]
+      "src/*": ["./src/*"]
     }
   }
 }

@@ -1,4 +1,4 @@
-import type { FetchError, DataType, Details } from 'core';
+import type { FetchError, DataType, Details } from 'app';
 
 export function isFetchError(
   data: DataType | FetchError | Details
