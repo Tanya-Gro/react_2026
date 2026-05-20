@@ -9,4 +9,6 @@ export const LINKS: Url = {
 
 export const CARDS_PER_PAGE: number = 10;
 
+export const FETCH_TIMEOUT_MS = 10000;
+
 export const LS_KEY = 'wookieeSearchQuery';

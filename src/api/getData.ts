@@ -1,4 +1,4 @@
-import { type DataType, type FetchError, LINKS } from 'app';
+import { type DataType, type FetchError, LINKS, FETCH_TIMEOUT_MS } from 'app';
 
 export async function getData(
   searchQuery: string,
@@ -9,15 +9,26 @@ export async function getData(
     if (searchQuery) url.searchParams.set('search', searchQuery);
     if (currentPage) url.searchParams.set('page', currentPage.toString());
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
 
     if (!response.ok) {
-      return { hasError: true, message: `${response.status}` };
+      return { hasError: true, message: `Server error: ${response.status}` };
     }
 
-    const data: DataType = await response.json();
-    return data;
-  } catch (error) {
+    return await response.json();
+  } catch (error: unknown) {
+    if (import.meta.env.DEV) {
+      console.error('Fetch crashed:', error);
+    }
+
+    if (error instanceof DOMException && error.name === 'TimeoutError') {
+      return {
+        hasError: true,
+        message: 'Your request timed out. Please try again.',
+      };
+    }
     return { hasError: true, message: String(error) };
   }
 }
