@@ -106,15 +106,15 @@ export const Detail = (): React.JSX.Element | null => {
   }
 
   return (
-    <aside className="sticky w-80 top-4 h-fit bg-mist-50 p-6 shadow-lg">
-      <div className="mb-6 flex items-start justify-between gap-4">
+    <aside className="flex flex-col w-80 top-4 max-h-dvh bg-mist-50 p-2 shadow-[inset_0_25px_50px_-12px_rgba(0,0,0,0.25)]">
+      <div className="p-2.5 flex items-start justify-between gap-4 border-b border-mist-400 my-0.5">
         <h2 className="text-2xl font-bold text-mist-800">
           {cardDescription.name}
         </h2>
         {CloseButton()}
       </div>
 
-      <div className="flex flex-col gap-2 items-center">
+      <div className="flex flex-col gap-2 px-2 items-center overflow-y-auto">
         <img src={cardDescription.image} alt="" className="w-60" />
 
         <DetailField label="Height" value={cardDescription.height} />

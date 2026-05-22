@@ -140,7 +140,7 @@ export const App = (): React.JSX.Element => {
   }
 
   return (
-    <section className="flex flex-col p-4">
+    <section className="flex flex-col flex-1 px-4 overflow-hidden">
       <h1 className="text-4xl font-bold text-center p-6 text-mist-700 bg-mist-50 border-b-2 border-b-mist-300">
         Star Wars Characters
       </h1>
