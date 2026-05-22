@@ -3,6 +3,7 @@ import { RouterProvider } from '@tanstack/react-router';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'components';
 import { router } from 'app';
+import '@fontsource/material-symbols-outlined';
 import './index.css';
 
 const rootElement = document.getElementById('root');

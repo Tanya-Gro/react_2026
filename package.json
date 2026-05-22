@@ -17,6 +17,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@fontsource/material-symbols-outlined": "^5.2.45",
     "@tailwindcss/vite": "^4.2.4",
     "@tanstack/react-router": "^1.170.4",
     "@tanstack/react-router-devtools": "^1.167.0",
