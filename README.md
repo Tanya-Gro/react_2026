@@ -12,7 +12,7 @@ In this task, you will refactor your class components to functional components w
 ## 🎯 Task Goals
 
 - **Functional Refactoring** — Convert class components to functional components using React hooks.
-- **React Router Integration** — Implement React Router for navigation and URL management.
+- **TanStack Router Integration** — Implement TanStack Router for navigation and URL management.
 - **Custom Hooks** — Create custom hooks for shared logic.
 - **Smart Pagination** — Add pagination with seamless URL synchronization.
 
