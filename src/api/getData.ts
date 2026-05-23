@@ -2,7 +2,8 @@ import { type DataType, type FetchError, LINKS, FETCH_TIMEOUT_MS } from 'app';
 
 export async function getData(
   searchQuery: string,
-  currentPage: number
+  currentPage: number,
+  signal?: AbortSignal
 ): Promise<DataType | FetchError> {
   try {
     const url = new URL(LINKS.characters);
@@ -11,7 +12,9 @@ export async function getData(
       url.searchParams.set('page', currentPage.toString());
 
     const response = await fetch(url, {
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      signal: signal
+        ? AbortSignal.any([signal, AbortSignal.timeout(FETCH_TIMEOUT_MS)])
+        : AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
 
     if (!response.ok) {
@@ -20,6 +23,10 @@ export async function getData(
 
     return await response.json();
   } catch (error: unknown) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw error;
+    }
+
     if (import.meta.env.DEV) {
       console.error('Fetch crashed:', error);
     }

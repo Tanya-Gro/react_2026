@@ -82,27 +82,48 @@ export const App = (): React.JSX.Element => {
     state;
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchData = async (): Promise<void> => {
       dispatch({
         type: 'start_loading',
       });
 
-      const data: DataType | FetchError = await getData(search, page);
+      try {
+        const data: DataType | FetchError = await getData(
+          search,
+          page,
+          controller.signal
+        );
 
-      if (isFetchError(data)) {
+        if (!isFetchError(data)) {
+          dispatch({
+            type: 'fetch_success',
+            payload: { results: data.results, count: data.count },
+          });
+        } else {
+          dispatch({
+            type: 'fetch_failed',
+            payload: data.message,
+          });
+        }
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return;
+        }
+
         dispatch({
           type: 'fetch_failed',
-          payload: data.message,
-        });
-      } else {
-        dispatch({
-          type: 'fetch_success',
-          payload: { results: data.results, count: data.count },
+          payload: String(error),
         });
       }
     };
 
     fetchData();
+
+    return (): void => {
+      controller.abort();
+    };
   }, [search, page]);
 
   useEffect(() => {
