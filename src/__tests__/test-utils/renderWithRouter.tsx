@@ -1,6 +1,10 @@
-import { RouterProvider, createMemoryHistory } from '@tanstack/react-router';
+import {
+  RouterProvider,
+  createMemoryHistory,
+  createRouter,
+} from '@tanstack/react-router';
 import { render, type RenderResult } from '@testing-library/react';
-import { router } from 'app';
+import { routeTree } from 'src/routeTree.gen';
 
 type Options = {
   route?: string;
@@ -11,11 +15,14 @@ export async function renderWithRouter(
 ): Promise<RenderResult> {
   const { route = '/' } = options;
 
-  router.history = createMemoryHistory({
-    initialEntries: [route],
+  const testRouter = createRouter({
+    routeTree,
+    history: createMemoryHistory({
+      initialEntries: [route],
+    }),
   });
 
-  await router.load();
+  await testRouter.load();
 
-  return render(<RouterProvider router={router} />);
+  return render(<RouterProvider router={testRouter} />);
 }

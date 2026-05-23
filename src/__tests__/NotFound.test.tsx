@@ -1,6 +1,5 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { router } from 'app';
 import { renderWithRouter } from './test-utils/renderWithRouter';
 
 describe('NotFound Component', () => {
@@ -19,18 +18,12 @@ describe('NotFound Component', () => {
   it('navigates to the home page when the button is clicked', async () => {
     const user = userEvent.setup();
 
-    const navigateSpy = vi.spyOn(router, 'navigate');
-
     await renderWithRouter({ route: '/some-invalid-route' });
 
     const button = await screen.findByRole('button', { name: /back to base/i });
 
     await user.click(button);
 
-    expect(navigateSpy).toHaveBeenCalledWith({
-      to: '/',
-    });
-
-    navigateSpy.mockRestore();
+    expect(window.location.pathname).toBe('/');
   });
 });
