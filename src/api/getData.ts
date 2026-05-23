@@ -7,7 +7,8 @@ export async function getData(
   try {
     const url = new URL(LINKS.characters);
     if (searchQuery) url.searchParams.set('search', searchQuery);
-    if (currentPage) url.searchParams.set('page', currentPage.toString());
+    if (Number.isInteger(currentPage) && currentPage >= 1)
+      url.searchParams.set('page', currentPage.toString());
 
     const response = await fetch(url, {
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
