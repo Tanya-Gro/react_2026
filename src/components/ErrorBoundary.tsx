@@ -1,7 +1,7 @@
-import { Component, type ErrorInfo } from 'react';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 type ErrorBoundaryProps = {
-  children: React.JSX.Element;
+  children: ReactNode;
 };
 
 type ErrorBoundaryState = {
@@ -37,7 +37,7 @@ export class ErrorBoundary extends Component<
     this.setState({ shouldThrow: false, errorMessage: '' });
   };
 
-  render(): React.JSX.Element {
+  render(): ReactNode {
     if (this.state.shouldThrow) {
       return (
         <article
