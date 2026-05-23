@@ -50,6 +50,8 @@ export const Detail = (): React.JSX.Element | null => {
     const fetchDetails = async (): Promise<void> => {
       setIsLoading(true);
 
+      setCardDescription(null);
+
       const data = await getDetails(details);
 
       if (!isFetchError(data)) {
@@ -115,7 +117,11 @@ export const Detail = (): React.JSX.Element | null => {
       </div>
 
       <div className="flex flex-col gap-2 px-2 items-center overflow-y-auto">
-        <img src={cardDescription.image} alt="" className="w-60" />
+        <img
+          src={cardDescription.image}
+          alt={cardDescription.name}
+          className="w-60"
+        />
 
         <DetailField label="Height" value={cardDescription.height} />
 
