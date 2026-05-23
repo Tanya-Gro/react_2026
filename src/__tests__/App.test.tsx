@@ -25,6 +25,11 @@ describe('App', () => {
 
     await user.click(button);
 
+    expect(consoleSpy).toHaveBeenCalled();
+    expect(
+      await screen.findByText(/something went wrong/i)
+    ).toBeInTheDocument();
+
     consoleSpy.mockRestore();
   });
 
