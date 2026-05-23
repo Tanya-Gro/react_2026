@@ -27,10 +27,10 @@ describe('Pagination', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('button', { name: 'arrow_back' })
+      screen.getByRole('button', { name: /previous page/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'arrow_forward' })
+      screen.getByRole('button', { name: /next page/i })
     ).toBeInTheDocument();
   });
 
@@ -45,7 +45,7 @@ describe('Pagination', () => {
       />
     );
 
-    const nextButton = screen.getByRole('button', { name: 'arrow_forward' });
+    const nextButton = screen.getByRole('button', { name: /next page/i });
     await user.click(nextButton);
 
     expect(mockOnPageChange).toHaveBeenCalledTimes(1);
@@ -63,7 +63,7 @@ describe('Pagination', () => {
       />
     );
 
-    const prevButton = screen.getByRole('button', { name: 'arrow_back' });
+    const prevButton = screen.getByRole('button', { name: /previous page/i });
     await user.click(prevButton);
 
     expect(mockOnPageChange).toHaveBeenCalledTimes(1);
@@ -79,8 +79,8 @@ describe('Pagination', () => {
       />
     );
 
-    const prevButton = screen.getByRole('button', { name: 'arrow_back' });
-    const nextButton = screen.getByRole('button', { name: 'arrow_forward' });
+    const prevButton = screen.getByRole('button', { name: /previous page/i });
+    const nextButton = screen.getByRole('button', { name: /next page/i });
 
     await userEvent.click(prevButton);
     await userEvent.click(nextButton);

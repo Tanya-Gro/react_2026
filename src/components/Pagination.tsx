@@ -17,7 +17,7 @@ export const Pagination = ({
   };
 
   const nextPage = (): void => {
-    if (currentPage !== countPages) {
+    if (currentPage < countPages) {
       onPageChange(currentPage + 1);
     }
   };
@@ -33,7 +33,8 @@ export const Pagination = ({
         className={BUTTON_CLASSES}
         onClick={prevPage}
       >
-        arrow_back
+        <span aria-hidden="true">arrow_back</span>
+        <span className="sr-only">Previous page</span>
       </button>
 
       <output className="">{`Page ${currentPage} of ${countPages}`}</output>
@@ -44,7 +45,8 @@ export const Pagination = ({
         className={BUTTON_CLASSES}
         onClick={nextPage}
       >
-        arrow_forward
+        <span aria-hidden="true">arrow_forward</span>
+        <span className="sr-only">Next page</span>
       </button>
     </section>
   );
