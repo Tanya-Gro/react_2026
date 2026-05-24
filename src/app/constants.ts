@@ -1,4 +1,4 @@
-import type { Url } from './index';
+import type { Url } from './types';
 
 export const LINKS: Url = {
   characters: 'https://swapi.py4e.com/api/people/?',
