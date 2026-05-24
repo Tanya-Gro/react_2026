@@ -70,8 +70,9 @@ export const ResultsArea = ({
             };
 
             return (
-              <article
+              <button
                 key={id}
+                type="button"
                 onClick={handleSelect}
                 className={`
           grid cursor-pointer grid-cols-[40px_repeat(6,1fr)]
@@ -84,7 +85,7 @@ export const ResultsArea = ({
                   <input
                     type="checkbox"
                     checked={isSelected}
-                    onChange={() => {}}
+                    onChange={handleSelect}
                     className="h-4 w-4 cursor-pointer"
                   />
                 </div>
@@ -97,7 +98,7 @@ export const ResultsArea = ({
                     {card[row.key]}
                   </span>
                 ))}
-              </article>
+              </button>
             );
           })}
         </div>
