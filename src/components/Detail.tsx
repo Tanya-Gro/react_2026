@@ -16,12 +16,7 @@ function DetailField({
   label,
   value,
 }: DetailFieldProps): React.JSX.Element | null {
-  if (
-    value === undefined ||
-    value === null ||
-    value === '' ||
-    (Array.isArray(value) && value.length === 0)
-  ) {
+  if (!value || (Array.isArray(value) && value.length === 0)) {
     return null;
   }
 
