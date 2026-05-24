@@ -1,4 +1,5 @@
-import { type Details, type FetchError, LINKS, FETCH_TIMEOUT_MS } from 'app';
+import { type Details, type FetchError, LINKS } from 'app';
+import { FETCH_TIMEOUT_MS } from './constants';
 
 export async function getDetails(id: string): Promise<Details | FetchError> {
   try {
@@ -19,7 +20,7 @@ export async function getDetails(id: string): Promise<Details | FetchError> {
     if (error instanceof DOMException && error.name === 'TimeoutError') {
       return {
         hasError: true,
-        message: `Your request timed out. Please try again.`,
+        message: 'Your request timed out. Please try again.',
       };
     }
 

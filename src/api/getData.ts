@@ -1,4 +1,5 @@
-import { type DataType, type FetchError, LINKS, FETCH_TIMEOUT_MS } from 'app';
+import { type DataType, type FetchError, LINKS } from 'app';
+import { FETCH_TIMEOUT_MS } from './constants';
 
 export async function getData(
   searchQuery: string,
