@@ -5,7 +5,7 @@ import { server } from 'mocks';
 import { LS_KEY } from 'app';
 import { renderWithRouter } from './test-utils/renderWithRouter';
 
-describe('App', () => {
+describe('Home', () => {
   beforeEach(() => {
     localStorage.clear();
   });
