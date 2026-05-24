@@ -7,9 +7,12 @@ export async function getData(
 ): Promise<DataType | FetchError> {
   try {
     const url = new URL(LINKS.characters);
-    if (searchQuery) url.searchParams.set('search', searchQuery);
-    if (Number.isInteger(currentPage) && currentPage >= 1)
+    if (searchQuery) {
+      url.searchParams.set('search', searchQuery);
+    }
+    if (Number.isInteger(currentPage) && currentPage >= 1) {
       url.searchParams.set('page', currentPage.toString());
+    }
 
     const response = await fetch(url, {
       signal: signal
