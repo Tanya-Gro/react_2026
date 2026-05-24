@@ -24,6 +24,7 @@ describe('NotFound Component', () => {
 
     await user.click(button);
 
-    expect(window.location.pathname).toBe('/');
+    expect(await screen.findByPlaceholderText(/search/i)).toBeInTheDocument();
+    expect(screen.queryByText('404 - Not Found')).not.toBeInTheDocument();
   });
 });
