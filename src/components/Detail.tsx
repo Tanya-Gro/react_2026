@@ -158,7 +158,7 @@ export const Detail = (): React.JSX.Element | null => {
         <a
           href={cardDescription.wiki}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="mt-4 text-lg font-medium text-mauve-700 underline-offset-4 transition hover:underline"
         >
           More on Wookieepedia

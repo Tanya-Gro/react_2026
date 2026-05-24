@@ -15,7 +15,7 @@ export const About = (): React.JSX.Element => {
           <a
             href={LINKS.RSS}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="font-semibold underline decoration-mauve-400 underline-offset-4 transition hover:text-mauve-600"
           >
             Rolling Scopes School

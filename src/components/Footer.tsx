@@ -7,7 +7,7 @@ export const Footer = (): React.JSX.Element => {
         <a
           href={LINKS.GitHub}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           aria-label="GitHub"
           className="transition hover:scale-105 hover:opacity-80"
         >
@@ -21,7 +21,7 @@ export const Footer = (): React.JSX.Element => {
         <a
           href={LINKS.RSS}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           aria-label="RS School"
           className="transition hover:scale-105 hover:opacity-80"
         >
