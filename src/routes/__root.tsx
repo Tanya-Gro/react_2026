@@ -1,10 +1,10 @@
 import { createRootRoute } from '@tanstack/react-router';
 import { ErrorBoundary } from 'components';
-import { RootLayout } from 'components/RootLayout';
+import { App } from 'src/App';
 import { NotFound } from 'pages';
 
 export const Route = createRootRoute({
-  component: RootLayout,
+  component: App,
   notFoundComponent: NotFound,
   errorComponent: ({ error }) => (
     <ErrorBoundary>

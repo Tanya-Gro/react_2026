@@ -1,199 +1,26 @@
-import { useEffect, useReducer } from 'react';
-import { useNavigate } from '@tanstack/react-router';
-import { SearchArea, ResultsArea, Loader } from 'components';
-import { getData } from 'api';
-import { isFetchError } from 'helpers';
-import { useLocalStorage } from 'hooks';
-import type { Card, DataType, FetchError } from 'app';
-import { CARDS_PER_PAGE, LS_KEY } from 'app';
-import { Route } from 'routes';
-
-type AppState = {
-  hasError: boolean;
-  errorMessage: string;
-  cards: Card[];
-  isLoading: boolean;
-  shouldThrow: boolean;
-  countPages: number;
-};
-
-type AppAction =
-  | { type: 'start_loading' }
-  | { type: 'fetch_success'; payload: { results: Card[]; count: number } }
-  | { type: 'fetch_failed'; payload: string }
-  | { type: 'throw_error' };
-
-function reducer(state: AppState, action: AppAction): AppState {
-  switch (action.type) {
-    case 'start_loading': {
-      return { ...state, isLoading: true, hasError: false, errorMessage: '' };
-    }
-    case 'fetch_success': {
-      return {
-        ...state,
-        isLoading: false,
-        cards: action.payload.results,
-        hasError: false,
-        countPages: Math.max(
-          1,
-          Math.ceil(action.payload.count / CARDS_PER_PAGE)
-        ),
-      };
-    }
-    case 'fetch_failed': {
-      return {
-        ...state,
-        isLoading: false,
-        hasError: true,
-        errorMessage: action.payload,
-        cards: [],
-      };
-    }
-    case 'throw_error': {
-      return {
-        ...state,
-        shouldThrow: true,
-        errorMessage: 'This is a test error.',
-      };
-    }
-    default:
-      return state;
-  }
-}
+import { Link, Outlet } from '@tanstack/react-router';
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { Footer } from 'components';
 
 export const App = (): React.JSX.Element => {
-  const navigate = useNavigate({ from: '/' });
-  const { search = '', page = 1 } = Route.useSearch();
-
-  const [, setLsStore] = useLocalStorage<string>(LS_KEY, search);
-
-  const initialState = {
-    hasError: false,
-    errorMessage: '',
-    cards: [],
-    isLoading: false,
-    shouldThrow: false,
-    countPages: 1,
-  };
-
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  const { cards, hasError, errorMessage, isLoading, shouldThrow, countPages } =
-    state;
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const fetchData = async (): Promise<void> => {
-      dispatch({
-        type: 'start_loading',
-      });
-
-      try {
-        const data: DataType | FetchError = await getData(
-          search,
-          page,
-          controller.signal
-        );
-
-        if (!isFetchError(data)) {
-          dispatch({
-            type: 'fetch_success',
-            payload: { results: data.results, count: data.count },
-          });
-        } else {
-          dispatch({
-            type: 'fetch_failed',
-            payload: data.message,
-          });
-        }
-      } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError') {
-          return;
-        }
-
-        dispatch({
-          type: 'fetch_failed',
-          payload: String(error),
-        });
-      }
-    };
-
-    fetchData();
-
-    return (): void => {
-      controller.abort();
-    };
-  }, [search, page]);
-
-  useEffect(() => {
-    setLsStore(search);
-  }, [search, setLsStore]);
-
-  const handleSearchQueryChange = (newSearchQuery: string): void => {
-    navigate({
-      to: '/',
-      search: {
-        search: newSearchQuery,
-        page: 1,
-      },
-    });
-  };
-
-  const handlePageChange = (newPage: number): void => {
-    navigate({
-      to: '/',
-      search: {
-        search: search,
-        page: newPage,
-      },
-    });
-  };
-
-  const handleErrorButtonClick = (): void => {
-    dispatch({
-      type: 'throw_error',
-    });
-  };
-
-  if (shouldThrow) {
-    throw new Error(errorMessage);
-  }
-
   return (
-    <section className="flex flex-col flex-1 px-4 overflow-hidden">
-      <h1 className="text-4xl font-bold text-center p-6 text-mist-700 bg-mist-50 border-b-2 border-b-mist-300">
-        Star Wars Characters
-      </h1>
-      <SearchArea
-        searchQuery={search}
-        onSearchQueryChange={handleSearchQueryChange}
-      />
-      {hasError ? (
-        <p className="flex-1">Error: {errorMessage}</p>
-      ) : (
-        <>
-          {isLoading ? (
-            <Loader />
-          ) : (
-            <ResultsArea
-              cards={cards}
-              currentPage={page}
-              countPages={countPages}
-              onPageChange={handlePageChange}
-            />
-          )}
-          <div className="p-4 flex justify-end bg-mist-50 border-t-2 border-t-mist-300">
-            <button
-              name="throw-error-button"
-              onClick={handleErrorButtonClick}
-              className="bg-mauve-300 hover:bg-mauve-400 cursor-pointer rounded h-10 w-30 border border-mist-500"
-            >
-              Throw Error
-            </button>
-          </div>
-        </>
-      )}
-    </section>
+    <>
+      <header className="p-4 border-b-2 border-b-mist-300">
+        <nav className="flex gap-x-8 text-xl">
+          <Link to="/" className="[&.active]:font-bold [&.active]:underline">
+            Home
+          </Link>{' '}
+          <Link
+            to="/about"
+            className="[&.active]:font-bold [&.active]:underline"
+          >
+            About
+          </Link>
+        </nav>
+      </header>
+      <Outlet />
+      <Footer />
+      {import.meta.env.DEV && <TanStackRouterDevtools />}
+    </>
   );
 };

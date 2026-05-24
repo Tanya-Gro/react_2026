@@ -4,5 +4,5 @@ export { Loader } from './Loader';
 export { ErrorBoundary } from './ErrorBoundary';
 export { Pagination } from './Pagination';
 export { Footer } from './Footer';
-export { RootLayout } from './RootLayout';
 export { Detail } from './Detail';
+export { ActionArea } from './ActionArea';
