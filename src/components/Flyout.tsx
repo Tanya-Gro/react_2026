@@ -48,7 +48,7 @@ export const Flyout = (): React.JSX.Element | null => {
             <a
               className="inline-block rounded-lg bg-mauve-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-mauve-700 text-center cursor-pointer"
               href={downloadCards(cards)}
-              download={'selected_cards.csv'}
+              download={`selected_cards_${countCards}_items.csv`}
             >
               Download
             </a>
