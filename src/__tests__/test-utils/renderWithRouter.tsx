@@ -8,6 +8,7 @@ import { routeTree } from 'src/routeTree.gen';
 import { configureStore, type EnhancedStore } from '@reduxjs/toolkit';
 import { selectedCardsReducer } from 'features';
 import { Provider } from 'react-redux';
+import { ThemeProvider } from 'context';
 
 type Options = {
   route?: string;
@@ -38,7 +39,9 @@ export async function renderWithRouter(
 
   return render(
     <Provider store={store}>
-      <RouterProvider router={testRouter} />
+      <ThemeProvider>
+        <RouterProvider router={testRouter} />
+      </ThemeProvider>
     </Provider>
   );
 }

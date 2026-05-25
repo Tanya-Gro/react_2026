@@ -1,11 +1,50 @@
 @import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --color-mist-50: #f9fafb;
+  --color-mist-100: oklch(96.3% 0.002 197.1);
+  --color-mist-200: #e5e7eb;
+  --color-mist-300: #d1d5db;
+  --color-mist-500: #6b7280;
+  --color-mist-600: #4b5563;
+  --color-mist-700: #374151;
+  --color-mist-800: #1f2937;
+  --color-mist-900: #111827;
+
+  --color-amber-900: #78350f;
+
+  --color-mauve-200: #f5f3ff;
+  --color-mauve-300: #ddd6fe;
+}
+
+.dark {
+  --color-white: #0f172a;
+  --color-black: #f8fafc;
+
+  --color-mauve-200: #361672;
+  --color-mauve-300: #4c1d95;
+
+  --color-mist-50: #1e293b;
+  --color-mist-100: #37465c;
+  --color-mist-200: #334155;
+  --color-mist-300: #475569;
+  --color-mist-500: #94a3b8;
+  --color-mist-600: #cbd5e1;
+  --color-mist-700: #e2e8f0;
+  --color-mist-800: #f1f5f9;
+  --color-mist-900: #f8fafc;
+
+  --color-amber-900: #fde68a;
+}
 
 :root {
   --border: #e5e4e7;
-
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-
   font: 18px / 145% var(--sans);
 }
 

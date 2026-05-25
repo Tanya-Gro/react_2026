@@ -1,11 +1,12 @@
+import '@fontsource/material-symbols-outlined';
 import { StrictMode } from 'react';
 import { RouterProvider } from '@tanstack/react-router';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'components';
 import { router } from 'app';
-import '@fontsource/material-symbols-outlined';
 import { store } from 'app';
 import { Provider } from 'react-redux';
+import { ThemeProvider } from 'context';
 import './index.css';
 
 const rootElement: HTMLElement | null = document.getElementById('root');
@@ -18,7 +19,9 @@ createRoot(rootElement).render(
   <StrictMode>
     <ErrorBoundary>
       <Provider store={store}>
-        <RouterProvider router={router} />
+        <ThemeProvider>
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </Provider>
     </ErrorBoundary>
   </StrictMode>

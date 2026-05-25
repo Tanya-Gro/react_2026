@@ -32,8 +32,10 @@
       "helpers": ["./src/helpers/index.ts"],
       "hooks": ["./src/hooks/index.ts"],
       "features": ["./src/features/index.ts"],
+      "context": ["./src/context/index.ts"],
+      "layouts": ["./src/layouts/index.ts"],
       "src/*": ["./src/*"]
     }
   },
-  "include": ["src", "vite-env.d.ts"]
+  "include": ["src", "vite-env.d.ts", "tailwind.config.js"]
 }
