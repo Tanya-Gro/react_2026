@@ -2,11 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Card } from 'app';
 
-export interface CounterState {
+export interface CardState {
   items: Record<string, Card>;
 }
 
-const initialState: CounterState = {
+const initialState: CardState = {
   items: {},
 };
 
@@ -22,9 +22,12 @@ export const selectedCardsSlice = createSlice({
         state.items[id] = card;
       }
     },
+    clearCards: (state) => {
+      state.items = {};
+    },
   },
 });
 
-export const { toggleCard } = selectedCardsSlice.actions;
+export const { toggleCard, clearCards } = selectedCardsSlice.actions;
 
 export default selectedCardsSlice.reducer;
