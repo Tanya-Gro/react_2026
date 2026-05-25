@@ -6,3 +6,4 @@ export { Pagination } from './Pagination';
 export { Footer } from './Footer';
 export { Detail } from './Detail';
 export { ActionArea } from './ActionArea';
+export { Flyout } from './Flyout';
