@@ -17,6 +17,7 @@
       "mocks": ["./src/mocks/index.ts"],
       "helpers": ["./src/helpers/index.ts"],
       "hooks": ["./src/hooks/index.ts"],
+      "features": ["./src/features/index.ts"],
       "src/*": ["./src/*"]
     }
   }

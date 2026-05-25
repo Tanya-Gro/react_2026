@@ -4,6 +4,8 @@ import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'components';
 import { router } from 'app';
 import '@fontsource/material-symbols-outlined';
+import { store } from 'app';
+import { Provider } from 'react-redux';
 import './index.css';
 
 const rootElement: HTMLElement | null = document.getElementById('root');
@@ -15,7 +17,9 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <ErrorBoundary>
-      <RouterProvider router={router} />
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
     </ErrorBoundary>
   </StrictMode>
 );

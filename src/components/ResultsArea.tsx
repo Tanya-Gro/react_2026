@@ -4,6 +4,10 @@ import { Route } from 'routes';
 import { getID } from 'helpers';
 import { Detail, Pagination } from 'components';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleCard } from 'features';
+import type { RootState } from 'app';
+
 type DataProps = {
   cards: Card[];
   currentPage: number;
@@ -33,6 +37,10 @@ export const ResultsArea: (data: DataProps) => React.JSX.Element = ({
 }: DataProps) => {
   const navigate = useNavigate({ from: '/' });
   const { details, search, page } = Route.useSearch();
+  const dispatch = useDispatch();
+  const selectedCards = useSelector(
+    (state: RootState) => state.selectedCards.items
+  );
 
   if (cards.length === 0) {
     return (
@@ -56,29 +64,37 @@ export const ResultsArea: (data: DataProps) => React.JSX.Element = ({
         <div className="flex flex-col overflow-y-auto">
           {cards.map((card) => {
             const id = getID(card.url);
-            const isSelected = details === id;
+            const isShown = details === id;
+            const isSelected = id in selectedCards;
 
-            const handleSelect = (): void => {
+            const handleSelect = (
+              e: React.ChangeEvent<HTMLInputElement>
+            ): void => {
+              e.stopPropagation();
+              dispatch(toggleCard({ id, card }));
+            };
+
+            const handleShowDetails = (): void => {
               navigate({
                 to: '/',
                 search: {
                   search,
                   page,
-                  details: isSelected ? undefined : id,
+                  details: isShown ? undefined : id,
                 },
               });
             };
 
             return (
-              <button
+              <div
                 key={id}
-                type="button"
-                onClick={handleSelect}
+                role="button"
+                onClick={handleShowDetails}
                 className={`
           grid cursor-pointer grid-cols-[40px_repeat(6,1fr)]
           border-b border-mist-200 py-3 text-left transition-colors
           hover:bg-mist-200
-          ${isSelected ? 'bg-mist-200' : ''}
+          ${isShown ? 'bg-mist-200' : ''}
         `}
               >
                 <div className="flex items-center justify-center">
@@ -86,7 +102,8 @@ export const ResultsArea: (data: DataProps) => React.JSX.Element = ({
                     type="checkbox"
                     checked={isSelected}
                     onChange={handleSelect}
-                    className="h-4 w-4 cursor-pointer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="h-5 w-5 cursor-pointer hover:bg-mist-400 hover:border-mist-400 px-4"
                   />
                 </div>
 
@@ -98,7 +115,7 @@ export const ResultsArea: (data: DataProps) => React.JSX.Element = ({
                     {card[row.key]}
                   </span>
                 ))}
-              </button>
+              </div>
             );
           })}
         </div>
