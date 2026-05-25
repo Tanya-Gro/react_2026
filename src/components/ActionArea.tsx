@@ -2,9 +2,9 @@ type ActionAreaProps = {
   onThrowError: () => void;
 };
 
-export function ActionArea({
+export const ActionArea = ({
   onThrowError,
-}: ActionAreaProps): React.JSX.Element {
+}: ActionAreaProps): React.JSX.Element => {
   return (
     <div className="p-4 flex justify-end bg-mist-50 border-t-2 border-t-mist-300">
       <button
@@ -16,4 +16,4 @@ export function ActionArea({
       </button>
     </div>
   );
-}
+};

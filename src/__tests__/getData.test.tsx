@@ -1,12 +1,14 @@
 import { getData } from 'api';
+import type { FetchError, DataType } from 'app';
+import type { Mock } from 'vitest';
 
 describe('getData', () => {
-  const searchQuery = 'Luke';
+  const searchQuery: string = 'Luke';
 
   it('returns fetch error from catch block', async () => {
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('Network Error'));
 
-    const result = await getData('', 1);
+    const result: DataType | FetchError = await getData('', 1);
 
     expect(result).toEqual({
       hasError: true,
@@ -15,14 +17,14 @@ describe('getData', () => {
   });
 
   it('adds search query to url', async () => {
-    const fetchMock = vi
+    const fetchMock: Mock = vi
       .spyOn(globalThis, 'fetch')
       .mockResolvedValue(new Response(JSON.stringify({ results: [] })));
 
     await getData(searchQuery, 1);
 
     const [[calledUrl]] = fetchMock.mock.calls;
-    const url = new URL(String(calledUrl));
+    const url: URL = new URL(String(calledUrl));
 
     expect(url.searchParams.get('search')).toBe(searchQuery);
   });

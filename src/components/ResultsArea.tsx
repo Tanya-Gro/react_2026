@@ -25,12 +25,12 @@ const TABLE_HEADERS: TableHeader[] = [
   { label: 'Hair Color', key: 'hair_color' },
 ];
 
-export const ResultsArea = ({
+export const ResultsArea: (data: DataProps) => React.JSX.Element = ({
   cards,
   currentPage,
   countPages,
   onPageChange,
-}: DataProps): React.JSX.Element => {
+}: DataProps) => {
   const navigate = useNavigate({ from: '/' });
   const { details, search, page } = Route.useSearch();
 

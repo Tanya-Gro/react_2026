@@ -1,13 +1,13 @@
 import { type DataType, type FetchError, LINKS } from 'app';
 import { FETCH_TIMEOUT_MS } from './constants';
 
-export async function getData(
+export const getData = async (
   searchQuery: string,
   currentPage: number,
   signal?: AbortSignal
-): Promise<DataType | FetchError> {
+): Promise<DataType | FetchError> => {
   try {
-    const url = new URL(LINKS.characters);
+    const url: URL = new URL(LINKS.characters);
     if (searchQuery) {
       url.searchParams.set('search', searchQuery);
     }
@@ -15,7 +15,7 @@ export async function getData(
       url.searchParams.set('page', currentPage.toString());
     }
 
-    const response = await fetch(url, {
+    const response: Response = await fetch(url, {
       signal: signal
         ? AbortSignal.any([signal, AbortSignal.timeout(FETCH_TIMEOUT_MS)])
         : AbortSignal.timeout(FETCH_TIMEOUT_MS),
@@ -43,4 +43,4 @@ export async function getData(
     }
     return { hasError: true, message: String(error) };
   }
-}
+};

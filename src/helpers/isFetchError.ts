@@ -1,7 +1,7 @@
 import type { FetchError, DataType, Details } from 'app';
 
-export function isFetchError(
+export const isFetchError = (
   data: DataType | FetchError | Details
-): data is FetchError {
+): data is FetchError => {
   return 'message' in data;
-}
+};

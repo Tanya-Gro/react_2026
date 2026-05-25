@@ -1,14 +1,15 @@
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { Pagination } from 'components/Pagination';
+import type { Mock } from 'vitest';
 
-const props = {
+const props: Record<string, number> = {
   currentPage: 2,
   countPages: 6,
 };
 
 describe('Pagination', () => {
-  const mockOnPageChange = vi.fn();
+  const mockOnPageChange: Mock = vi.fn();
   beforeEach(() => {
     mockOnPageChange.mockClear();
   });
@@ -35,7 +36,7 @@ describe('Pagination', () => {
   });
 
   it('calls onPageChange with next page number when forward button is clicked', async () => {
-    const user = userEvent.setup();
+    const user: UserEvent = userEvent.setup();
 
     render(
       <Pagination
@@ -45,7 +46,9 @@ describe('Pagination', () => {
       />
     );
 
-    const nextButton = screen.getByRole('button', { name: /next page/i });
+    const nextButton: HTMLButtonElement = screen.getByRole('button', {
+      name: /next page/i,
+    });
     await user.click(nextButton);
 
     expect(mockOnPageChange).toHaveBeenCalledTimes(1);
@@ -53,7 +56,7 @@ describe('Pagination', () => {
   });
 
   it('calls onPageChange with prev page number when back button is clicked', async () => {
-    const user = userEvent.setup();
+    const user: UserEvent = userEvent.setup();
 
     render(
       <Pagination
@@ -63,7 +66,9 @@ describe('Pagination', () => {
       />
     );
 
-    const prevButton = screen.getByRole('button', { name: /previous page/i });
+    const prevButton: HTMLButtonElement = screen.getByRole('button', {
+      name: /previous page/i,
+    });
     await user.click(prevButton);
 
     expect(mockOnPageChange).toHaveBeenCalledTimes(1);
@@ -79,8 +84,12 @@ describe('Pagination', () => {
       />
     );
 
-    const prevButton = screen.getByRole('button', { name: /previous page/i });
-    const nextButton = screen.getByRole('button', { name: /next page/i });
+    const prevButton: HTMLButtonElement = screen.getByRole('button', {
+      name: /previous page/i,
+    });
+    const nextButton: HTMLButtonElement = screen.getByRole('button', {
+      name: /next page/i,
+    });
 
     await userEvent.click(prevButton);
     await userEvent.click(nextButton);

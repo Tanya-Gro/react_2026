@@ -10,9 +10,9 @@ type Options = {
   route?: string;
 };
 
-export async function renderWithRouter(
+export const renderWithRouter = async (
   options: Options = {}
-): Promise<RenderResult> {
+): Promise<RenderResult> => {
   const { route = '/' } = options;
 
   const testRouter = createRouter({
@@ -25,4 +25,4 @@ export async function renderWithRouter(
   await testRouter.load();
 
   return render(<RouterProvider router={testRouter} />);
-}
+};
