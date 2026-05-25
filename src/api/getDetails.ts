@@ -1,9 +1,9 @@
 import { type Details, type FetchError, LINKS } from 'app';
 import { FETCH_TIMEOUT_MS } from './constants';
 
-export async function getDetails(id: string): Promise<Details | FetchError> {
+export const getDetails = async (id: string): Promise<Details | FetchError> => {
   try {
-    const response = await fetch(`${LINKS.details}${id}.json`, {
+    const response: Response = await fetch(`${LINKS.details}${id}.json`, {
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
 
@@ -26,4 +26,4 @@ export async function getDetails(id: string): Promise<Details | FetchError> {
 
     return { hasError: true, message: String(error) };
   }
-}
+};

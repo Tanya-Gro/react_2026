@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, type UseNavigateResult } from '@tanstack/react-router';
 
 import { getDetails } from 'api';
 import { isFetchError } from 'helpers';
 import { Loader } from 'components';
 import { Route } from 'routes';
-import type { Details } from 'app';
+import type { Details, FetchError } from 'app';
 
 type DetailFieldProps = {
   label: string;
   value?: string | number | string[] | null;
 };
 
-function DetailField({
+const DetailField = ({
   label,
   value,
-}: DetailFieldProps): React.JSX.Element | null {
+}: DetailFieldProps): React.JSX.Element | null => {
   if (!value || (Array.isArray(value) && value.length === 0)) {
     return null;
   }
@@ -26,11 +26,11 @@ function DetailField({
       {Array.isArray(value) ? value.join(', ') : value}
     </p>
   );
-}
+};
 
-export const Detail = (): React.JSX.Element | null => {
-  const navigate = useNavigate({ from: '/' });
-
+export const Detail: () => React.JSX.Element | null = () => {
+  const navigate: UseNavigateResult<string> = useNavigate({ from: '/' });
+  //: Record<string, string | number | undefined>
   const { details, page, search } = Route.useSearch();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +47,7 @@ export const Detail = (): React.JSX.Element | null => {
 
       setCardDescription(null);
 
-      const data = await getDetails(details);
+      const data: FetchError | Details = await getDetails(details);
 
       if (!isFetchError(data)) {
         setCardDescription(data);

@@ -1,9 +1,10 @@
 import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { HttpResponse, http } from 'msw';
 import { server } from 'mocks';
 import { LS_KEY } from 'app';
 import { renderWithRouter } from './test-utils/renderWithRouter';
+import type { Mock } from 'vitest';
 
 describe('Home', () => {
   beforeEach(() => {
@@ -11,13 +12,15 @@ describe('Home', () => {
   });
 
   it('renders error button and handles click', async () => {
-    const user = userEvent.setup();
+    const user: UserEvent = userEvent.setup();
 
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleSpy: Mock = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
     await renderWithRouter();
 
-    const button = await screen.findByRole('button', {
+    const button: HTMLButtonElement = await screen.findByRole('button', {
       name: /throw error/i,
     });
 
@@ -52,13 +55,13 @@ describe('Home', () => {
   });
 
   it('updates localStorage when search query changes', async () => {
-    const user = userEvent.setup();
+    const user: UserEvent = userEvent.setup();
 
     await renderWithRouter();
 
-    const input = screen.getByPlaceholderText(/search/i);
+    const input: HTMLInputElement = screen.getByPlaceholderText(/search/i);
 
-    const button = screen.getByRole('button', {
+    const button: HTMLButtonElement = screen.getByRole('button', {
       name: /search/i,
     });
 
@@ -66,25 +69,25 @@ describe('Home', () => {
     await user.type(input, 'Luke');
     await user.click(button);
 
-    const storedData = localStorage.getItem(LS_KEY) || '';
+    const storedData: string | null = localStorage.getItem(LS_KEY) || '';
 
     expect(storedData).toBe(JSON.stringify('Luke'));
   });
 
   it('does not update localStorage when query is unchanged', async () => {
-    const user = userEvent.setup();
+    const user: UserEvent = userEvent.setup();
 
     localStorage.setItem(LS_KEY, JSON.stringify('Luke'));
 
-    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+    const setItemSpy: Mock = vi.spyOn(Storage.prototype, 'setItem');
 
     await renderWithRouter({
       route: '/?search=Luke&page=1',
     });
 
-    const input = screen.getByPlaceholderText(/search/i);
+    const input: HTMLInputElement = screen.getByPlaceholderText(/search/i);
 
-    const button = screen.getByRole('button', {
+    const button: HTMLButtonElement = screen.getByRole('button', {
       name: /search/i,
     });
 

@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, type RenderResult } from '@testing-library/react';
+import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { ErrorBoundary } from 'components/ErrorBoundary';
 
 describe('ErrorBoundary', () => {
@@ -32,15 +32,15 @@ describe('ErrorBoundary', () => {
   });
 
   it('dismisses error fallback after button click', async () => {
-    const user = userEvent.setup();
+    const user: UserEvent = userEvent.setup();
 
-    const { rerender } = render(
+    const { rerender }: RenderResult = render(
       <ErrorBoundary>
         <TestComponent shouldThrow={true} />
       </ErrorBoundary>
     );
 
-    const dismissButton = screen.getByRole('button', {
+    const dismissButton: HTMLButtonElement = screen.getByRole('button', {
       name: /dismiss/i,
     });
 

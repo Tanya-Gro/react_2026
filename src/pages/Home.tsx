@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, type UseNavigateResult } from '@tanstack/react-router';
 import { SearchArea, ResultsArea, Loader, ActionArea } from 'components';
 import { getData } from 'api';
 import { isFetchError } from 'helpers';
@@ -23,7 +23,9 @@ type HomeAction =
   | { type: 'fetch_failed'; payload: string }
   | { type: 'throw_error' };
 
-function reducer(state: HomeState, action: HomeAction): HomeState {
+type PageChangeHandler = (data: number) => void;
+
+const reducer = (state: HomeState, action: HomeAction): HomeState => {
   switch (action.type) {
     case 'start_loading': {
       return { ...state, isLoading: true, hasError: false, errorMessage: '' };
@@ -60,10 +62,10 @@ function reducer(state: HomeState, action: HomeAction): HomeState {
       return state;
     }
   }
-}
+};
 
-export const Home = (): React.JSX.Element => {
-  const navigate = useNavigate({ from: '/' });
+export const Home: () => React.JSX.Element = () => {
+  const navigate: UseNavigateResult<string> = useNavigate({ from: '/' });
   const { search = '', page = 1 } = Route.useSearch();
 
   const [, setLsStore] = useLocalStorage<string>(LS_KEY, search);
@@ -141,7 +143,7 @@ export const Home = (): React.JSX.Element => {
     });
   };
 
-  const handlePageChange = (newPage: number): void => {
+  const handlePageChange: PageChangeHandler = (newPage) => {
     navigate({
       to: '/',
       search: {

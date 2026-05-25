@@ -4,11 +4,11 @@ type PaginationProps = {
   onPageChange: (page: number) => void;
 };
 
-export const Pagination = ({
+export const Pagination: (data: PaginationProps) => React.JSX.Element = ({
   currentPage,
   countPages,
   onPageChange,
-}: PaginationProps): React.JSX.Element => {
+}: PaginationProps) => {
   const prevPage = (): void => {
     if (currentPage === 1) {
       return;
@@ -22,7 +22,7 @@ export const Pagination = ({
     }
   };
 
-  const BUTTON_CLASSES =
+  const BUTTON_CLASSES: string =
     'material-symbols-outlined cursor-pointer hover:text-amber-900 hover:underline disabled:text-mist-200 disabled:no-underline disabled:cursor-auto';
 
   return (
