@@ -5,7 +5,7 @@ import { isFetchError } from 'helpers';
 
 type UseDetailResult = [Details | null, boolean];
 
-export const useDetails = (id: string | undefined): UseDetailResult => {
+export const useDetails = (id: number | undefined): UseDetailResult => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [details, setDetails] = useState<Details | null>(null);
@@ -22,7 +22,7 @@ export const useDetails = (id: string | undefined): UseDetailResult => {
       setDetails(null);
 
       try {
-        const data: FetchError | Details = await getDetails(id);
+        const data: FetchError | Details = await getDetails(String(id));
 
         if (!ignore && !isFetchError(data)) {
           setDetails(data);
