@@ -73,7 +73,7 @@ const CharactersRow = ({
     id: string,
     isSelected: boolean
   ): void => {
-    if (e.key === 'Enter' || e.key === 'Space') {
+    if (e.key === 'Enter' || e.code === 'Space') {
       e.preventDefault();
       onToggleSelect(id, isSelected);
     }
