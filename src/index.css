@@ -8,7 +8,8 @@
   --color-mist-50: #f9fafb;
   --color-mist-100: oklch(96.3% 0.002 197.1);
   --color-mist-200: #e5e7eb;
-  --color-mist-300: #d1d5db;
+  --color-mist-300: oklch(87.2% 0.007 219.6);
+  --color-mist-400: #d1d5db;
   --color-mist-500: #6b7280;
   --color-mist-600: #4b5563;
   --color-mist-700: #374151;
@@ -29,9 +30,10 @@
   --color-mauve-300: #4c1d95;
 
   --color-mist-50: #1e293b;
-  --color-mist-100: #37465c;
+  --color-mist-100: #2e3c52;
   --color-mist-200: #334155;
   --color-mist-300: #475569;
+  --color-mist-400: #53647c;
   --color-mist-500: #94a3b8;
   --color-mist-600: #cbd5e1;
   --color-mist-700: #e2e8f0;
