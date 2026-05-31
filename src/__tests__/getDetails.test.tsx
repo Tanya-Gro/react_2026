@@ -17,7 +17,7 @@ describe('getDetails', () => {
     });
     expect(consoleSpy).toHaveBeenCalledWith(
       'Fetch crashed:',
-      expect.any(Error)
+      expect.any(Error),
     );
 
     consoleSpy.mockRestore();
@@ -33,7 +33,7 @@ describe('getDetails', () => {
     server.use(
       http.get('https://akabab.github.io/starwars-api/api/id/1.json', () => {
         return new HttpResponse(null, { status: 404 });
-      })
+      }),
     );
 
     const result = await getDetails('1');
@@ -50,7 +50,7 @@ describe('getDetails', () => {
 
     const timeoutError = new DOMException(
       'The operation timed out.',
-      'TimeoutError'
+      'TimeoutError',
     );
 
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(timeoutError);

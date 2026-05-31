@@ -7,6 +7,6 @@ export const LINKS: Url = {
   details: 'https://akabab.github.io/starwars-api/api/id/',
 };
 
-export const LS_KEY: string = 'wookieeSearchQuery';
+export const LS_KEY = 'wookieeSearchQuery';
 
-export const CARDS_PER_PAGE: number = 10;
+export const CARDS_PER_PAGE = 10;

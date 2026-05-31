@@ -82,7 +82,7 @@ const CharactersRow = ({
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLTableRowElement>,
     id: string,
-    isSelected: boolean
+    isSelected: boolean,
   ): void => {
     if (e.key === 'Enter') {
       e.preventDefault();

@@ -1,15 +1,16 @@
-import { useNavigate, type UseNavigateResult } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { Loader } from 'components';
 import { Route } from 'routes';
 import { DetailInfo } from './DetailInfo';
 import { useDetails } from 'src/hooks/useDetails';
 
 export const Detail = (): React.JSX.Element | null => {
-  const navigate: UseNavigateResult<string> = useNavigate({ from: '/' });
+  const navigate = useNavigate({ from: '/' });
 
   const { details, page, search } = Route.useSearch();
 
-  const [card, isLoading] = useDetails(details);
+  const detailsId = details ? Number(details) : undefined;
+  const [card, isLoading] = useDetails(detailsId);
 
   const handleClose = (): void => {
     navigate({

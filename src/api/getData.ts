@@ -4,7 +4,7 @@ import { FETCH_TIMEOUT_MS } from './constants';
 export const getData = async (
   searchQuery: string,
   currentPage: number,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<DataType | FetchError> => {
   try {
     const url: URL = new URL(LINKS.characters);
@@ -25,7 +25,8 @@ export const getData = async (
       return { hasError: true, message: `Server error: ${response.status}` };
     }
 
-    return await response.json();
+    const data: DataType = await response.json();
+    return data;
   } catch (error: unknown) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       throw error;

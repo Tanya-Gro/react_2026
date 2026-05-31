@@ -10,13 +10,10 @@ export const ThemeProvider = ({
   const [theme, setTheme] = useLocalStorage<Theme>('app-theme', 'light');
 
   useEffect(() => {
-    const root = window.document.documentElement;
-
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
+    globalThis.document.documentElement.classList.toggle(
+      'dark',
+      theme === 'dark',
+    );
   }, [theme]);
 
   const toggleTheme = (): void => {

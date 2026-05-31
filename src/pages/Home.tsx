@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { useNavigate, type UseNavigateResult } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { SearchArea, ResultsArea, Loader, ActionArea } from 'components';
 import { getData } from 'api';
 import { isFetchError } from 'helpers';
@@ -38,7 +38,7 @@ const reducer = (state: HomeState, action: HomeAction): HomeState => {
         hasError: false,
         countPages: Math.max(
           1,
-          Math.ceil(action.payload.count / CARDS_PER_PAGE)
+          Math.ceil(action.payload.count / CARDS_PER_PAGE),
         ),
       };
     }
@@ -65,7 +65,7 @@ const reducer = (state: HomeState, action: HomeAction): HomeState => {
 };
 
 export const Home: () => React.JSX.Element = () => {
-  const navigate: UseNavigateResult<string> = useNavigate({ from: '/' });
+  const navigate = useNavigate({ from: '/' });
   const { search = '', page = 1 } = Route.useSearch();
 
   const [, setLsStore] = useLocalStorage<string>(LS_KEY, search);
@@ -96,18 +96,18 @@ export const Home: () => React.JSX.Element = () => {
         const data: DataType | FetchError = await getData(
           search,
           page,
-          controller.signal
+          controller.signal,
         );
 
-        if (!isFetchError(data)) {
-          dispatch({
-            type: 'fetch_success',
-            payload: { results: data.results, count: data.count },
-          });
-        } else {
+        if (isFetchError(data)) {
           dispatch({
             type: 'fetch_failed',
             payload: data.message,
+          });
+        } else {
+          dispatch({
+            type: 'fetch_success',
+            payload: { results: data.results, count: data.count },
           });
         }
       } catch (error) {
@@ -149,6 +149,7 @@ export const Home: () => React.JSX.Element = () => {
       search: {
         search: search,
         page: newPage,
+        details: undefined,
       },
     });
   };

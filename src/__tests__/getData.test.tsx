@@ -3,7 +3,7 @@ import type { FetchError, DataType } from 'app';
 import type { Mock } from 'vitest';
 
 describe('getData', () => {
-  const searchQuery: string = 'Luke';
+  const searchQuery = 'Luke';
 
   it('returns fetch error from catch block', async () => {
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('Network Error'));
@@ -19,7 +19,7 @@ describe('getData', () => {
   it('adds search query to url', async () => {
     const fetchMock: Mock = vi
       .spyOn(globalThis, 'fetch')
-      .mockResolvedValue(new Response(JSON.stringify({ results: [] })));
+      .mockResolvedValue(Response.json({ results: [] }));
 
     await getData(searchQuery, 1);
 
@@ -32,7 +32,7 @@ describe('getData', () => {
   it('does not add search param when query is empty', async () => {
     const fetchMock = vi
       .spyOn(globalThis, 'fetch')
-      .mockResolvedValue(new Response(JSON.stringify({ results: [] })));
+      .mockResolvedValue(Response.json({ results: [] }));
 
     await getData('', 1);
 
@@ -48,7 +48,7 @@ describe('getData', () => {
 
     const timeoutError = new DOMException(
       'The operation timed out.',
-      'TimeoutError'
+      'TimeoutError',
     );
 
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(timeoutError);

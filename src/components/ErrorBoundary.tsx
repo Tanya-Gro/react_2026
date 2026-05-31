@@ -13,18 +13,18 @@ export class ErrorBoundary extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
 > {
-  state: ErrorBoundaryState = { shouldThrow: false, errorMessage: '' };
+  public state: ErrorBoundaryState = { shouldThrow: false, errorMessage: '' };
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+  public static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { shouldThrow: true, errorMessage: error.message };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error('ErrorBoundary caught an error:', error);
     console.error('Component stack:', errorInfo.componentStack);
   }
 
-  componentDidUpdate(prevProps: ErrorBoundaryProps): void {
+  public componentDidUpdate(prevProps: ErrorBoundaryProps): void {
     if (prevProps.children !== this.props.children && this.state.shouldThrow) {
       this.setState({
         shouldThrow: false,
@@ -33,11 +33,11 @@ export class ErrorBoundary extends Component<
     }
   }
 
-  handleDismissButtonClick: () => void = () => {
+  public handleDismissButtonClick: () => void = () => {
     this.setState({ shouldThrow: false, errorMessage: '' });
   };
 
-  render(): ReactNode {
+  public render(): ReactNode {
     if (this.state.shouldThrow) {
       return (
         <article

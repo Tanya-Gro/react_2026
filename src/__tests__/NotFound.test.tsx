@@ -8,7 +8,7 @@ describe('NotFound Component', () => {
 
     expect(await screen.findByText('404 - Not Found')).toBeInTheDocument();
     expect(
-      await screen.findByText("This is not the page you're looking for...")
+      await screen.findByText("This is not the page you're looking for..."),
     ).toBeInTheDocument();
 
     const button: HTMLButtonElement = await screen.findByRole('button', {

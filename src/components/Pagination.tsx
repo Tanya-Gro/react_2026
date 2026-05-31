@@ -22,7 +22,7 @@ export const Pagination: (data: PaginationProps) => React.JSX.Element = ({
     }
   };
 
-  const BUTTON_CLASSES: string =
+  const BUTTON_CLASSES =
     'material-symbols-outlined cursor-pointer hover:text-amber-900 hover:underline disabled:text-mist-200 disabled:no-underline disabled:cursor-auto';
 
   return (

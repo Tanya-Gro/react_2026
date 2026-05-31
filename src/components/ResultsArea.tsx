@@ -25,7 +25,7 @@ export const ResultsArea = ({
   const dispatch = useDispatch();
 
   const selectedCards = useSelector(
-    (state: RootState) => state.selectedCards.items
+    (state: RootState) => state.selectedCards.items,
   );
 
   if (cards.length === 0) {

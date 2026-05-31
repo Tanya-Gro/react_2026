@@ -20,18 +20,18 @@ describe('Pagination', () => {
         currentPage={props.currentPage}
         countPages={props.countPages}
         onPageChange={mockOnPageChange}
-      />
+      />,
     );
 
     expect(
-      screen.getByText(`Page ${props.currentPage} of ${props.countPages}`)
+      screen.getByText(`Page ${props.currentPage} of ${props.countPages}`),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('button', { name: /previous page/i })
+      screen.getByRole('button', { name: /previous page/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /next page/i })
+      screen.getByRole('button', { name: /next page/i }),
     ).toBeInTheDocument();
   });
 
@@ -43,7 +43,7 @@ describe('Pagination', () => {
         currentPage={props.currentPage}
         countPages={props.countPages}
         onPageChange={mockOnPageChange}
-      />
+      />,
     );
 
     const nextButton: HTMLButtonElement = screen.getByRole('button', {
@@ -63,7 +63,7 @@ describe('Pagination', () => {
         currentPage={props.currentPage}
         countPages={props.countPages}
         onPageChange={mockOnPageChange}
-      />
+      />,
     );
 
     const prevButton: HTMLButtonElement = screen.getByRole('button', {
@@ -81,7 +81,7 @@ describe('Pagination', () => {
         currentPage={1}
         countPages={1}
         onPageChange={mockOnPageChange}
-      />
+      />,
     );
 
     const prevButton: HTMLButtonElement = screen.getByRole('button', {

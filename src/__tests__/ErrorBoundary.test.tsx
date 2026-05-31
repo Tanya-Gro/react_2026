@@ -23,7 +23,7 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <TestComponent shouldThrow={true} />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
@@ -37,7 +37,7 @@ describe('ErrorBoundary', () => {
     const { rerender }: RenderResult = render(
       <ErrorBoundary>
         <TestComponent shouldThrow={true} />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     const dismissButton: HTMLButtonElement = screen.getByRole('button', {
@@ -49,7 +49,7 @@ describe('ErrorBoundary', () => {
     rerender(
       <ErrorBoundary>
         <TestComponent shouldThrow={false} />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     expect(screen.queryByText(/something went wrong/i)).not.toBeInTheDocument();

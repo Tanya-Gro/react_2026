@@ -6,7 +6,7 @@ import { clearCards } from 'features';
 export const Flyout = (): React.JSX.Element | null => {
   const dispatch = useDispatch();
   const selectedCards = useSelector(
-    (state: RootState) => state.selectedCards.items
+    (state: RootState) => state.selectedCards.items,
   );
 
   const cards = Object.entries(selectedCards);
