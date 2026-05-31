@@ -1,5 +1,5 @@
 import type { RootState } from 'app';
-import { downloadCards } from 'helpers';
+import { getBlob } from 'helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCards } from 'features';
 
@@ -13,7 +13,7 @@ export const Flyout = (): React.JSX.Element | null => {
   const countCards = cards.length;
 
   const handleDownload = () => {
-    const blob = downloadCards(cards);
+    const blob = getBlob(cards);
     const url = URL.createObjectURL(blob);
 
     const tempLink = document.createElement('a');

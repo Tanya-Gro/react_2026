@@ -1,6 +1,6 @@
 import { BLOB } from 'mocks';
 import { people } from 'mocks';
-import { downloadCards } from 'helpers';
+import { getBlob } from 'helpers';
 
 vi.stubGlobal('URL', {
   createObjectURL: vi.fn(() => 'blob:mock-url'),
@@ -29,9 +29,9 @@ async function readBlobAsText(blob: Blob): Promise<string> {
   });
 }
 
-describe('handleDownload', () => {
+describe('getBlob', () => {
   it('should create a Blob with the actual CSV content', async () => {
-    const blob = downloadCards([['1', people.results[0]]]);
+    const blob = getBlob([['1', people.results[0]]]);
 
     expect(blob).toBeInstanceOf(Blob);
     expect(blob.type).toBe('text/csv;charset=utf-8');
