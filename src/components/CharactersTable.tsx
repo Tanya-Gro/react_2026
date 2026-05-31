@@ -111,6 +111,7 @@ const CharactersRow = ({
     >
       <td className="p-2 w-5">
         <input
+          aria-label={`Select ${card.name}`}
           type="checkbox"
           checked={isSelected}
           readOnly
