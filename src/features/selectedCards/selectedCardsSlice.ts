@@ -2,8 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Card } from 'app';
 
+export type StoredCards = Record<string, Card>;
+
 export interface CardState {
-  items: Record<string, Card>;
+  items: StoredCards;
 }
 
 const initialState: CardState = {

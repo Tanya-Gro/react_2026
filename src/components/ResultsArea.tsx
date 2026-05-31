@@ -1,9 +1,8 @@
 import { useNavigate } from '@tanstack/react-router';
-import type { Card } from 'app';
 import { Route } from 'routes';
-import { getID } from 'helpers';
+import type { Card } from 'app';
 import { Detail, Pagination } from 'components';
-
+import { CharactersTable } from './CharactersTable';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleCard } from 'features';
 import type { RootState } from 'app';
@@ -15,29 +14,16 @@ type DataProps = {
   onPageChange: (page: number) => void;
 };
 
-type TableHeader = {
-  label: string;
-  key: keyof Card;
-  className?: string;
-};
-
-const TABLE_HEADERS: TableHeader[] = [
-  { label: 'Name', key: 'name', className: 'col-span-2' },
-  { label: 'Gender', key: 'gender' },
-  { label: 'Height', key: 'height' },
-  { label: 'Mass', key: 'mass' },
-  { label: 'Hair Color', key: 'hair_color' },
-];
-
-export const ResultsArea: (data: DataProps) => React.JSX.Element = ({
+export const ResultsArea = ({
   cards,
   currentPage,
   countPages,
   onPageChange,
-}: DataProps) => {
+}: DataProps): React.JSX.Element => {
   const navigate = useNavigate({ from: '/' });
   const { details, search, page } = Route.useSearch();
   const dispatch = useDispatch();
+
   const selectedCards = useSelector(
     (state: RootState) => state.selectedCards.items
   );
@@ -50,82 +36,40 @@ export const ResultsArea: (data: DataProps) => React.JSX.Element = ({
     );
   }
 
+  const handleToggleShown = (id: string, isShown: boolean): void => {
+    navigate({
+      to: '/',
+      search: {
+        search,
+        page,
+        details: isShown ? undefined : Number(id),
+      },
+    });
+  };
+
+  const handleSelect = (id: string, card: Card): void => {
+    dispatch(toggleCard({ id, card }));
+  };
+
   return (
-    <div className="flex flex-row gap-2 flex-1 overflow-hidden">
-      <section className="flex flex-col gap-2 bg-mist-100 flex-1 overflow-hidden">
-        <div className="grid grid-cols-6 text-left border-b border-mist-400 py-5 px-4 font-bold text-mist-700 pl-13">
-          {TABLE_HEADERS.map((header) => (
-            <span key={header.key} className={header.className || ''}>
-              {header.label}
-            </span>
-          ))}
-        </div>
-
-        <div className="flex flex-col overflow-y-auto">
-          {cards.map((card) => {
-            const id = getID(card.url);
-            const isShown = details === id;
-            const isSelected = id in selectedCards;
-
-            const handleSelect = (
-              e: React.ChangeEvent<HTMLInputElement>
-            ): void => {
-              e.stopPropagation();
-              dispatch(toggleCard({ id, card }));
-            };
-
-            const handleShowDetails = (): void => {
-              navigate({
-                to: '/',
-                search: {
-                  search,
-                  page,
-                  details: isShown ? undefined : id,
-                },
-              });
-            };
-
-            return (
-              <div
-                key={id}
-                role="button"
-                onClick={handleShowDetails}
-                className={`
-          grid cursor-pointer grid-cols-[40px_repeat(6,1fr)]
-          border-b border-mist-200 py-3 text-left transition-colors
-          hover:bg-mist-200
-          ${isShown ? 'bg-mist-200' : ''}
-        `}
-              >
-                <div className="flex items-center justify-center">
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={handleSelect}
-                    onClick={(e) => e.stopPropagation()}
-                    className="h-5 w-5 cursor-pointer hover:bg-mist-400 hover:border-mist-400 px-4"
-                  />
-                </div>
-
-                {TABLE_HEADERS.map((row) => (
-                  <span
-                    key={`${id}-${row.key}`}
-                    className={`px-4 text-mist-600 ${row.className || ''}`}
-                  >
-                    {card[row.key]}
-                  </span>
-                ))}
-              </div>
-            );
-          })}
+    <section className="flex flex-row gap-2 flex-1 overflow-hidden">
+      <div className="flex flex-col flex-1 bg-mist-100 overflow-hidden">
+        <div className="overflow-y-auto overflow-x-auto">
+          <CharactersTable
+            cards={cards}
+            shownCardId={details}
+            selectedCards={selectedCards}
+            handleToggleShown={handleToggleShown}
+            handleSelect={handleSelect}
+          />
         </div>
         <Pagination
           currentPage={currentPage}
           countPages={countPages}
           onPageChange={onPageChange}
         />
-      </section>
+      </div>
       <Detail />
-    </div>
+    </section>
   );
 };

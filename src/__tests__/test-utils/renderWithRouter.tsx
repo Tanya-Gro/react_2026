@@ -22,9 +22,9 @@ const createTestStore = (): EnhancedStore => {
   });
 };
 
-export async function renderWithRouter(
+export const renderWithRouter = async (
   options: Options = {}
-): Promise<RenderResult> {
+): Promise<RenderResult> => {
   const store = createTestStore();
   const { route = '/' } = options;
 
@@ -44,4 +44,4 @@ export async function renderWithRouter(
       </ThemeProvider>
     </Provider>
   );
-}
+};

@@ -7,17 +7,17 @@ describe('ErrorBoundary', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  function TestComponent({
+  const TestComponent = ({
     shouldThrow,
   }: {
     shouldThrow: boolean;
-  }): React.JSX.Element | null {
+  }): React.JSX.Element | null => {
     if (shouldThrow) {
       throw new Error('Woops....');
     }
 
     return <p>Content loaded</p>;
-  }
+  };
 
   it('renders fallback UI on error', () => {
     render(

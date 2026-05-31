@@ -3,4 +3,5 @@ export {
   toggleCard,
   clearCards,
   type CardState,
+  type StoredCards,
 } from './selectedCards/selectedCardsSlice';
