@@ -12,6 +12,18 @@ export const Flyout = (): React.JSX.Element | null => {
   const cards = Object.entries(selectedCards);
   const countCards = cards.length;
 
+  const handleDownload = () => {
+    const blob = downloadCards(cards);
+    const url = URL.createObjectURL(blob);
+
+    const tempLink = document.createElement('a');
+    tempLink.href = url;
+    tempLink.download = `selected_cards_${countCards}_items.csv`;
+
+    tempLink.click();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  };
+
   if (countCards === 0) {
     return null;
   }
@@ -45,13 +57,13 @@ export const Flyout = (): React.JSX.Element | null => {
             </button>
           </li>
           <li>
-            <a
+            <button
+              type="button"
               className="inline-block rounded-lg bg-mauve-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-mauve-700 text-center cursor-pointer"
-              href={downloadCards(cards)}
-              download={`selected_cards_${countCards}_items.csv`}
+              onClick={handleDownload}
             >
               Download
-            </a>
+            </button>
           </li>
         </ul>
       </div>

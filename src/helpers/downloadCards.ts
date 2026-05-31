@@ -1,21 +1,32 @@
 import type { Card } from 'app';
 
-export const downloadCards = (selectedCards: [string, Card][]): string => {
-  const SEPARATOR = '\n-----------------\n';
-  const csvHeader =
-    'ID, Name, Image URL, Height, Mass, Hair color, Skin, Eye color, Birth year, Gender:' +
-    SEPARATOR;
+const escapeCSV = (value: string): string => `"${value.replaceAll('"', '""')}"`;
 
-  const csvRows = selectedCards
-    .map(
-      ([id, card]) =>
-        `ID: ${id}, Name: ${card.name}, Image URL: ${card.url}, Height: ${card.height}, Mass: ${card.mass}, Hair color: ${card.hair_color}, Skin: ${card.skin_color}, Eye color: ${card.eye_color}, Birth year: ${card.birth_year}, Gender: ${card.gender}`,
-    )
-    .join(SEPARATOR);
+export const downloadCards = (selectedCards: [string, Card][]): Blob => {
+  const csvMap: Record<string, keyof Card> = {
+    Name: 'name',
+    'Image URL': 'url',
+    Height: 'height',
+    Mass: 'mass',
+    'Hair Color': 'hair_color',
+    'Skin Color': 'skin_color',
+    'Eye Color': 'eye_color',
+    'Birth Year': 'birth_year',
+    Gender: 'gender',
+  };
 
-  const csvContent = csvHeader + csvRows;
+  const keys = Object.values(csvMap);
 
-  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const csvContent = [
+    ['ID', ...Object.keys(csvMap)].join(','),
+    ...selectedCards.map(([id, details]) =>
+      [id, ...keys.map((key) => escapeCSV(String(details[key])))].join(','),
+    ),
+  ].join('\n');
 
-  return URL.createObjectURL(blob);
+  const blob = new Blob(['\uFEFF', csvContent], {
+    type: 'text/csv;charset=utf-8',
+  });
+
+  return blob;
 };

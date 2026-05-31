@@ -167,8 +167,8 @@ export default defineConfig([
       '*.config.js',
       '**/routeTree.gen.ts',
       '**/coverage/**',
-      "src/app/router.ts",
-      "src/features/selectedCards/selectedCardsSlice.ts"
+      'src/app/router.ts',
+      'src/features/selectedCards/selectedCardsSlice.ts',
     ],
   },
 ]);
