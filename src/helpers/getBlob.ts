@@ -2,7 +2,7 @@ import type { Card } from 'app';
 
 const escapeCSV = (value: string): string => `"${value.replaceAll('"', '""')}"`;
 
-export const downloadCards = (selectedCards: [string, Card][]): Blob => {
+export const getBlob = (selectedCards: [string, Card][]): Blob => {
   const csvMap: Record<string, keyof Card> = {
     Name: 'name',
     'Image URL': 'url',
