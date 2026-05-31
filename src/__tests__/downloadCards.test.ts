@@ -30,7 +30,20 @@ async function readBlobAsText(blob: Blob): Promise<string> {
 }
 
 describe('handleDownload', () => {
-  const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL');
+  let createObjectURLSpy = vi.spyOn(URL, 'createObjectURL');
+
+  beforeEach(() => {
+    vi.stubGlobal('URL', {
+      createObjectURL: vi.fn(() => 'blob:mock-url'),
+      revokeObjectURL: vi.fn(),
+    });
+
+    createObjectURLSpy = vi.spyOn(URL, 'createObjectURL');
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
 
   it('should create a Blob with the actual CSV content', async () => {
     downloadCards([['1', people.results[0]]]);
