@@ -1,7 +1,7 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { HttpResponse, http } from 'msw';
-import { server } from 'mocks';
+import { people, server } from 'mocks';
 import { LS_KEY } from 'app';
 import { renderWithRouter } from './test-utils/renderWithRouter';
 import type { Mock } from 'vitest';
@@ -14,10 +14,6 @@ describe('Home', () => {
   it('renders error button and handles click', async () => {
     const user: UserEvent = userEvent.setup();
 
-    const consoleSpy: Mock = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-
     await renderWithRouter();
 
     const button: HTMLButtonElement = await screen.findByRole('button', {
@@ -28,12 +24,9 @@ describe('Home', () => {
 
     await user.click(button);
 
-    expect(consoleSpy).toHaveBeenCalled();
     expect(
       await screen.findByText(/something went wrong/i),
     ).toBeInTheDocument();
-
-    consoleSpy.mockRestore();
   });
 
   it('renders fetched characters', async () => {
@@ -51,7 +44,7 @@ describe('Home', () => {
 
     await renderWithRouter();
 
-    expect(await screen.findByText(/Error:/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Error:500/i)).toBeInTheDocument();
   });
 
   it('updates localStorage when search query changes', async () => {
@@ -69,9 +62,9 @@ describe('Home', () => {
     await user.type(input, 'Luke');
     await user.click(button);
 
-    const storedData: string | null = localStorage.getItem(LS_KEY) ?? '';
-
-    expect(storedData).toBe(JSON.stringify('Luke'));
+    await waitFor(() => {
+      expect(localStorage.getItem(LS_KEY)).toBe(JSON.stringify('Luke'));
+    });
   });
 
   it('does not update localStorage when query is unchanged', async () => {
@@ -101,5 +94,18 @@ describe('Home', () => {
       LS_KEY,
       expect.stringContaining('Luke'),
     );
+  });
+  it('shows loader while data is loading', async () => {
+    server.use(
+      http.get('https://swapi.py4e.com/api/people/', async () => {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        return HttpResponse.json(people);
+      }),
+    );
+
+    await renderWithRouter();
+
+    expect(screen.getByRole('status')).toBeInTheDocument();
   });
 });

@@ -9,6 +9,8 @@ import { configureStore, type EnhancedStore } from '@reduxjs/toolkit';
 import { selectedCardsReducer } from 'features';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'context';
+import { dataApi } from 'services';
+import { ErrorBoundary } from 'components';
 
 type Options = {
   route?: string;
@@ -18,7 +20,10 @@ const createTestStore = (): EnhancedStore => {
   return configureStore({
     reducer: {
       selectedCards: selectedCardsReducer,
+      [dataApi.reducerPath]: dataApi.reducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(dataApi.middleware),
   });
 };
 
@@ -40,7 +45,9 @@ export const renderWithRouter = async (
   return render(
     <Provider store={store}>
       <ThemeProvider>
-        <RouterProvider router={testRouter} />
+        <ErrorBoundary>
+          <RouterProvider router={testRouter} />
+        </ErrorBoundary>
       </ThemeProvider>
     </Provider>,
   );
