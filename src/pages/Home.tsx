@@ -1,133 +1,28 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { SearchArea, ResultsArea, Loader, ActionArea } from 'components';
-import { getData } from 'api';
-import { isFetchError } from 'helpers';
 import { useLocalStorage } from 'hooks';
-import type { Card, DataType, FetchError } from 'app';
 import { CARDS_PER_PAGE, LS_KEY } from 'app';
 import { Route } from 'routes';
-
-type HomeState = {
-  hasError: boolean;
-  errorMessage: string;
-  cards: Card[];
-  isLoading: boolean;
-  shouldThrow: boolean;
-  countPages: number;
-};
-
-type HomeAction =
-  | { type: 'start_loading' }
-  | { type: 'fetch_success'; payload: { results: Card[]; count: number } }
-  | { type: 'fetch_failed'; payload: string }
-  | { type: 'throw_error' };
+import { useGetDataQuery } from 'services';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import type { SerializedError } from '@reduxjs/toolkit/react';
 
 type PageChangeHandler = (data: number) => void;
 
-const reducer = (state: HomeState, action: HomeAction): HomeState => {
-  switch (action.type) {
-    case 'start_loading': {
-      return { ...state, isLoading: true, hasError: false, errorMessage: '' };
-    }
-    case 'fetch_success': {
-      return {
-        ...state,
-        isLoading: false,
-        cards: action.payload.results,
-        hasError: false,
-        countPages: Math.max(
-          1,
-          Math.ceil(action.payload.count / CARDS_PER_PAGE),
-        ),
-      };
-    }
-    case 'fetch_failed': {
-      return {
-        ...state,
-        isLoading: false,
-        hasError: true,
-        errorMessage: action.payload,
-        cards: [],
-      };
-    }
-    case 'throw_error': {
-      return {
-        ...state,
-        shouldThrow: true,
-        errorMessage: 'This is a test error.',
-      };
-    }
-    default: {
-      return state;
-    }
-  }
-};
-
-export const Home: () => React.JSX.Element = () => {
+export const Home = (): React.JSX.Element => {
   const navigate = useNavigate({ from: '/' });
   const { search = '', page = 1 } = Route.useSearch();
-
   const [, setLsStore] = useLocalStorage<string>(LS_KEY, search);
-
-  const initialState = {
-    hasError: false,
-    errorMessage: '',
-    cards: [],
-    isLoading: false,
-    shouldThrow: false,
-    countPages: 1,
-  };
-
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  const { cards, hasError, errorMessage, isLoading, shouldThrow, countPages } =
-    state;
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const fetchData = async (): Promise<void> => {
-      dispatch({
-        type: 'start_loading',
-      });
-
-      try {
-        const data: DataType | FetchError = await getData(
-          search,
-          page,
-          controller.signal,
-        );
-
-        if (isFetchError(data)) {
-          dispatch({
-            type: 'fetch_failed',
-            payload: data.message,
-          });
-        } else {
-          dispatch({
-            type: 'fetch_success',
-            payload: { results: data.results, count: data.count },
-          });
-        }
-      } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError') {
-          return;
-        }
-
-        dispatch({
-          type: 'fetch_failed',
-          payload: String(error),
-        });
-      }
-    };
-
-    fetchData();
-
-    return (): void => {
-      controller.abort();
-    };
-  }, [search, page]);
+  const { data, error, isLoading, isFetching } = useGetDataQuery({
+    search,
+    page,
+  });
+  const countPages = data
+    ? Math.max(1, Math.ceil(data.count / CARDS_PER_PAGE))
+    : 1;
+  const cards = data?.results ?? [];
+  const [shouldThrow, setShouldThrow] = useState(false);
 
   useEffect(() => {
     setLsStore(search);
@@ -147,7 +42,7 @@ export const Home: () => React.JSX.Element = () => {
     navigate({
       to: '/',
       search: {
-        search: search,
+        search,
         page: newPage,
         details: undefined,
       },
@@ -155,13 +50,11 @@ export const Home: () => React.JSX.Element = () => {
   };
 
   const handleErrorButtonClick = (): void => {
-    dispatch({
-      type: 'throw_error',
-    });
+    setShouldThrow(true);
   };
 
   if (shouldThrow) {
-    throw new Error(errorMessage);
+    throw new Error('This is a test error.');
   }
 
   return (
@@ -173,11 +66,11 @@ export const Home: () => React.JSX.Element = () => {
         searchQuery={search}
         onSearchQueryChange={handleSearchQueryChange}
       />
-      {hasError ? (
-        <p className="flex-1">Error: {errorMessage}</p>
+      {error ? (
+        <ShowError err={error} />
       ) : (
         <>
-          {isLoading ? (
+          {isLoading || isFetching ? (
             <Loader />
           ) : (
             <ResultsArea
@@ -191,5 +84,18 @@ export const Home: () => React.JSX.Element = () => {
         </>
       )}
     </section>
+  );
+};
+
+type ShowErrorProps = {
+  err: FetchBaseQueryError | SerializedError;
+};
+
+const ShowError = ({ err }: ShowErrorProps): React.JSX.Element => {
+  return (
+    <p>
+      Error:
+      {'status' in err ? String(err.status) : (err.message ?? 'Unknown error')}
+    </p>
   );
 };
