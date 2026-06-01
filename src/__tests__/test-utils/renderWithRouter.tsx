@@ -16,7 +16,7 @@ type Options = {
   route?: string;
 };
 
-const createTestStore = (): EnhancedStore => {
+export const createTestStore = (): EnhancedStore => {
   return configureStore({
     reducer: {
       selectedCards: selectedCardsReducer,

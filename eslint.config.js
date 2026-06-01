@@ -156,6 +156,8 @@ export default defineConfig([
       '@typescript-eslint/no-unsafe-member-access': 'off',
       'unicorn/prefer-add-event-listener': 'off',
       'unicorn/prefer-blob-reading-methods': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
   {
