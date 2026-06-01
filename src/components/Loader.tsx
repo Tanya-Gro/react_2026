@@ -1,6 +1,6 @@
 export const Loader: () => React.JSX.Element = () => {
   return (
-    <div className="flex flex-1 justify-center items-center">
+    <div role="status" className="flex flex-1 justify-center items-center">
       <svg
         aria-hidden="true"
         className="animate-spin h-8 w-8 text-blue-500"

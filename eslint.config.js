@@ -159,6 +159,12 @@ export default defineConfig([
     },
   },
   {
+    files: ['**/renderWithRouter.tsx', '**/store.ts'],
+    rules: {
+      'unicorn/prefer-spread': 'off',
+    },
+  },
+  {
     ignores: [
       '**/node_modules/**',
       '**/dist/**',
