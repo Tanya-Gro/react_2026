@@ -12,7 +12,6 @@
       "components/*": ["./src/components/*"],
       "pages": ["./src/pages/index.ts"],
       "routes": ["./src/routes/index.tsx"],
-      "api": ["./src/api/index.ts"],
       "app": ["./src/app/index.ts"],
       "mocks": ["./src/mocks/index.ts"],
       "helpers": ["./src/helpers/index.ts"],
@@ -21,6 +20,7 @@
       "context": ["./src/context/index.ts"],
       "layouts": ["./src/layouts/index.ts"],
       "services": ["./src/services/index.ts"],
+      "app/constants": ["./src/app/constants.ts"],
       "src/*": ["./src/*"]
     }
   }
