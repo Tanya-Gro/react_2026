@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { HttpResponse, http } from 'msw';
 import { people, server } from 'mocks';
@@ -50,17 +50,21 @@ describe('Home', () => {
   it('updates localStorage when search query changes', async () => {
     const user: UserEvent = userEvent.setup();
 
-    await renderWithRouter();
+    await act(async () => {
+      await renderWithRouter();
+    });
 
     const input: HTMLInputElement = screen.getByPlaceholderText(/search/i);
-
     const button: HTMLButtonElement = screen.getByRole('button', {
       name: /search/i,
     });
 
     await user.clear(input);
     await user.type(input, 'Luke');
-    await user.click(button);
+
+    await act(async () => {
+      await user.click(button);
+    });
 
     await waitFor(() => {
       expect(localStorage.getItem(LS_KEY)).toBe(JSON.stringify('Luke'));
@@ -107,5 +111,6 @@ describe('Home', () => {
     await renderWithRouter();
 
     expect(screen.getByRole('status')).toBeInTheDocument();
+    expect(await screen.findByText(/Luke Skywalker/i)).toBeInTheDocument();
   });
 });
