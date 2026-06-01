@@ -2,7 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { HttpResponse, http } from 'msw';
 import { people, server } from 'mocks';
-import { LS_KEY } from 'app';
+import { LS_KEY } from 'app/constants';
 import { renderWithRouter } from './test-utils/renderWithRouter';
 import type { Mock } from 'vitest';
 

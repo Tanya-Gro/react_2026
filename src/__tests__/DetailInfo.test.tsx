@@ -3,20 +3,8 @@ import { DetailInfo } from 'components/DetailInfo';
 import { detail } from 'mocks';
 
 describe('DetailInfo', () => {
-  it('renders fallback message when card is null', () => {
-    render(<DetailInfo card={null} onClose={vi.fn()} />);
-
-    expect(
-      screen.getByText('Oops. Description not found...'),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('button', { name: /close details/i }),
-    ).toBeInTheDocument();
-  });
-
-  it('renders fallback message when card is null', () => {
-    render(<DetailInfo card={null} onClose={vi.fn()} />);
+  it('renders fallback message when card is undefined', () => {
+    render(<DetailInfo card={undefined} error={undefined} onClose={vi.fn()} />);
 
     expect(
       screen.getByText('Oops. Description not found...'),
@@ -28,7 +16,7 @@ describe('DetailInfo', () => {
   });
 
   it('renders card details', () => {
-    render(<DetailInfo card={detail} onClose={vi.fn()} />);
+    render(<DetailInfo card={detail} error={undefined} onClose={vi.fn()} />);
 
     expect(
       screen.getByRole('heading', { name: 'Luke Skywalker' }),
