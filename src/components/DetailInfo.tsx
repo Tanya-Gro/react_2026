@@ -44,7 +44,7 @@ export const DetailInfo = ({
     return (
       <>
         <CloseButton onClose={onClose} />
-        <p className="mt-10 text-xl text-mist-700">
+        <p role="alert" className="mt-10 text-xl text-mist-700">
           {card
             ? 'Failed to load character details.'
             : 'Oops. Description not found...'}

@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
+import { useDispatch } from 'react-redux';
 import { SearchArea, ResultsArea, Loader, ActionArea } from 'components';
 import { useLocalStorage } from 'hooks';
 import { CARDS_PER_PAGE, LS_KEY } from 'app/constants';
 import { Route } from 'routes';
-import { useGetDataQuery } from 'services';
+import { dataApi, detailsApi, useGetDataQuery } from 'services';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import type { SerializedError } from '@reduxjs/toolkit/react';
 
@@ -12,17 +13,24 @@ type PageChangeHandler = (data: number) => void;
 
 export const Home = (): React.JSX.Element => {
   const navigate = useNavigate({ from: '/' });
+
   const { search = '', page = 1 } = Route.useSearch();
+
   const [, setLsStore] = useLocalStorage<string>(LS_KEY, search);
+
+  const dispatch = useDispatch();
   const { data, error, isLoading, isFetching } = useGetDataQuery({
     search,
     page,
   });
+
+  const [shouldThrow, setShouldThrow] = useState(false);
+
   const countPages = data
     ? Math.max(1, Math.ceil(data.count / CARDS_PER_PAGE))
     : 1;
+
   const cards = data?.results ?? [];
-  const [shouldThrow, setShouldThrow] = useState(false);
 
   useEffect(() => {
     setLsStore(search);
@@ -53,6 +61,11 @@ export const Home = (): React.JSX.Element => {
     setShouldThrow(true);
   };
 
+  const handleRefresh = (): void => {
+    dispatch(dataApi.util.invalidateTags(['Characters']));
+    dispatch(detailsApi.util.invalidateTags(['Details']));
+  };
+
   if (shouldThrow) {
     throw new Error('This is a test error.');
   }
@@ -80,7 +93,10 @@ export const Home = (): React.JSX.Element => {
               onPageChange={handlePageChange}
             />
           )}
-          <ActionArea onThrowError={handleErrorButtonClick} />
+          <ActionArea
+            onThrowError={handleErrorButtonClick}
+            onRefresh={handleRefresh}
+          />
         </>
       )}
     </section>
@@ -93,7 +109,7 @@ type ShowErrorProps = {
 
 const ShowError = ({ err }: ShowErrorProps): React.JSX.Element => {
   return (
-    <p>
+    <p role="alert">
       Error:
       {'status' in err ? String(err.status) : (err.message ?? 'Unknown error')}
     </p>
