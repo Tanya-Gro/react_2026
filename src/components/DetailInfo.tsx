@@ -1,3 +1,5 @@
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
+import type { SerializedError } from '@reduxjs/toolkit/react';
 import type { Details } from 'app';
 
 type DetailFieldProps = {
@@ -6,7 +8,8 @@ type DetailFieldProps = {
 };
 
 type DetailInfoProps = {
-  card: Details | null;
+  card: Details | undefined;
+  error: FetchBaseQueryError | SerializedError | undefined;
   onClose: () => void;
 };
 
@@ -34,14 +37,17 @@ const DETAIL_FIELDS: readonly DetailFieldConfig[] = [
 
 export const DetailInfo = ({
   card,
+  error,
   onClose,
 }: DetailInfoProps): React.JSX.Element => {
-  if (!card) {
+  if (!card || error) {
     return (
       <>
         <CloseButton onClose={onClose} />
         <p className="mt-10 text-xl text-mist-700">
-          Oops. Description not found...
+          {card
+            ? 'Failed to load character details.'
+            : 'Oops. Description not found...'}
         </p>
       </>
     );

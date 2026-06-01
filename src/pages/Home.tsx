@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { SearchArea, ResultsArea, Loader, ActionArea } from 'components';
 import { useLocalStorage } from 'hooks';
-import { CARDS_PER_PAGE, LS_KEY } from 'app';
+import { CARDS_PER_PAGE, LS_KEY } from 'app/constants';
 import { Route } from 'routes';
 import { useGetDataQuery } from 'services';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';

@@ -2,15 +2,19 @@ import { useNavigate } from '@tanstack/react-router';
 import { Loader } from 'components';
 import { Route } from 'routes';
 import { DetailInfo } from './DetailInfo';
-import { useDetails } from 'src/hooks/useDetails';
+import { useGetDetailsQuery } from 'services';
 
 export const Detail = (): React.JSX.Element | null => {
   const navigate = useNavigate({ from: '/' });
 
   const { details, page, search } = Route.useSearch();
 
-  const detailsId = details ? Number(details) : undefined;
-  const [card, isLoading] = useDetails(detailsId);
+  const { data, error, isLoading, isFetching } = useGetDetailsQuery(
+    details ?? 0,
+    {
+      skip: !details,
+    },
+  );
 
   const handleClose = (): void => {
     navigate({
@@ -32,10 +36,10 @@ export const Detail = (): React.JSX.Element | null => {
       aria-label="Character details"
       className="flex flex-col w-80 max-h-dvh bg-mist-50 p-2 shadow-[inset_0_25px_50px_-12px_rgba(0,0,0,0.25)]"
     >
-      {isLoading ? (
+      {isLoading || isFetching ? (
         <Loader />
       ) : (
-        <DetailInfo card={card} onClose={handleClose} />
+        <DetailInfo card={data} error={error} onClose={handleClose} />
       )}
     </aside>
   );
