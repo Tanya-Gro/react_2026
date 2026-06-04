@@ -7,6 +7,7 @@ import { renderWithRouter } from './test-utils/renderWithRouter';
 import type { Mock } from 'vitest';
 
 describe('Home', () => {
+  const INTERVAL_SERVER_ERROR = 500;
   beforeEach(() => {
     localStorage.clear();
   });
@@ -38,7 +39,10 @@ describe('Home', () => {
   it('shows error message', async () => {
     server.use(
       http.get('https://swapi.py4e.com/api/people/', () => {
-        return HttpResponse.json({ detail: 'Server error' }, { status: 500 });
+        return HttpResponse.json(
+          { detail: 'Server error' },
+          { status: INTERVAL_SERVER_ERROR },
+        );
       }),
     );
 

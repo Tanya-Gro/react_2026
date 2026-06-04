@@ -5,6 +5,7 @@ import { renderWithRouter } from './test-utils/renderWithRouter';
 
 describe('Detail Component - Querying Behavior', () => {
   const TIMEOUT_MS = 500;
+  const INTERVAL_SERVER_ERROR = 500;
   it('should render Loader when query is loading', async () => {
     server.use(
       http.get('*/1.json', async () => {
@@ -21,7 +22,7 @@ describe('Detail Component - Querying Behavior', () => {
   it('should render error UI when query fails', async () => {
     server.use(
       http.get('*/1.json', () => {
-        return new HttpResponse(null, { status: TIMEOUT_MS });
+        return new HttpResponse(null, { status: INTERVAL_SERVER_ERROR });
       }),
     );
 
