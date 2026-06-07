@@ -23,8 +23,6 @@ type HomeAction =
   | { type: 'fetch_failed'; payload: string }
   | { type: 'throw_error' };
 
-type PageChangeHandler = (data: number) => void;
-
 const reducer = (state: HomeState, action: HomeAction): HomeState => {
   switch (action.type) {
     case 'start_loading': {
@@ -143,16 +141,6 @@ export const Home: () => React.JSX.Element = () => {
     });
   };
 
-  const handlePageChange: PageChangeHandler = (newPage) => {
-    navigate({
-      to: '/',
-      search: {
-        search: search,
-        page: newPage,
-      },
-    });
-  };
-
   const handleErrorButtonClick = (): void => {
     dispatch({
       type: 'throw_error',
@@ -179,12 +167,7 @@ export const Home: () => React.JSX.Element = () => {
           {isLoading ? (
             <Loader />
           ) : (
-            <ResultsArea
-              cards={cards}
-              currentPage={page}
-              countPages={countPages}
-              onPageChange={handlePageChange}
-            />
+            <ResultsArea cards={cards} countPages={countPages} />
           )}
           <ActionArea onThrowError={handleErrorButtonClick} />
         </>

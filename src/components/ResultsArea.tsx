@@ -6,16 +6,12 @@ import { CharactersTable } from './CharactersTable';
 
 type DataProps = {
   cards: Card[];
-  currentPage: number;
   countPages: number;
-  onPageChange: (page: number) => void;
 };
 
 export const ResultsArea: (data: DataProps) => React.JSX.Element = ({
   cards,
-  currentPage,
   countPages,
-  onPageChange,
 }: DataProps) => {
   const navigate = useNavigate({ from: '/' });
   const { details, search, page } = Route.useSearch();
@@ -49,11 +45,7 @@ export const ResultsArea: (data: DataProps) => React.JSX.Element = ({
             onToggleSelect={handleToggleSelect}
           />
         </div>
-        <Pagination
-          currentPage={currentPage}
-          countPages={countPages}
-          onPageChange={onPageChange}
-        />
+        <Pagination countPages={countPages} />
       </div>
       <Detail />
     </section>

@@ -1,24 +1,37 @@
+import { useNavigate, type UseNavigateResult } from '@tanstack/react-router';
+import { Route } from 'routes';
+
 type PaginationProps = {
-  currentPage: number;
   countPages: number;
-  onPageChange: (page: number) => void;
 };
 
 export const Pagination: (data: PaginationProps) => React.JSX.Element = ({
-  currentPage,
   countPages,
-  onPageChange,
 }: PaginationProps) => {
+  const navigate: UseNavigateResult<string> = useNavigate({ from: '/' });
+
+  const { search = '', page = 1 } = Route.useSearch();
+
+  const onPageChange = (newPage: number): void => {
+    navigate({
+      to: '/',
+      search: {
+        search: search,
+        page: newPage,
+      },
+    });
+  };
+
   const prevPage = (): void => {
-    if (currentPage === 1) {
+    if (page === 1) {
       return;
     }
-    onPageChange(currentPage - 1);
+    onPageChange(page - 1);
   };
 
   const nextPage = (): void => {
-    if (currentPage < countPages) {
-      onPageChange(currentPage + 1);
+    if (page < countPages) {
+      onPageChange(page + 1);
     }
   };
 
@@ -29,7 +42,7 @@ export const Pagination: (data: PaginationProps) => React.JSX.Element = ({
     <section className="flex items-center content-center place-content-center h-10 mb-2 mt-auto gap-3">
       <button
         type="button"
-        disabled={currentPage === 1}
+        disabled={page === 1}
         className={BUTTON_CLASSES}
         onClick={prevPage}
       >
@@ -37,11 +50,11 @@ export const Pagination: (data: PaginationProps) => React.JSX.Element = ({
         <span className="sr-only">Previous page</span>
       </button>
 
-      <output className="">{`Page ${currentPage} of ${countPages}`}</output>
+      <output className="">{`Page ${page} of ${countPages}`}</output>
 
       <button
         type="button"
-        disabled={currentPage === countPages}
+        disabled={page === countPages}
         className={BUTTON_CLASSES}
         onClick={nextPage}
       >
