@@ -1,4 +1,4 @@
-language: 'en-US'
+language: 'ru-RU'
 tone_instructions: |
   Informative React/TS student review: Lines X-Y: [describe issue]. Use [specific HTML/TS/React fix]. Reference line numbers. Actionable suggestions with semantic tags/hooks. Brief explanation why it matters.
 early_access: true

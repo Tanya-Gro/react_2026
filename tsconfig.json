@@ -5,6 +5,19 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals"],
+    "strict": true,
+    "paths": {
+      "components": ["./src/components/index.ts"],
+      "components/*": ["./src/components/*"],
+      "pages": ["./src/pages/index.ts"],
+      "routes": ["./src/routes/index.tsx"],
+      "api": ["./src/api/index.ts"],
+      "app": ["./src/app/index.ts"],
+      "mocks": ["./src/mocks/index.ts"],
+      "helpers": ["./src/helpers/index.ts"],
+      "hooks": ["./src/hooks/index.ts"],
+      "src/*": ["./src/*"]
+    }
   }
 }

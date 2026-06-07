@@ -1,68 +1,33 @@
-import { Component, type ReactNode } from 'react';
-import type { Card } from '../app/';
-import { getID } from '../helpers';
+import type { Card } from 'app';
+import { Detail, Pagination } from 'components';
+import { CharactersTable } from './CharactersTable';
 
 type DataProps = {
   cards: Card[];
+  countPages: number;
 };
 
-type TableHeader = {
-  label: string;
-  key: keyof Card;
-  className?: string;
-};
-
-const TABLE_HEADERS: TableHeader[] = [
-  { label: 'Name', key: 'name', className: 'col-span-2' },
-  { label: 'Gender', key: 'gender' },
-  { label: 'Height', key: 'height' },
-  { label: 'Mass', key: 'mass' },
-  { label: 'Hair Color', key: 'hair_color' },
-];
-
-export class ResultsArea extends Component<DataProps> {
-  render(): ReactNode {
-    const { cards } = this.props;
-
-    if (cards.length === 0) {
-      return (
-        <div className="flex-1 p-8 text-center text-mist-500 italic">
-          No results found. Try adjusting your search.
-        </div>
-      );
-    }
-
+export const ResultsArea: (data: DataProps) => React.JSX.Element = ({
+  cards,
+  countPages,
+}: DataProps) => {
+  if (cards.length === 0) {
     return (
-      <section className="flex flex-col gap-2 p-4 bg-mist-100 flex-1 overflow-auto">
-        <div className="grid grid-cols-6 text-left border-b border-mist-400 py-5 font-bold text-mist-700">
-          {TABLE_HEADERS.map((header) => (
-            <span key={header.key} className={header.className || ''}>
-              {header.label}
-            </span>
-          ))}
-        </div>
-
-        <div className="flex flex-col gap-1">
-          {cards.map((card) => {
-            const id = getID(card.url);
-            return (
-              <article
-                key={id}
-                className="grid grid-cols-6 text-left border-b border-mist-200 pt-3 pb-4 hover:bg-mist-200 transition-colors"
-              >
-                {TABLE_HEADERS.map((row) => (
-                  <span
-                    className={`text-mist-600 ${row.className || ''}`}
-                    key={`${id}-${row.key}`}
-                  >
-                    {card[row.key]}
-                  </span>
-                ))}
-              </article>
-            );
-          })}
-        </div>
-      </section>
+      <div className="flex-1 p-8 text-center text-mist-500 italic">
+        No results found. Try adjusting your search.
+      </div>
     );
   }
-}
+
+  return (
+    <section className="flex flex-row gap-2 flex-1 overflow-hidden">
+      <div className="flex flex-col flex-1 bg-mist-100 overflow-hidden">
+        <div className="overflow-y-auto overflow-x-auto">
+          <CharactersTable cards={cards} />
+        </div>
+        <Pagination countPages={countPages} />
+      </div>
+      <Detail />
+    </section>
+  );
+};

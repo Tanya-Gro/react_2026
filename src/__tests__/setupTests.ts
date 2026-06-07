@@ -1,5 +1,7 @@
 import '@testing-library/jest-dom';
-import { server } from '../mocks';
+import { server } from 'mocks';
+
+window.scrollTo = vi.fn();
 
 beforeAll(() => {
   server.listen();

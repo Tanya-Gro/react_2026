@@ -40,6 +40,7 @@ export default defineConfig([
       '@typescript-eslint/consistent-indexed-object-style': 'error',
       'prefer-const': 'warn',
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+      curly: 'error',
       eqeqeq: ['error', 'always'],
     },
   },

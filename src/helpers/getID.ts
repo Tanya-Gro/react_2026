@@ -1,4 +1,4 @@
-export function getID(url: string): string {
-  const parts = url.split('/').filter(Boolean);
+export const getID = (url: string): string => {
+  const parts: string[] = url.split('/').filter(Boolean);
   return parts.at(-1) ?? '';
-}
+};

@@ -1,5 +1,13 @@
-import type { FetchError, DataType } from '../app/';
+import type { FetchError, DataType, Details } from 'app';
 
-export function isFetchError(data: DataType | FetchError): data is FetchError {
-  return 'message' in data;
-}
+export const isFetchError = (
+  data: DataType | FetchError | Details
+): data is FetchError => {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'hasError' in data &&
+    data.hasError === true &&
+    'message' in data
+  );
+};
