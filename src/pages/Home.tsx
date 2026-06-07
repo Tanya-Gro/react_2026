@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, type JSX } from 'react';
 import { useNavigate, type UseNavigateResult } from '@tanstack/react-router';
 import { SearchArea, ResultsArea, Loader, ActionArea } from 'components';
 import { getData } from 'api';
@@ -62,7 +62,7 @@ const reducer = (state: HomeState, action: HomeAction): HomeState => {
   }
 };
 
-export const Home: () => React.JSX.Element = () => {
+export const Home = (): JSX.Element => {
   const navigate: UseNavigateResult<string> = useNavigate({ from: '/' });
   const { search = '', page = 1 } = Route.useSearch();
 

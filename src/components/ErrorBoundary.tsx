@@ -33,7 +33,7 @@ export class ErrorBoundary extends Component<
     }
   }
 
-  handleDismissButtonClick: () => void = () => {
+  handleDismissButtonClick = (): void => {
     this.setState({ shouldThrow: false, errorMessage: '' });
   };
 

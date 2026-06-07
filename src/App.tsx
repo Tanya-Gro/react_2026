@@ -2,7 +2,7 @@ import { Link, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { Footer } from 'components';
 
-export const App: () => React.JSX.Element = () => {
+export const App = (): React.JSX.Element => {
   return (
     <>
       <header className="p-4 border-b-2 border-b-mist-300">
