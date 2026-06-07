@@ -1,5 +1,3 @@
-import { useNavigate } from '@tanstack/react-router';
-import { Route } from 'routes';
 import type { Card } from 'app';
 import { Detail, Pagination } from 'components';
 import { CharactersTable } from './CharactersTable';
@@ -13,9 +11,6 @@ export const ResultsArea: (data: DataProps) => React.JSX.Element = ({
   cards,
   countPages,
 }: DataProps) => {
-  const navigate = useNavigate({ from: '/' });
-  const { details, search, page } = Route.useSearch();
-
   if (cards.length === 0) {
     return (
       <div className="flex-1 p-8 text-center text-mist-500 italic">
@@ -24,26 +19,11 @@ export const ResultsArea: (data: DataProps) => React.JSX.Element = ({
     );
   }
 
-  const handleToggleSelect = (id: string, isSelected: boolean): void => {
-    navigate({
-      to: '/',
-      search: {
-        search,
-        page,
-        details: isSelected ? undefined : Number(id),
-      },
-    });
-  };
-
   return (
     <section className="flex flex-row gap-2 flex-1 overflow-hidden">
       <div className="flex flex-col flex-1 bg-mist-100 overflow-hidden">
         <div className="overflow-y-auto overflow-x-auto">
-          <CharactersTable
-            cards={cards}
-            selectedCardId={details}
-            onToggleSelect={handleToggleSelect}
-          />
+          <CharactersTable cards={cards} />
         </div>
         <Pagination countPages={countPages} />
       </div>

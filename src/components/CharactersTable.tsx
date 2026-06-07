@@ -1,10 +1,10 @@
+import { useNavigate } from '@tanstack/react-router';
+import { Route } from 'routes';
 import type { Card } from 'app';
 import { getID } from 'helpers';
 
 type CharactersTableProps = {
   cards: Card[];
-  selectedCardId: number | undefined;
-  onToggleSelect: (id: string, isSelected: boolean) => void;
 };
 
 type CharactersRowProps = {
@@ -29,9 +29,21 @@ const TABLE_HEADERS: readonly TableHeader[] = [
 
 export const CharactersTable = ({
   cards,
-  selectedCardId,
-  onToggleSelect,
 }: CharactersTableProps): React.JSX.Element => {
+  const navigate = useNavigate({ from: '/' });
+  const { details, search, page } = Route.useSearch();
+
+  const handleToggleSelect = (id: string, isSelected: boolean): void => {
+    navigate({
+      to: '/',
+      search: {
+        search,
+        page,
+        details: isSelected ? undefined : Number(id),
+      },
+    });
+  };
+
   return (
     <table
       aria-label="Star Wars characters"
@@ -54,8 +66,8 @@ export const CharactersTable = ({
           <CharactersRow
             key={card.url}
             card={card}
-            selectedCardId={selectedCardId}
-            onToggleSelect={onToggleSelect}
+            selectedCardId={details}
+            onToggleSelect={handleToggleSelect}
           />
         ))}
       </tbody>
