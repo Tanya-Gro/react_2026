@@ -9,8 +9,6 @@ import { dataApi, detailsApi, useGetDataQuery } from 'services';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import type { SerializedError } from '@reduxjs/toolkit/react';
 
-type PageChangeHandler = (data: number) => void;
-
 export const Home = (): React.JSX.Element => {
   const navigate = useNavigate({ from: '/' });
 
@@ -46,17 +44,6 @@ export const Home = (): React.JSX.Element => {
     });
   };
 
-  const handlePageChange: PageChangeHandler = (newPage) => {
-    navigate({
-      to: '/',
-      search: {
-        search,
-        page: newPage,
-        details: undefined,
-      },
-    });
-  };
-
   const handleErrorButtonClick = (): void => {
     setShouldThrow(true);
   };
@@ -86,12 +73,7 @@ export const Home = (): React.JSX.Element => {
           {isLoading || isFetching ? (
             <Loader />
           ) : (
-            <ResultsArea
-              cards={cards}
-              currentPage={page}
-              countPages={countPages}
-              onPageChange={handlePageChange}
-            />
+            <ResultsArea cards={cards} countPages={countPages} />
           )}
           <ActionArea
             onThrowError={handleErrorButtonClick}

@@ -9,17 +9,13 @@ import type { RootState } from 'app';
 
 type DataProps = {
   cards: Card[];
-  currentPage: number;
   countPages: number;
-  onPageChange: (page: number) => void;
 };
 
 export const ResultsArea = ({
   cards,
-  currentPage,
   countPages,
-  onPageChange,
-}: DataProps): React.JSX.Element => {
+}: DataProps) => {
   const navigate = useNavigate({ from: '/' });
   const { details, search, page } = Route.useSearch();
   const dispatch = useDispatch();
@@ -63,11 +59,7 @@ export const ResultsArea = ({
             handleSelect={handleSelect}
           />
         </div>
-        <Pagination
-          currentPage={currentPage}
-          countPages={countPages}
-          onPageChange={onPageChange}
-        />
+        <Pagination countPages={countPages} />
       </div>
       <Detail />
     </section>

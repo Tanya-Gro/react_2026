@@ -1,30 +1,46 @@
 import { render, screen } from '@testing-library/react';
-import userEvent, { type UserEvent } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
+import { type UserEvent } from '@testing-library/user-event';
 import { Pagination } from 'components/Pagination';
 import type { Mock } from 'vitest';
 
-const props: Record<string, number> = {
-  currentPage: 2,
-  countPages: 6,
+const navigateMock: Mock = vi.fn();
+
+const mockSearchState = {
+  search: '',
+  page: 2,
 };
 
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+
+  return {
+    ...actual,
+    useNavigate: () => navigateMock,
+  };
+});
+
+vi.mock('routes', () => ({
+  Route: {
+    useSearch: () => mockSearchState,
+  },
+}));
+
+const COUNT_PAGES = 6;
+
 describe('Pagination', () => {
-  const mockOnPageChange: Mock = vi.fn();
   beforeEach(() => {
-    mockOnPageChange.mockClear();
+    navigateMock.mockClear();
+
+    mockSearchState.search = '';
+    mockSearchState.page = 2;
   });
 
   it('renders correctly and shows current page info', () => {
-    render(
-      <Pagination
-        currentPage={props.currentPage}
-        countPages={props.countPages}
-        onPageChange={mockOnPageChange}
-      />,
-    );
+    render(<Pagination countPages={COUNT_PAGES} />);
 
     expect(
-      screen.getByText(`Page ${props.currentPage} of ${props.countPages}`),
+      screen.getByText(`Page ${mockSearchState.page} of ${COUNT_PAGES}`)
     ).toBeInTheDocument();
 
     expect(
@@ -38,51 +54,47 @@ describe('Pagination', () => {
   it('calls onPageChange with next page number when forward button is clicked', async () => {
     const user: UserEvent = userEvent.setup();
 
-    render(
-      <Pagination
-        currentPage={props.currentPage}
-        countPages={props.countPages}
-        onPageChange={mockOnPageChange}
-      />,
-    );
+    render(<Pagination countPages={COUNT_PAGES} />);
 
     const nextButton: HTMLButtonElement = screen.getByRole('button', {
       name: /next page/i,
     });
     await user.click(nextButton);
 
-    expect(mockOnPageChange).toHaveBeenCalledTimes(1);
-    expect(mockOnPageChange).toHaveBeenCalledWith(props.currentPage + 1);
+    expect(navigateMock).toHaveBeenCalledWith({
+      to: '/',
+      search: {
+        search: '',
+        page: mockSearchState.page + 1,
+      },
+    });
   });
 
   it('calls onPageChange with prev page number when back button is clicked', async () => {
     const user: UserEvent = userEvent.setup();
 
-    render(
-      <Pagination
-        currentPage={props.currentPage}
-        countPages={props.countPages}
-        onPageChange={mockOnPageChange}
-      />,
-    );
+    render(<Pagination countPages={COUNT_PAGES} />);
 
     const prevButton: HTMLButtonElement = screen.getByRole('button', {
       name: /previous page/i,
     });
     await user.click(prevButton);
 
-    expect(mockOnPageChange).toHaveBeenCalledTimes(1);
-    expect(mockOnPageChange).toHaveBeenCalledWith(props.currentPage - 1);
+    expect(navigateMock).toHaveBeenCalledWith({
+      to: '/',
+      search: {
+        search: '',
+        page: mockSearchState.page - 1,
+      },
+    });
   });
 
   it('does not call onPageChange if buttons are disabled or conditions are met edge-case', async () => {
-    render(
-      <Pagination
-        currentPage={1}
-        countPages={1}
-        onPageChange={mockOnPageChange}
-      />,
-    );
+    const user = userEvent.setup();
+
+    mockSearchState.page = 1;
+
+    render(<Pagination countPages={1} />);
 
     const prevButton: HTMLButtonElement = screen.getByRole('button', {
       name: /previous page/i,
@@ -91,9 +103,12 @@ describe('Pagination', () => {
       name: /next page/i,
     });
 
-    await userEvent.click(prevButton);
-    await userEvent.click(nextButton);
+    expect(prevButton).toBeDisabled();
+    expect(nextButton).toBeDisabled();
 
-    expect(mockOnPageChange).not.toHaveBeenCalled();
+    await user.click(prevButton);
+    await user.click(nextButton);
+
+    expect(navigateMock).not.toHaveBeenCalled();
   });
 });
