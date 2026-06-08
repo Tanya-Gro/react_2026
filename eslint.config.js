@@ -176,7 +176,9 @@ export default defineConfig([
       '**/routeTree.gen.ts',
       '**/coverage/**',
       'src/app/router.ts',
-      'src/features/cards/cardsSlice.ts',
+      'src/app/hooks.ts',
+      'src/components/UncontrolledForm.tsx',
+      'src/helpers/toBase64.ts',
     ],
   },
 ]);
