@@ -135,6 +135,7 @@ export default defineConfig([
       'unicorn/prefer-query-selector': 'off',
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/explicit-length-check': 'off',
+      'unicorn/prefer-at': 'off',
     },
   },
   {
