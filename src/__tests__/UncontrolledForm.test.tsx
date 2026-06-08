@@ -23,15 +23,20 @@ vi.mock('features', async (importOriginal) => {
   };
 });
 
-vi.mock('helpers', () => ({
-  toBase64: vi.fn().mockResolvedValue('fakeBase64'),
-}));
+vi.mock('helpers', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('helpers')>();
+  return {
+    ...actual,
+    toBase64: vi.fn().mockResolvedValue('fakeBase64'),
+  };
+});
 
-const mockData: Card = {
+const mockData = {
   name: 'Ivan Ivanov',
   age: 18,
   email: 'nnn@ex.ru',
-  password: '*******',
+  password: 'Password1!',
+  confirmPassword: 'Password1!',
   gender: 'female',
   country: 'Zimbabwe',
   picture: 'teddy bear',
@@ -58,7 +63,11 @@ describe('UncontrolledForm', () => {
     await user.type(screen.getByLabelText(/Name/i), mockData.name);
     await user.type(screen.getByLabelText(/Age/i), mockData.age.toString());
     await user.type(screen.getByLabelText(/Email/i), mockData.email);
-    await user.type(screen.getByLabelText(/Password/i), mockData.password);
+    await user.type(screen.getByLabelText(/^password$/i), mockData.password);
+    await user.type(
+      screen.getByLabelText(/confirm password/i),
+      mockData.confirmPassword,
+    );
     await user.selectOptions(screen.getByLabelText(/Gender/i), mockData.gender);
     await user.type(screen.getByLabelText(/Country/i), mockData.country);
     const file = new File(['dummy content'], 'avatar.png', {

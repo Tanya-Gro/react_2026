@@ -35,9 +35,13 @@ const createTestStore = (cardsItems = mockCards) => {
   });
 };
 
-vi.mock('helpers', () => ({
-  toBase64: vi.fn().mockResolvedValue('fakeBase64'),
-}));
+vi.mock('helpers', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('helpers')>();
+  return {
+    ...actual,
+    toBase64: vi.fn().mockResolvedValue('fakeBase64'),
+  };
+});
 
 describe('App Component Integration', () => {
   const originalRAF = globalThis.requestAnimationFrame;

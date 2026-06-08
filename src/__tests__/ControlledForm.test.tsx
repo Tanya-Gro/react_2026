@@ -23,15 +23,20 @@ vi.mock('features', async (importOriginal) => {
   };
 });
 
-vi.mock('helpers', () => ({
-  toBase64: vi.fn().mockResolvedValue('fakeBase64'),
-}));
+vi.mock('helpers', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('helpers')>();
+  return {
+    ...actual,
+    toBase64: vi.fn().mockResolvedValue('fakeBase64'),
+  };
+});
 
-const mockData: Card = {
+const mockData = {
   name: 'Ivan Ivanova',
   age: 18,
   email: 'iiii@ex.ru',
-  password: '*******',
+  password: 'Password1!',
+  confirmPassword: 'Password1!',
   gender: 'male',
   country: 'Russia',
   picture: 'dummy',
@@ -60,7 +65,11 @@ describe('ControlledForm', () => {
     await user.type(screen.getByLabelText(/name/i), mockData.name);
     await user.type(screen.getByLabelText(/age/i), mockData.age.toString());
     await user.type(screen.getByLabelText(/email/i), mockData.email);
-    await user.type(screen.getByLabelText(/password/i), mockData.password);
+    await user.type(screen.getByLabelText(/^password$/i), mockData.password);
+    await user.type(
+      screen.getByLabelText(/confirm password/i),
+      mockData.confirmPassword,
+    );
     await user.selectOptions(screen.getByLabelText(/gender/i), mockData.gender);
     await user.type(screen.getByLabelText(/country/i), mockData.country);
 
@@ -106,7 +115,11 @@ describe('ControlledForm', () => {
     await user.type(screen.getByLabelText(/name/i), mockData.name);
     await user.type(screen.getByLabelText(/age/i), mockData.age.toString());
     await user.type(screen.getByLabelText(/email/i), mockData.email);
-    await user.type(screen.getByLabelText(/password/i), mockData.password);
+    await user.type(screen.getByLabelText(/^password$/i), mockData.password);
+    await user.type(
+      screen.getByLabelText(/confirm password/i),
+      mockData.confirmPassword,
+    );
     await user.selectOptions(screen.getByLabelText(/gender/i), mockData.gender);
 
     await user.type(screen.getByLabelText(/country/i), 'france');
