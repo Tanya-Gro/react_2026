@@ -9,15 +9,11 @@
     "strict": true,
     "paths": {
       "components": ["./src/components/index.ts"],
-      "layouts": ["./src/layouts/index.ts"],
-      "app": ["./src/app/index.ts"],
-      "helpers": ["./src/helpers/index.ts"],
-      "hooks": ["./src/hooks/index.ts"],
       "features": ["./src/features/index.ts"],
-      "context": ["./src/context/index.ts"],
-      "services": ["./src/services/index.ts"],
+      "helpers": ["./src/helpers/index.ts"],
+      "layouts": ["./src/layouts/index.ts"],
       "schemas": ["./src/schemas/index.ts"],
-      "app/constants": ["./src/app/constants.ts"],
+      "app": ["./src/app/index.ts"],
       "src/*": ["./src/*"]
     }
   }

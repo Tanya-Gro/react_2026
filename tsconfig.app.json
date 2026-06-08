@@ -30,9 +30,9 @@
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "components": ["./src/components/index.ts"],
-      "layouts": ["./src/layouts/index.ts"],
-      "helpers": ["./src/helpers/index.ts"],
       "features": ["./src/features/index.ts"],
+      "helpers": ["./src/helpers/index.ts"],
+      "layouts": ["./src/layouts/index.ts"],
       "schemas": ["./src/schemas/index.ts"],
       "app": ["./src/app/index.ts"],
       "src/*": ["./src/*"]
