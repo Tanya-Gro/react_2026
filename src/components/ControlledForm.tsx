@@ -1,13 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { formSchema, type FormValues } from 'schemas';
 import { useAppDispatch, useAppSelector } from 'app';
 import { addCard, addCountry } from 'features';
-import { toBase64 } from 'helpers';
+import { getPasswordStrength, toBase64 } from 'helpers';
 
 type ControlledFormProps = {
   onSuccess: () => void;
 };
+
+const indicatorStyles = (isValid: boolean) =>
+  `text-xs flex items-center gap-1.5 transition-colors ${isValid ? 'text-green-400' : 'text-gray-500'}`;
 
 export const ControlledForm = ({ onSuccess }: ControlledFormProps) => {
   const dispatch = useAppDispatch();
@@ -28,9 +31,14 @@ export const ControlledForm = ({ onSuccess }: ControlledFormProps) => {
       name: '',
       email: '',
       password: '',
+      confirmPassword: '',
       age: undefined,
     },
   });
+
+  const passwordValue = useWatch({ control, name: 'password' }) || '';
+
+  const strength = getPasswordStrength(passwordValue);
 
   const onSubmit = async (data: FormValues) => {
     let base64: string;
@@ -51,8 +59,12 @@ export const ControlledForm = ({ onSuccess }: ControlledFormProps) => {
       dispatch(addCountry(formedCountry));
     }
 
+    const { confirmPassword, ...cardData } = data;
+
     dispatch(
-      addCard({ card: { ...data, picture: base64, country: formedCountry } }),
+      addCard({
+        card: { ...cardData, picture: base64, country: formedCountry },
+      }),
     );
 
     onSuccess();
@@ -142,6 +154,36 @@ export const ControlledForm = ({ onSuccess }: ControlledFormProps) => {
           placeholder="••••••••"
         />
         <p className={errorStyles}>{errors.password?.message ?? ''}</p>
+      </div>
+
+      <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700/50 flex flex-col gap-1.5 -mt-2 mb-1">
+        <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+          <div className={indicatorStyles(strength.hasNumber)}>
+            <span>{strength.hasNumber ? '✓' : '○'}</span> 1 Digit
+          </div>
+          <div className={indicatorStyles(strength.hasUppercase)}>
+            <span>{strength.hasUppercase ? '✓' : '○'}</span> 1 Uppercase
+          </div>
+          <div className={indicatorStyles(strength.hasLowercase)}>
+            <span>{strength.hasLowercase ? '✓' : '○'}</span> 1 Lowercase
+          </div>
+          <div className={indicatorStyles(strength.hasSpecial)}>
+            <span>{strength.hasSpecial ? '✓' : '○'}</span> 1 Special Char
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col">
+        <label htmlFor="confirmPassword" className={labelStyles}>
+          Confirm Password
+        </label>
+        <input
+          id="confirmPassword"
+          type="password"
+          {...register('confirmPassword')}
+          className={inputStyles}
+        />
+        <p className={errorStyles}>{errors.confirmPassword?.message ?? ''}</p>
       </div>
 
       <div className="flex flex-col">

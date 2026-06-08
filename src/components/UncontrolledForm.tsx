@@ -1,18 +1,30 @@
-import { useState, type SubmitEvent, type JSX } from 'react';
+import { useState } from 'react';
+import type { SubmitEvent, JSX, ChangeEvent } from 'react';
 import { useAppDispatch, useAppSelector } from 'app';
 import { addCard, addCountry } from 'features';
 import { formSchema, type FormValues } from 'schemas';
-import { toBase64 } from 'helpers';
+import { getPasswordStrength, toBase64 } from 'helpers';
 
 type Props = {
   onSuccess: () => void;
 };
 type FormFieldError = Record<string, string>;
 
+const indicatorStyles = (isValid: boolean) =>
+  `text-xs flex items-center gap-1.5 transition-colors ${isValid ? 'text-green-600 font-medium' : 'text-gray-400'}`;
+
 export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
   const dispatch = useAppDispatch();
   const countries = useAppSelector((s) => s.countries.items);
   const [errors, setErrors] = useState<FormFieldError>({});
+
+  const [passwordValue, setPasswordValue] = useState('');
+
+  const strength = getPasswordStrength(passwordValue);
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPasswordValue(e.target.value);
+  };
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,6 +40,7 @@ export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
       age: formData.get('age') ? Number(formData.get('age')) : 0,
       email: formData.get('email') as string,
       password: formData.get('password') as string,
+      confirmPassword: formData.get('confirmPassword') as string,
       gender: formData.get('gender') as 'male' | 'female',
       country: formData.get('country') as string,
       picture: file as File,
@@ -48,7 +61,7 @@ export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
       return;
     }
 
-    const { country, picture } = result.data;
+    const { country, picture, ...validatedData } = result.data;
 
     if (!picture) {
       setErrors((prev) => ({ ...prev, picture: 'Picture is required' }));
@@ -69,9 +82,11 @@ export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
     setErrors({});
 
     const formattedCountry = country[0].toUpperCase() + country.slice(1);
+    const { confirmPassword, ...cardData } = validatedData;
+
     dispatch(
       addCard({
-        card: { ...result.data, country: formattedCountry, picture: base64 },
+        card: { ...cardData, country: formattedCountry, picture: base64 },
       }),
     );
 
@@ -156,8 +171,39 @@ export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
           autoComplete="given-password"
           className={inputStyles}
           placeholder="••••••••"
+          onChange={handlePasswordChange}
         />
         <p className={errorStyles}>{errors.password}</p>
+      </div>
+
+      <div className="bg-gray-50 p-3 rounded-lg border border-gray-200/60 flex flex-col gap-1.5 -mt-2 mb-1">
+        <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+          <div className={indicatorStyles(strength.hasNumber)}>
+            <span>{strength.hasNumber ? '✓' : '○'}</span> 1 Digit
+          </div>
+          <div className={indicatorStyles(strength.hasUppercase)}>
+            <span>{strength.hasUppercase ? '✓' : '○'}</span> 1 Uppercase
+          </div>
+          <div className={indicatorStyles(strength.hasLowercase)}>
+            <span>{strength.hasLowercase ? '✓' : '○'}</span> 1 Lowercase
+          </div>
+          <div className={indicatorStyles(strength.hasSpecial)}>
+            <span>{strength.hasSpecial ? '✓' : '○'}</span> 1 Special Char
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col">
+        <label htmlFor="confirmPassword" className={labelStyles}>
+          Confirm Password
+        </label>
+        <input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          className={inputStyles}
+        />
+        <p className={errorStyles}>{errors.confirmPassword}</p>
       </div>
 
       <div className="flex flex-col">
