@@ -7,26 +7,7 @@ export type CardState = {
 };
 
 const initialState: CardState = {
-  items: [
-    {
-      name: 'Card 1',
-      age: 25,
-      email: 'card1@example.com',
-      password: 'password1',
-      gender: 'male',
-      country: 'Country1',
-      picture: 'picture1.png',
-    },
-    {
-      name: 'Card 2',
-      age: 30,
-      email: 'card2@example.com',
-      password: 'password2',
-      gender: 'female',
-      country: 'Country2',
-      picture: '',
-    },
-  ],
+  items: [],
 };
 
 export const cardsSlice = createSlice({
