@@ -1,7 +1,8 @@
 import { useNavigate } from '@tanstack/react-router';
 
-export const NotFound: () => React.JSX.Element = () => {
+export const NotFound = (): React.JSX.Element => {
   const navigate = useNavigate();
+
   const handleClick: () => void = () => {
     navigate({ to: '/' });
   };
