@@ -1,4 +1,4 @@
-export const Loader: () => React.JSX.Element = () => {
+export const Loader = (): React.JSX.Element => {
   return (
     <div role="status" className="flex flex-1 justify-center items-center">
       <svg

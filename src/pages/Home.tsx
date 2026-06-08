@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, type JSX } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useDispatch } from 'react-redux';
 import { SearchArea, ResultsArea, Loader, ActionArea } from 'components';
@@ -9,7 +9,7 @@ import { dataApi, detailsApi, useGetDataQuery } from 'services';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import type { SerializedError } from '@reduxjs/toolkit/react';
 
-export const Home = (): React.JSX.Element => {
+export const Home = (): JSX.Element => {
   const navigate = useNavigate({ from: '/' });
 
   const { search = '', page = 1 } = Route.useSearch();

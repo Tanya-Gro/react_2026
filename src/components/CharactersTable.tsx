@@ -1,13 +1,14 @@
+import { useNavigate } from '@tanstack/react-router';
+import { Route } from 'routes';
+import { useSelector, useDispatch } from 'react-redux';
 import type { Card } from 'app';
 import type { StoredCards } from 'features';
 import { getID } from 'helpers';
+import type { RootState } from 'app';
+import { toggleCard } from 'features';
 
 type CharactersTableProps = {
   cards: Card[];
-  shownCardId: number | undefined;
-  selectedCards: StoredCards;
-  handleToggleShown: (id: string, isShown: boolean) => void;
-  handleSelect: (id: string, card: Card) => void;
 };
 
 type CharactersRowProps = {
@@ -34,11 +35,30 @@ const TABLE_HEADERS: readonly TableHeader[] = [
 
 export const CharactersTable = ({
   cards,
-  shownCardId,
-  selectedCards,
-  handleToggleShown,
-  handleSelect,
 }: CharactersTableProps): React.JSX.Element => {
+  const navigate = useNavigate({ from: '/' });
+  const { details, search, page } = Route.useSearch();
+  const dispatch = useDispatch();
+
+  const handleSelect = (id: string, card: Card): void => {
+    dispatch(toggleCard({ id, card }));
+  };
+
+  const selectedCards = useSelector(
+    (state: RootState) => state.selectedCards.items,
+  );
+
+  const handleToggleShown = (id: string, isShown: boolean): void => {
+    navigate({
+      to: '/',
+      search: {
+        search,
+        page,
+        details: isShown ? undefined : Number(id),
+      },
+    });
+  };
+
   return (
     <table
       aria-label="Star Wars characters"
@@ -61,8 +81,8 @@ export const CharactersTable = ({
           <CharactersRow
             key={card.url}
             card={card}
+            shownCardId={details}
             selectedCards={selectedCards}
-            shownCardId={shownCardId}
             onToggleShown={handleToggleShown}
             onSelect={handleSelect}
           />

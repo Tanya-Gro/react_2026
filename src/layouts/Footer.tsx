@@ -1,6 +1,6 @@
 import { LINKS } from 'app/constants';
 
-export const Footer: () => React.JSX.Element = () => {
+export const Footer = (): React.JSX.Element => {
   return (
     <footer className="border-t border-mist-300 bg-mist-100">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-2">
