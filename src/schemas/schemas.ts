@@ -16,6 +16,9 @@ export const formSchema = z
       .min(MIN_PASSWORD_LENGTH, 'Password must be at least 6 characters'),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
     gender: z.enum(['male', 'female']),
+    acceptTerms: z.boolean().refine((val) => val === true, {
+      message: 'You must accept the terms and conditions',
+    }),
     country: z.string().nonempty('Please select/enter a country'),
     picture: z
       .instanceof(File, { message: 'File is required' })

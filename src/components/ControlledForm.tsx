@@ -21,7 +21,7 @@ export const ControlledForm = ({ onSuccess }: ControlledFormProps) => {
     control,
     handleSubmit,
     setError,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
@@ -33,6 +33,7 @@ export const ControlledForm = ({ onSuccess }: ControlledFormProps) => {
       password: '',
       confirmPassword: '',
       age: undefined,
+      acceptTerms: false,
     },
   });
 
@@ -59,7 +60,7 @@ export const ControlledForm = ({ onSuccess }: ControlledFormProps) => {
       dispatch(addCountry(formedCountry));
     }
 
-    const { confirmPassword, ...cardData } = data;
+    const { acceptTerms, confirmPassword, ...cardData } = data;
 
     dispatch(
       addCard({
@@ -229,9 +230,28 @@ export const ControlledForm = ({ onSuccess }: ControlledFormProps) => {
         />
       </div>
 
+      <div className="flex flex-col mt-1">
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="acceptTerms"
+            {...register('acceptTerms')}
+            className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-blue-500 focus:ring-offset-gray-800 cursor-pointer"
+          />
+          <label
+            htmlFor="acceptTerms"
+            className="text-sm text-gray-300 cursor-pointer select-none"
+          >
+            I accept the Terms & Conditions
+          </label>
+        </div>
+        <p className={errorStyles}>{errors.acceptTerms?.message ?? ''}</p>
+      </div>
+
       <button
         type="submit"
-        className="mt-2 w-full p-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-md transition-colors text-sm"
+        disabled={!isValid}
+        className="mt-2 w-full p-2.5 bg-blue-600 hover:bg-blue-700 cursor-pointer disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-semibold shadow-md transition-colors text-sm"
       >
         Submit Card
       </button>

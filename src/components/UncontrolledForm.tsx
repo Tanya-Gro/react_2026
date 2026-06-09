@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { SubmitEvent, JSX, ChangeEvent } from 'react';
+import type { JSX, ChangeEvent, FormEvent } from 'react';
 import { useAppDispatch, useAppSelector } from 'app';
 import { addCard, addCountry } from 'features';
-import { formSchema, type FormValues } from 'schemas';
+import { formSchema } from 'schemas';
 import { getPasswordStrength, toBase64 } from 'helpers';
 
 type Props = {
@@ -26,16 +26,15 @@ export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
     setPasswordValue(e.target.value);
   };
 
-  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const formData = new FormData(e.currentTarget);
     const fileInput = e.currentTarget.elements.namedItem(
       'picture',
     ) as HTMLInputElement;
     const file = fileInput.files?.[0];
 
-    const data: FormValues = {
+    const data = {
       name: formData.get('name') as string,
       age: formData.get('age') ? Number(formData.get('age')) : 0,
       email: formData.get('email') as string,
@@ -44,6 +43,7 @@ export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
       gender: formData.get('gender') as 'male' | 'female',
       country: formData.get('country') as string,
       picture: file as File,
+      acceptTerms: formData.get('acceptTerms') === 'on',
     };
 
     const result = formSchema.safeParse(data);
@@ -61,7 +61,7 @@ export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
       return;
     }
 
-    const { country, picture, ...validatedData } = result.data;
+    const { country, picture, ...validatedData } = result.data as any;
 
     if (!picture) {
       setErrors((prev) => ({ ...prev, picture: 'Picture is required' }));
@@ -82,7 +82,8 @@ export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
     setErrors({});
 
     const formattedCountry = country[0].toUpperCase() + country.slice(1);
-    const { confirmPassword, ...cardData } = validatedData;
+
+    const { confirmPassword, acceptTerms, ...cardData } = validatedData;
 
     dispatch(
       addCard({
@@ -105,7 +106,7 @@ export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
     <form
       onSubmit={handleSubmit}
       data-testid="form"
-      className="flex flex-col gap-3 bg-white p-6 rounded-2xl shadow-xl border border-gray-100  max-w-md w-full"
+      className="flex flex-col gap-3 bg-white p-6 rounded-2xl shadow-xl border border-gray-100 max-w-md w-full"
     >
       <h2 className="text-2xl font-bold text-gray-900 border-b border-gray-100 pb-2 mb-2">
         Uncontrolled Form
@@ -156,7 +157,12 @@ export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
         <label htmlFor="email" className={labelStyles}>
           Email
         </label>
-        <input id="email" name="email" className={inputStyles} />
+        <input
+          id="email"
+          name="email"
+          className={inputStyles}
+          placeholder="example@mail.com"
+        />
         <p className={errorStyles}>{errors.email}</p>
       </div>
 
@@ -202,6 +208,7 @@ export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
           name="confirmPassword"
           type="password"
           className={inputStyles}
+          placeholder="••••••••"
         />
         <p className={errorStyles}>{errors.confirmPassword}</p>
       </div>
@@ -248,6 +255,24 @@ export const UncontrolledForm = ({ onSuccess }: Props): JSX.Element => {
             data-testid="file-input"
           />
         </div>
+      </div>
+
+      <div className="flex flex-col mt-1">
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="acceptTerms"
+            name="acceptTerms"
+            className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+          />
+          <label
+            htmlFor="acceptTerms"
+            className="text-sm text-gray-700 cursor-pointer select-none"
+          >
+            I accept the Terms & Conditions
+          </label>
+        </div>
+        <p className={errorStyles}>{errors.acceptTerms}</p>
       </div>
 
       <button
