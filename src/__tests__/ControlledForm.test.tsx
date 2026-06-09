@@ -62,6 +62,9 @@ describe('ControlledForm', () => {
       </Provider>,
     );
 
+    const submitButton = screen.getByRole('button', { name: /submit card/i });
+    expect(submitButton).toBeDisabled();
+
     await user.type(screen.getByLabelText(/name/i), mockData.name);
     await user.type(screen.getByLabelText(/age/i), mockData.age.toString());
     await user.type(screen.getByLabelText(/email/i), mockData.email);
@@ -79,7 +82,12 @@ describe('ControlledForm', () => {
     const fileInput = screen.getByLabelText(/profile picture/i);
     await user.upload(fileInput, file);
 
-    const submitButton = screen.getByRole('button', { name: /submit card/i });
+    const termsCheckbox = screen.getByLabelText(
+      /i accept the terms & conditions/i,
+    );
+    await user.click(termsCheckbox);
+
+    expect(submitButton).toBeEnabled();
     await user.click(submitButton);
 
     await waitFor(() => {
@@ -129,7 +137,14 @@ describe('ControlledForm', () => {
     });
     await user.upload(screen.getByLabelText(/profile picture/i), file);
 
-    await user.click(screen.getByRole('button', { name: /submit card/i }));
+    const termsCheckbox = screen.getByLabelText(
+      /i accept the terms & conditions/i,
+    );
+    await user.click(termsCheckbox);
+
+    const submitButton = screen.getByRole('button', { name: /submit card/i });
+    expect(submitButton).toBeEnabled();
+    await user.click(submitButton);
 
     await waitFor(() => {
       expect(onSuccess).toHaveBeenCalled();

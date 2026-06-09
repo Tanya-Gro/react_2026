@@ -75,6 +75,12 @@ describe('UncontrolledForm', () => {
     });
     const input = screen.getByTestId('file-input');
     await user.upload(input, file);
+
+    const termsCheckbox = screen.getByLabelText(
+      /i accept the terms & conditions/i,
+    );
+    await user.click(termsCheckbox);
+
     await user.click(screen.getByRole('button', { name: /submit/i }));
     await waitFor(() => {
       expect(onSuccess).toHaveBeenCalledTimes(1);
