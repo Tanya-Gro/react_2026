@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+
+:root {
+  --border: #e5e4e7;
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font: 18px / 145% var(--sans);
+}
+
+#root {
+  width: 1326px;
+  max-width: 100%;
+  max-height: 100vh;
+  min-height: 100vh;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+}

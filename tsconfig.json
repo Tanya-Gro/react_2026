@@ -1,0 +1,20 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    "types": ["vitest/globals"],
+    "strict": true,
+    "paths": {
+      "components": ["./src/components/index.ts"],
+      "features": ["./src/features/index.ts"],
+      "helpers": ["./src/helpers/index.ts"],
+      "layouts": ["./src/layouts/index.ts"],
+      "schemas": ["./src/schemas/index.ts"],
+      "app": ["./src/app/index.ts"],
+      "src/*": ["./src/*"]
+    }
+  }
+}
