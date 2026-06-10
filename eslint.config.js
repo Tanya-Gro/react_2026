@@ -98,7 +98,7 @@ export default defineConfig([
       ],
       '@typescript-eslint/prefer-nullish-coalescing': 'warn',
       '@typescript-eslint/prefer-optional-chain': 'error',
-      '@typescript-eslint/no-unnecessary-condition': 'warn',
+      '@typescript-eslint/no-unnecessary-condition': 'error',
       '@typescript-eslint/no-inferrable-types': 'error',
 
       'unicorn/prefer-node-protocol': 'error',
@@ -119,6 +119,7 @@ export default defineConfig([
         },
       ],
       'arrow-parens': ['error', 'always'],
+      'max-len': ['warn', { code: 120, ignoreComments: true }],
 
       // 🔧 Switched off
       'no-undef': 'off',
