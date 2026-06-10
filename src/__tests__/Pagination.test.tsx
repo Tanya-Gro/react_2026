@@ -40,14 +40,14 @@ describe('Pagination', () => {
     render(<Pagination countPages={COUNT_PAGES} />);
 
     expect(
-      screen.getByText(`Page ${mockSearchState.page} of ${COUNT_PAGES}`)
+      screen.getByText(`Page ${mockSearchState.page} of ${COUNT_PAGES}`),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('button', { name: /previous page/i })
+      screen.getByRole('button', { name: /previous page/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /next page/i })
+      screen.getByRole('button', { name: /next page/i }),
     ).toBeInTheDocument();
   });
 

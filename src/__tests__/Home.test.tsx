@@ -30,7 +30,7 @@ describe('Home', () => {
 
     expect(consoleSpy).toHaveBeenCalled();
     expect(
-      await screen.findByText(/something went wrong/i)
+      await screen.findByText(/something went wrong/i),
     ).toBeInTheDocument();
 
     consoleSpy.mockRestore();
@@ -46,7 +46,7 @@ describe('Home', () => {
     server.use(
       http.get('https://swapi.py4e.com/api/people/', () => {
         return HttpResponse.json({ detail: 'Server error' }, { status: 500 });
-      })
+      }),
     );
 
     await renderWithRouter();
@@ -69,7 +69,7 @@ describe('Home', () => {
     await user.type(input, 'Luke');
     await user.click(button);
 
-    const storedData: string | null = localStorage.getItem(LS_KEY) || '';
+    const storedData: string | null = localStorage.getItem(LS_KEY) ?? '';
 
     expect(storedData).toBe(JSON.stringify('Luke'));
   });
@@ -99,7 +99,7 @@ describe('Home', () => {
 
     expect(setItemSpy).not.toHaveBeenCalledWith(
       LS_KEY,
-      expect.stringContaining('Luke')
+      expect.stringContaining('Luke'),
     );
   });
 });

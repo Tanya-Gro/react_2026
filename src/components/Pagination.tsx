@@ -10,7 +10,7 @@ export const Pagination: (data: PaginationProps) => React.JSX.Element = ({
 }: PaginationProps) => {
   const navigate: UseNavigateResult<string> = useNavigate({ from: '/' });
 
-  const { search = '', page = 1 } = Route.useSearch();
+  const { details, search = '', page = 1 } = Route.useSearch();
 
   const onPageChange = (newPage: number): void => {
     navigate({
@@ -18,6 +18,7 @@ export const Pagination: (data: PaginationProps) => React.JSX.Element = ({
       search: {
         search: search,
         page: newPage,
+        details: details,
       },
     });
   };
@@ -35,7 +36,7 @@ export const Pagination: (data: PaginationProps) => React.JSX.Element = ({
     }
   };
 
-  const BUTTON_CLASSES: string =
+  const BUTTON_CLASSES =
     'material-symbols-outlined cursor-pointer hover:text-amber-900 hover:underline disabled:text-mist-200 disabled:no-underline disabled:cursor-auto';
 
   return (

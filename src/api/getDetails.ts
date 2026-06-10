@@ -11,7 +11,8 @@ export const getDetails = async (id: string): Promise<Details | FetchError> => {
       return { hasError: true, message: `Server error: ${response.status}` };
     }
 
-    return await response.json();
+    const details: Details = await response.json();
+    return details;
   } catch (error) {
     if (import.meta.env.DEV) {
       console.error('Fetch crashed:', error);

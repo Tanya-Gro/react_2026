@@ -6,7 +6,7 @@ describe('About Component', () => {
     await renderWithRouter({ route: '/about' });
 
     expect(
-      await screen.findByRole('link', { name: /Rolling Scopes School/i })
+      await screen.findByRole('link', { name: /Rolling Scopes School/i }),
     ).toBeInTheDocument();
   });
 });

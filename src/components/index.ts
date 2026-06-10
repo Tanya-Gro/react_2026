@@ -3,6 +3,7 @@ export { ResultsArea } from './ResultsArea';
 export { Loader } from './Loader';
 export { ErrorBoundary } from './ErrorBoundary';
 export { Pagination } from './Pagination';
-export { Footer } from './Footer';
 export { Detail } from './Detail';
 export { ActionArea } from './ActionArea';
+export { Flyout } from './Flyout';
+export { ThemeToggle } from './ThemeToggle';
