@@ -1,21 +1,36 @@
 import type { SubmitEvent, JSX } from 'react';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+import { Route } from 'routes';
+import { LS_KEY } from 'app';
+import { useLocalStorage } from 'hooks';
 
-type SearchFormProps = {
-  searchQuery: string;
-  onSearchQueryChange: (searchQuery: string) => void;
-};
-
-export const SearchArea = ({
-  searchQuery,
-  onSearchQueryChange,
-}: SearchFormProps): JSX.Element => {
+export const SearchArea = (): JSX.Element => {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const navigate = useNavigate({ from: '/' });
+
+  const { search = '' } = Route.useSearch();
+  const [lsSearch, setLsSearch] = useLocalStorage<string>(LS_KEY, search);
+
+  useEffect(() => {
+    if (search !== lsSearch) {
+      setLsSearch(search);
+    }
+  }, [search, setLsSearch]);
+
   const handleFormSubmit = (e: SubmitEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const value = inputRef.current?.value.trim() ?? '';
-    if (value !== searchQuery) {
-      onSearchQueryChange(value);
+    if (value !== search) {
+      setLsSearch(value);
+      navigate({
+        to: '/',
+        search: {
+          search: value,
+          page: 1,
+        },
+      });
     }
   };
 
@@ -28,12 +43,12 @@ export const SearchArea = ({
         Search characters:
       </label>
       <input
-        key={searchQuery}
+        key={search}
         ref={inputRef}
         id="search-input"
         type="search"
         placeholder="Search..."
-        defaultValue={searchQuery}
+        defaultValue={search || ''}
         className="px-2 rounded flex-1 border border-mist-200 focus:outline-none focus:ring-2 focus:ring-mist-300"
       />
       <button

@@ -1,157 +1,179 @@
-import { useNavigate } from '@tanstack/react-router';
+import { useEffect, useReducer, type JSX } from 'react';
+import { useSelector } from 'react-redux';
 import { Route } from 'routes';
-import { useSelector, useDispatch } from 'react-redux';
-import type { Card } from 'app';
-import type { StoredCards } from 'features';
-import { getID } from 'helpers';
-import type { RootState } from 'app';
-import { toggleCard } from 'features';
+import { getID, isFetchError } from 'helpers';
+import { CARDS_PER_PAGE, type Card } from 'app';
+import type { DataType, FetchError, RootState } from 'app';
+import { Loader } from './Loader';
+import { Pagination } from './Pagination';
+import { getData } from 'api';
+import { CharactersRow } from './CharactersRow';
+import { TABLE_HEADERS } from './constants';
 
-type CharactersTableProps = {
+type CharactersState = {
+  hasError: boolean;
+  errorMessage: string;
   cards: Card[];
+  isLoading: boolean;
+  countPages: number;
 };
 
-type CharactersRowProps = {
-  card: Card;
-  shownCardId: number | undefined;
-  selectedCards: StoredCards;
-  onToggleShown: (id: string, isSelected: boolean) => void;
-  onSelect: (id: string, card: Card) => void;
+type CharactersAction =
+  | { type: 'start_loading' }
+  | { type: 'fetch_success'; payload: { results: Card[]; count: number } }
+  | { type: 'fetch_failed'; payload: string };
+
+const reducer = (
+  state: CharactersState,
+  action: CharactersAction,
+): CharactersState => {
+  switch (action.type) {
+    case 'start_loading': {
+      return { ...state, isLoading: true, hasError: false, errorMessage: '' };
+    }
+    case 'fetch_success': {
+      return {
+        ...state,
+        isLoading: false,
+        cards: action.payload.results,
+        hasError: false,
+        countPages: Math.max(
+          1,
+          Math.ceil(action.payload.count / CARDS_PER_PAGE),
+        ),
+      };
+    }
+    case 'fetch_failed': {
+      return {
+        ...state,
+        isLoading: false,
+        hasError: true,
+        errorMessage: action.payload,
+        cards: [],
+      };
+    }
+    default: {
+      return state;
+    }
+  }
 };
 
-type TableHeader = {
-  label: string;
-  key: keyof Card;
-  className: string;
+const initialState = {
+  hasError: false,
+  errorMessage: '',
+  cards: [],
+  isLoading: false,
+  countPages: 1,
 };
 
-const TABLE_HEADERS: readonly TableHeader[] = [
-  { label: 'Name', key: 'name', className: 'p-3.5 w-2/6' },
-  { label: 'Gender', key: 'gender', className: 'p-3.5 w-1/6' },
-  { label: 'Height', key: 'height', className: 'p-3.5 w-1/6' },
-  { label: 'Mass', key: 'mass', className: 'p-3.5 w-1/6' },
-  { label: 'Hair Color', key: 'hair_color', className: 'p-3.5 w-1/6' },
-];
+export const CharactersTable = (): JSX.Element => {
+  const { search = '', page = 1 } = Route.useSearch();
 
-export const CharactersTable = ({
-  cards,
-}: CharactersTableProps): React.JSX.Element => {
-  const navigate = useNavigate({ from: '/' });
-  const { details, search, page } = Route.useSearch();
-  const dispatch = useDispatch();
+  const [state, dispatchReducer] = useReducer(reducer, initialState);
 
-  const handleSelect = (id: string, card: Card): void => {
-    dispatch(toggleCard({ id, card }));
-  };
+  const { cards, hasError, isLoading, errorMessage, countPages } = state;
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchData = async (): Promise<void> => {
+      dispatchReducer({
+        type: 'start_loading',
+      });
+
+      try {
+        const data: DataType | FetchError = await getData(
+          search,
+          page,
+          controller.signal,
+        );
+
+        if (isFetchError(data)) {
+          dispatchReducer({
+            type: 'fetch_failed',
+            payload: data.message,
+          });
+        } else {
+          dispatchReducer({
+            type: 'fetch_success',
+            payload: { results: data.results, count: data.count },
+          });
+        }
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return;
+        }
+
+        dispatchReducer({
+          type: 'fetch_failed',
+          payload: String(error),
+        });
+      }
+    };
+
+    fetchData();
+
+    return (): void => {
+      controller.abort();
+    };
+  }, [search, page]);
 
   const selectedCards = useSelector(
     (state: RootState) => state.selectedCards.items,
   );
 
-  const handleToggleShown = (id: string, isShown: boolean): void => {
-    navigate({
-      to: '/',
-      search: {
-        search,
-        page,
-        details: isShown ? undefined : Number(id),
-      },
-    });
-  };
+  if (hasError) {
+    return <p className="flex-1">Error: {errorMessage}</p>;
+  }
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
-    <table
-      aria-label="Star Wars characters"
-      className="text-left overflow-x-auto"
-    >
-      <caption className="sr-only">List of Star Wars characters</caption>
-      <thead className="sticky top-0 z-10 border-b font-bold border-mist-400 text-mist-700 bg-mist-200">
-        <tr>
-          <th aria-hidden="true"></th>
-          {TABLE_HEADERS.map((header) => (
-            <th key={header.key} className={header.className}>
-              {header.label}
-            </th>
-          ))}
-        </tr>
-      </thead>
+    <div className="flex flex-col flex-1 bg-mist-100 overflow-hidden">
+      <table
+        aria-label="Star Wars characters"
+        className="text-left overflow-y-auto overflow-x-auto"
+      >
+        <caption className="sr-only">List of Star Wars characters</caption>
+        <thead className="sticky top-0 z-10 border-b font-bold border-mist-400 text-mist-700 bg-mist-200">
+          <tr>
+            <th aria-hidden="true"></th>
+            {TABLE_HEADERS.map((header) => (
+              <th key={header.key} className={header.className}>
+                {header.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
 
-      <tbody>
-        {cards.map((card) => (
-          <CharactersRow
-            key={card.url}
-            card={card}
-            shownCardId={details}
-            selectedCards={selectedCards}
-            onToggleShown={handleToggleShown}
-            onSelect={handleSelect}
-          />
-        ))}
-      </tbody>
-    </table>
-  );
-};
-
-const CharactersRow = ({
-  card,
-  shownCardId,
-  selectedCards,
-  onToggleShown,
-  onSelect,
-}: CharactersRowProps): React.JSX.Element => {
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLTableRowElement>,
-    id: string,
-    isSelected: boolean,
-  ): void => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      onToggleShown(id, isSelected);
-    } else if (e.code === 'Space') {
-      e.preventDefault();
-      onSelect(id, card);
-    }
-  };
-
-  const id = getID(card.url);
-  const isShown = String(shownCardId) === id;
-  const isSelected = id in selectedCards;
-
-  return (
-    <tr
-      role="button"
-      tabIndex={0}
-      onClick={() => onToggleShown(id, isShown)}
-      onKeyDown={(e) => handleKeyDown(e, id, isShown)}
-      className={`
-        border-b border-mist-200 py-3 px-4 transition-colors outline-none
-        hover:bg-mist-200 focus-visible:bg-mist-200
-        ${isSelected ? 'bg-mist-200' : ''}
-      `}
-    >
-      <td className="p-2 w-5">
-        <input
-          aria-label={`Select ${card.name}`}
-          type="checkbox"
-          checked={isSelected}
-          readOnly
-          tabIndex={-1}
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect(id, card);
-          }}
-          className="h-4.5 w-4.5 cursor-pointer"
-        />
-      </td>
-
-      {TABLE_HEADERS.map((row) => (
-        <td
-          key={`${id}-${row.key}`}
-          className={`${row.className} py-2 text-mist-600 truncate cursor-pointer`}
-        >
-          {card[row.key] ?? '-'}
-        </td>
-      ))}
-    </tr>
+        <tbody>
+          {cards.length ? (
+            cards.map((card) => {
+              const id = getID(card.url);
+              return (
+                <CharactersRow
+                  key={id}
+                  id={id}
+                  card={card}
+                  isSelected={id in selectedCards}
+                />
+              );
+            })
+          ) : (
+            <tr>
+              <td
+                colSpan={TABLE_HEADERS.length + 1}
+                className="p-8 text-center text-mist-500 italic"
+              >
+                No results found. Try adjusting your search.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      <Pagination countPages={countPages} />
+    </div>
   );
 };
