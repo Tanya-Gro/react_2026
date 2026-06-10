@@ -1,4 +1,3 @@
-import '@fontsource/material-symbols-outlined';
 import { StrictMode } from 'react';
 import { RouterProvider } from '@tanstack/react-router';
 import { createRoot } from 'react-dom/client';

@@ -107,9 +107,11 @@ const CloseButton = ({ onClose }: CloseButtonProps): React.JSX.Element => {
     <button
       type="button"
       onClick={onClose}
-      className="material-symbols-outlined rounded border border-mist-400 bg-mist-200 px-2 py-1 transition hover:bg-mist-400 ml-auto"
+      className="rounded border border-mist-400 bg-mist-200 px-2 transition hover:bg-mist-400 ml-auto"
     >
-      <span aria-hidden="true">close</span>
+      <span aria-hidden="true" className="text-3xl">
+        &times;
+      </span>
       <span className="sr-only">Close details</span>
     </button>
   );
