@@ -46,7 +46,9 @@ describe('Detail Component - Querying Behavior', () => {
     const { unmount } = await renderWithRouter({ route: '/?details=42' });
 
     await waitFor(() => {
-      expect(screen.getByText('Luke Skywalker')).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: 'Luke Skywalker' }),
+      ).toBeInTheDocument();
     });
     expect(requestCount).toBe(1);
 
@@ -55,7 +57,9 @@ describe('Detail Component - Querying Behavior', () => {
     await renderWithRouter({ route: '/?details=42' });
 
     await waitFor(() => {
-      expect(screen.getByText('Luke Skywalker')).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: 'Luke Skywalker' }),
+      ).toBeInTheDocument();
     });
     expect(requestCount).toBe(2);
   });
