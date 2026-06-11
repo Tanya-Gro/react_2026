@@ -2,7 +2,7 @@ import type { SubmitEvent, JSX } from 'react';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Route } from 'routes';
-import { LS_KEY } from 'app';
+import { LS_KEY } from 'app/constants';
 import { useLocalStorage } from 'hooks';
 
 export const SearchArea = (): JSX.Element => {

@@ -12,7 +12,15 @@ export const Flyout = (): React.JSX.Element | null => {
   const cards = Object.entries(selectedCards);
   const countCards = cards.length;
 
-  const handleDownload = () => {
+  if (countCards === 0) {
+    return null;
+  }
+
+  const handleUnselectAllButtonClick = () => {
+    dispatch(clearCards());
+  };
+
+  const handleDownloadButtonClick = () => {
     const blob = getBlob(cards);
     const url = URL.createObjectURL(blob);
 
@@ -23,10 +31,6 @@ export const Flyout = (): React.JSX.Element | null => {
     tempLink.click();
     setTimeout(() => URL.revokeObjectURL(url), 0);
   };
-
-  if (countCards === 0) {
-    return null;
-  }
 
   return (
     <details
@@ -50,7 +54,7 @@ export const Flyout = (): React.JSX.Element | null => {
           <li>
             <button
               type="button"
-              onClick={() => dispatch(clearCards())}
+              onClick={handleUnselectAllButtonClick}
               className="rounded-lg border border-mist-300 bg-white px-4 py-2 text-sm font-medium text-mist-700 shadow-sm transition hover:bg-mist-100 cursor-pointer"
             >
               Unselect all
@@ -60,7 +64,7 @@ export const Flyout = (): React.JSX.Element | null => {
             <button
               type="button"
               className="inline-block rounded-lg bg-mauve-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-mauve-700 text-center cursor-pointer"
-              onClick={handleDownload}
+              onClick={handleDownloadButtonClick}
             >
               Download
             </button>

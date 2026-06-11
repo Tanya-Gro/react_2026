@@ -1,16 +1,17 @@
 import { useState, type JSX } from 'react';
 import { Flyout } from './Flyout';
+import { useDispatch } from 'react-redux';
+import { dataApi, detailsApi } from 'services';
 
-type ActionAreaProps = {
-  onThrowError: () => void;
-  onRefresh: () => void;
-};
-
-export const ActionArea = ({
-  onThrowError,
-  onRefresh,
-}: ActionAreaProps): JSX.Element => {
+export const ActionArea = (): JSX.Element => {
   const [hasError, setHasError] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const handleRefreshButtonClick = (): void => {
+    dispatch(dataApi.util.invalidateTags(['Characters']));
+    dispatch(detailsApi.util.invalidateTags(['Details']));
+  };
 
   if (hasError) {
     throw new Error('This is a test error.');
@@ -25,7 +26,7 @@ export const ActionArea = ({
       <Flyout />
       <button
         name="refresh-button"
-        onClick={onRefresh}
+        onClick={handleRefreshButtonClick}
         className="bg-mist-300 hover:bg-mauve-300 cursor-pointer rounded h-10 w-30 border border-mist-500"
       >
         Refresh

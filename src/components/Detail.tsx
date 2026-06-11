@@ -2,9 +2,9 @@ import type { JSX } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Route } from 'routes';
 import { Loader } from 'components';
-import { useDetails } from 'hooks';
 import { DetailField } from './DetailField';
 import type { Details } from 'app';
+import { useGetDetailsQuery } from 'services';
 
 type DetailFieldConfig = { title: string; key: keyof Details };
 
@@ -29,9 +29,9 @@ export const Detail = (): JSX.Element | null => {
 
   const { details, page, search } = Route.useSearch();
 
-  const detailsId = details ? Number(details) : undefined;
-
-  const [card, isLoading] = useDetails(detailsId);
+  const { data, error, isFetching } = useGetDetailsQuery(details ?? 0, {
+    skip: !details,
+  });
 
   if (!details) {
     return null;
@@ -48,7 +48,7 @@ export const Detail = (): JSX.Element | null => {
     });
   };
 
-  if (!card) {
+  if (!data || error) {
     return (
       <aside
         aria-label="Character details"
@@ -56,7 +56,9 @@ export const Detail = (): JSX.Element | null => {
       >
         <CloseButton onClose={handleClose} />
         <p className="mt-10 text-xl text-mist-700">
-          Oops. Description not found...
+          {data
+            ? 'Failed to load character details.'
+            : 'Oops. Description not found...'}
         </p>
       </aside>
     );
@@ -67,24 +69,24 @@ export const Detail = (): JSX.Element | null => {
       aria-label="Character details"
       className="flex flex-col w-80 max-h-dvh bg-mist-50 p-2 shadow-[inset_0_25px_50px_-12px_rgba(0,0,0,0.25)]"
     >
-      {isLoading || isFetching ? (
+      {isFetching ? (
         <Loader />
       ) : (
         <>
           <div className="p-2.5 flex items-start justify-between gap-4 border-b border-mist-400 my-0.5">
-            <h2 className="text-2xl font-bold text-mist-800">{card.name}</h2>
+            <h2 className="text-2xl font-bold text-mist-800">{data.name}</h2>
             <CloseButton onClose={handleClose} />
           </div>
 
           <div className="flex flex-col gap-2 px-2 items-center overflow-y-auto">
-            <img src={card.image} alt={card.name} className="w-60" />
+            <img src={data.image} alt={data.name} className="w-60" />
 
             {DETAIL_FIELDS.map(({ title, key }) => (
-              <DetailField label={title} value={card[key]} key={key} />
+              <DetailField label={title} value={data[key]} key={key} />
             ))}
 
             <a
-              href={card.wiki}
+              href={data.wiki}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 text-lg font-medium text-mauve-700 underline-offset-4 transition hover:underline"
