@@ -48,7 +48,5 @@ describe('Flyout Component', () => {
 
     expect(spyCreateElement).toHaveBeenCalledWith('a');
     expect(mockClick).toHaveBeenCalled();
-
-    spyCreateElement.mockRestore();
   });
 });

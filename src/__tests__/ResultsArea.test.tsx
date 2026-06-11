@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { server } from 'mocks';
 import { renderWithRouter } from './test-utils/renderWithRouter';
@@ -52,7 +52,7 @@ describe('ResultsArea & CharactersTable Integration', () => {
     ).toBeInTheDocument();
   });
 
-  it('should handle keyboard navigation (Enter and Space) on table rows', async () => {
+  it('should handle keyboard navigation Enter on table rows', async () => {
     const user = userEvent.setup();
     server.use(
       http.get('*/people*', () => {
@@ -81,6 +81,43 @@ describe('ResultsArea & CharactersTable Integration', () => {
     await user.keyboard('{Enter}');
 
     expect(row).toHaveFocus();
+  });
+
+  it('should handle keyboard navigation Space on table rows', async () => {
+    server.use(
+      http.get('*/people*', () => {
+        return HttpResponse.json({
+          results: [
+            {
+              url: 'https://swapi.dev',
+              name: 'Luke Skywalker',
+              gender: 'male',
+              height: '172',
+              mass: '77',
+              hair_color: 'blond',
+            },
+          ],
+          count: 1,
+        });
+      }),
+    );
+
+    await renderWithRouter({ route: '/' });
+
+    const row = await screen.findByRole('button', { name: /Luke Skywalker/i });
+    expect(row).toBeInTheDocument();
+
+    const checkbox = await screen.findByRole('checkbox', {
+      name: /select luke skywalker/i,
+    });
+    expect(checkbox).toBeInTheDocument();
+    expect(checkbox).not.toBeChecked();
+
+    row.focus();
+    expect(row).toHaveFocus();
+    fireEvent.keyDown(row, { key: ' ', code: 'Space' });
+
+    expect(checkbox).toBeChecked();
   });
 
   it('should select character when checkbox is clicked', async () => {
