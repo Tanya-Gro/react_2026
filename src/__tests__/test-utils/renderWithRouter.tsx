@@ -3,7 +3,7 @@ import {
   createMemoryHistory,
   createRouter,
 } from '@tanstack/react-router';
-import { render, type RenderResult } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { routeTree } from 'src/routeTree.gen';
 import { configureStore, type EnhancedStore } from '@reduxjs/toolkit';
 import { selectedCardsReducer } from 'features';
@@ -28,9 +28,7 @@ export const createTestStore = (): EnhancedStore => {
   });
 };
 
-export const renderWithRouter = async (
-  options: Options = {},
-): Promise<RenderResult> => {
+export const renderWithRouter = async (options: Options = {}) => {
   const store = createTestStore();
   const { route = '/' } = options;
 
@@ -43,7 +41,7 @@ export const renderWithRouter = async (
 
   await testRouter.load();
 
-  return render(
+  const renderResult = render(
     <Provider store={store}>
       <ThemeProvider>
         <ErrorBoundary>
@@ -52,4 +50,10 @@ export const renderWithRouter = async (
       </ThemeProvider>
     </Provider>,
   );
+
+  return {
+    ...renderResult,
+    router: testRouter,
+    store,
+  };
 };

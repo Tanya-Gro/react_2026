@@ -29,7 +29,7 @@ describe('Detail Component - Querying Behavior', () => {
     await renderWithRouter({ route: '/?details=1' });
 
     await waitFor(() => {
-      expect(screen.getByText(/error/i)).toBeInTheDocument();
+      expect(screen.getByText(/Description not found/i)).toBeInTheDocument();
     });
   });
 
@@ -43,7 +43,7 @@ describe('Detail Component - Querying Behavior', () => {
       }),
     );
 
-    const { unmount } = await renderWithRouter({ route: '/?details=42' });
+    const { router } = await renderWithRouter({ route: '/?details=42' });
 
     await waitFor(() => {
       expect(
@@ -52,15 +52,38 @@ describe('Detail Component - Querying Behavior', () => {
     });
     expect(requestCount).toBe(1);
 
-    unmount();
+    await router.navigate({
+      to: '/',
+      search: (old) => ({
+        ...old,
+        page: Number(old.page) || 1,
+        search: String(old.search) || '',
+        details: undefined,
+      }),
+    });
 
-    await renderWithRouter({ route: '/?details=42' });
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('heading', { name: 'Luke Skywalker' }),
+      ).not.toBeInTheDocument();
+    });
+
+    await router.navigate({
+      to: '/',
+      search: (old) => ({
+        ...old,
+        page: Number(old.page) || 1,
+        search: String(old.search) || '',
+        details: 42,
+      }),
+    });
 
     await waitFor(() => {
       expect(
         screen.getByRole('heading', { name: 'Luke Skywalker' }),
       ).toBeInTheDocument();
     });
-    expect(requestCount).toBe(2);
+
+    expect(requestCount).toBe(1);
   });
 });
