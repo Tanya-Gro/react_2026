@@ -1,0 +1,19 @@
+.countryList {
+  padding: 16px;
+  height: 70vh;
+  min-height: 420px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.virtualSpacer {
+  position: relative;
+  width: 100%;
+}
+
+.virtualItem {
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
