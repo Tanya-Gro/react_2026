@@ -16,7 +16,7 @@ import type { SerializedError } from '@reduxjs/toolkit/react';
 export const CharactersTable = (): JSX.Element => {
   const { search = '', page = 1 } = Route.useSearch();
 
-  const { data, error, isLoading, isFetching } = useGetDataQuery({
+  const { data, error, isLoading } = useGetDataQuery({
     search,
     page,
   });
@@ -35,7 +35,7 @@ export const CharactersTable = (): JSX.Element => {
     return <ShowError err={error} />;
   }
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -91,11 +91,22 @@ type ShowErrorProps = {
   err: FetchBaseQueryError | SerializedError;
 };
 
-const ShowError = ({ err }: ShowErrorProps): React.JSX.Element => {
-  return (
-    <p role="alert">
-      Error:
-      {'status' in err ? String(err.status) : (err.message ?? 'Unknown error')}
-    </p>
-  );
+const ERROR_MESSAGES: Record<string, string> = {
+  FETCH_ERROR:
+    'Failed to connect to the server. Please check your internet connection.',
+  TIMEOUT_ERROR: 'The request timed out. Please try again later.',
+  PARSING_ERROR: 'Received an invalid response from the server.',
+};
+
+const ShowError = ({ err }: ShowErrorProps): JSX.Element => {
+  let displayMessage = 'Unknown error';
+
+  if ('status' in err) {
+    const statusStr = String(err.status);
+    displayMessage = ERROR_MESSAGES[statusStr] ?? `HTTP Error ${statusStr}`;
+  } else if (err.message) {
+    displayMessage = err.message;
+  }
+
+  return <p role="alert">{`Error: ${displayMessage}`}</p>;
 };

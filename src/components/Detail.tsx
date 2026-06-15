@@ -8,6 +8,9 @@ import { useGetDetailsQuery } from 'services';
 
 type DetailFieldConfig = { title: string; key: keyof Details };
 
+const ASIDE_CLASSES =
+  'flex flex-col w-80 max-h-dvh bg-mist-50 p-2 shadow-[inset_0_25px_50px_-12px_rgba(0,0,0,0.25)]';
+
 const DETAIL_FIELDS: readonly DetailFieldConfig[] = [
   { title: 'Height', key: 'height' },
   { title: 'Mass', key: 'mass' },
@@ -29,7 +32,7 @@ export const Detail = (): JSX.Element | null => {
 
   const { details, page, search } = Route.useSearch();
 
-  const { data, error, isFetching } = useGetDetailsQuery(details ?? 0, {
+  const { data, error, isLoading } = useGetDetailsQuery(details ?? 0, {
     skip: !details,
   });
 
@@ -48,12 +51,17 @@ export const Detail = (): JSX.Element | null => {
     });
   };
 
+  if (isLoading) {
+    return (
+      <aside aria-label="Character details" className={ASIDE_CLASSES}>
+        <Loader />
+      </aside>
+    );
+  }
+
   if (!data || error) {
     return (
-      <aside
-        aria-label="Character details"
-        className="flex flex-col w-80 max-h-dvh bg-mist-50 p-2 shadow-[inset_0_25px_50px_-12px_rgba(0,0,0,0.25)]"
-      >
+      <aside aria-label="Character details" className={ASIDE_CLASSES}>
         <CloseButton onClose={handleClose} />
         <p className="mt-10 text-xl text-mist-700">
           {data
@@ -65,37 +73,28 @@ export const Detail = (): JSX.Element | null => {
   }
 
   return (
-    <aside
-      aria-label="Character details"
-      className="flex flex-col w-80 max-h-dvh bg-mist-50 p-2 shadow-[inset_0_25px_50px_-12px_rgba(0,0,0,0.25)]"
-    >
-      {isFetching ? (
-        <Loader />
-      ) : (
-        <>
-          <div className="p-2.5 flex items-start justify-between gap-4 border-b border-mist-400 my-0.5">
-            <h2 className="text-2xl font-bold text-mist-800">{data.name}</h2>
-            <CloseButton onClose={handleClose} />
-          </div>
+    <aside aria-label="Character details" className={ASIDE_CLASSES}>
+      <div className="p-2.5 flex items-start justify-between gap-4 border-b border-mist-400 my-0.5">
+        <h2 className="text-2xl font-bold text-mist-800">{data.name}</h2>
+        <CloseButton onClose={handleClose} />
+      </div>
 
-          <div className="flex flex-col gap-2 px-2 items-center overflow-y-auto">
-            <img src={data.image} alt={data.name} className="w-60" />
+      <div className="flex flex-col gap-2 px-2 items-center overflow-y-auto">
+        <img src={data.image} alt={data.name} className="w-60" />
 
-            {DETAIL_FIELDS.map(({ title, key }) => (
-              <DetailField label={title} value={data[key]} key={key} />
-            ))}
+        {DETAIL_FIELDS.map(({ title, key }) => (
+          <DetailField label={title} value={data[key]} key={key} />
+        ))}
 
-            <a
-              href={data.wiki}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 text-lg font-medium text-mauve-700 underline-offset-4 transition hover:underline"
-            >
-              More on Wookieepedia
-            </a>
-          </div>
-        </>
-      )}
+        <a
+          href={data.wiki}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 text-lg font-medium text-mauve-700 underline-offset-4 transition hover:underline"
+        >
+          More on Wookieepedia
+        </a>
+      </div>
     </aside>
   );
 };
