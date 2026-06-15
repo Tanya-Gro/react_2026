@@ -3,7 +3,7 @@ import { CountryCard } from '../country-card/country-card';
 import { getPopulationForYear, createYearDataMap } from '../../utils/data-transformers';
 
 import styles from './country-list.module.css';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 
 type CountryListProps = {
   countries: Country[];
@@ -16,7 +16,7 @@ type CountryListProps = {
   onYearChange: (year: number) => void;
 };
 
-export const CountryList = ({
+export const CountryList = memo(function CountryList({
   countries,
   searchQuery,
   selectedColumns,
@@ -24,7 +24,7 @@ export const CountryList = ({
   selectedYear,
   sortField,
   sortOrder,
-}: CountryListProps) => {
+}: CountryListProps) {
   const filteredCountries = useMemo(
     () =>
       countries
@@ -47,9 +47,9 @@ export const CountryList = ({
 
   return (
     <div className={styles.countryList}>
-      {filteredCountries.map((country, index) => (
+      {filteredCountries.map((country) => (
         <CountryCard
-          key={index}
+          key={country.id}
           country={country}
           selectedYear={selectedYear}
           selectedColumns={selectedColumns}
@@ -57,4 +57,4 @@ export const CountryList = ({
       ))}
     </div>
   );
-};
+});

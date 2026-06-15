@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import styles from './year-selector.module.css';
 
 type YearSelectorProps = {
@@ -6,7 +7,11 @@ type YearSelectorProps = {
   onChange: (year: number) => void;
 };
 
-export const YearSelector = ({ year, years, onChange }: YearSelectorProps) => {
+export const YearSelector = memo(function YearSelector({
+  year,
+  years,
+  onChange,
+}: YearSelectorProps) {
   return (
     <div className={styles.container}>
       <label htmlFor="year" className={styles.label}>
@@ -26,4 +31,4 @@ export const YearSelector = ({ year, years, onChange }: YearSelectorProps) => {
       </select>
     </div>
   );
-};
+});
