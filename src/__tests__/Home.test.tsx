@@ -48,7 +48,9 @@ describe('Home', () => {
 
     await renderWithRouter();
 
-    expect(await screen.findByText(/Error:500/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Error:\s*HTTP Error 500/i),
+    ).toBeInTheDocument();
   });
 
   it('updates localStorage when search query changes', async () => {

@@ -16,7 +16,8 @@ describe('Detail Component - Querying Behavior', () => {
 
     await renderWithRouter({ route: '/?details=1' });
 
-    expect(screen.getByRole('status')).toBeInTheDocument();
+    const loader = await screen.findByRole('status');
+    expect(loader).toBeInTheDocument();
   });
 
   it('should render error UI when query fails', async () => {
