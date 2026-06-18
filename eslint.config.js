@@ -168,6 +168,12 @@ export default defineConfig([
     },
   },
   {
+    files: ['src/app/router.ts'],
+    rules: {
+      '@typescript-eslint/consistent-type-definitions': 'off',
+    },
+  },
+  {
     ignores: [
       '**/node_modules/**',
       '**/dist/**',

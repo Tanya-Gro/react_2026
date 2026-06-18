@@ -23,8 +23,6 @@ export default defineConfig({
         'src/**/constants.ts',
         'src/**/types.ts',
         'src/main.tsx',
-        'src/app/store.ts',
-        'src/app/router.ts',
       ],
       thresholds: {
         global: {
