@@ -15,7 +15,7 @@ export const detailsApi = createApi({
       query: (id) => ({
         url: `${id}.json`,
       }),
-      providesTags: () => ['Details'],
+      providesTags: (_result, _error, id) => [{ type: 'Details', id }],
     }),
   }),
   keepUnusedDataFor: CACHE_TTL,

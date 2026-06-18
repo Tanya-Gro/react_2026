@@ -24,7 +24,9 @@ export const dataApi = createApi({
           page,
         },
       }),
-      providesTags: () => ['Characters'],
+      providesTags: (_result, _error, arg) => [
+        { type: 'Characters', id: `search:${arg.search}, page:${arg.page}` },
+      ],
     }),
   }),
   keepUnusedDataFor: CACHE_TTL,

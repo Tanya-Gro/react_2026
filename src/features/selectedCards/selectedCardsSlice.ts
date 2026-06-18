@@ -4,9 +4,9 @@ import type { Card } from 'app';
 
 export type StoredCards = Record<string, Card>;
 
-export interface CardState {
+export type CardState = {
   items: StoredCards;
-}
+};
 
 const initialState: CardState = {
   items: {},
