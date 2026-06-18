@@ -1,27 +1,28 @@
 import { type JSX } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from '@tanstack/react-router';
 import { toggleCard } from 'features';
 import { Route } from 'routes';
-import type { Card } from 'app';
+import type { Card, RootState } from 'app';
 import { TABLE_HEADERS } from './constants';
+import { getID } from 'helpers';
 
 type CharactersRowProps = {
-  id: string;
   card: Card;
-  isSelected: boolean;
 };
 
-export const CharactersRow = ({
-  id,
-  card,
-  isSelected,
-}: CharactersRowProps): JSX.Element => {
+export const CharactersRow = ({ card }: CharactersRowProps): JSX.Element => {
   const dispatch = useDispatch();
   const navigate = useNavigate({ from: '/' });
   const { details, search = '', page = 1 } = Route.useSearch();
 
+  const selectedCards = useSelector(
+    (state: RootState) => state.selectedCards.items,
+  );
+
+  const id = getID(card.url);
   const isShown = String(details) === id;
+  const isSelected = id in selectedCards;
 
   const toggleSelect = (): void => {
     dispatch(toggleCard({ id, card }));

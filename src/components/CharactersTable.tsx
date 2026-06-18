@@ -1,9 +1,6 @@
 import { type JSX } from 'react';
-import { useSelector } from 'react-redux';
 import { Route } from 'routes';
-import { getID } from 'helpers';
 import { CARDS_PER_PAGE } from 'app/constants';
-import type { RootState } from 'app';
 import { Loader } from './Loader';
 import { Pagination } from './Pagination';
 
@@ -26,10 +23,6 @@ export const CharactersTable = (): JSX.Element => {
     : 1;
 
   const cards = data?.results ?? [];
-
-  const selectedCards = useSelector(
-    (state: RootState) => state.selectedCards.items,
-  );
 
   if (error) {
     return <ShowError err={error} />;
@@ -60,15 +53,7 @@ export const CharactersTable = (): JSX.Element => {
         <tbody>
           {cards.length ? (
             cards.map((card) => {
-              const id = getID(card.url);
-              return (
-                <CharactersRow
-                  key={id}
-                  id={id}
-                  card={card}
-                  isSelected={id in selectedCards}
-                />
-              );
+              return <CharactersRow key={card.url} card={card} />;
             })
           ) : (
             <tr>
