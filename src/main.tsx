@@ -4,7 +4,8 @@ import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'components';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'context';
-import { router, store } from 'app';
+import { router } from 'app/router';
+import { store } from 'app/store';
 import './index.css';
 
 const rootElement: HTMLElement | null = document.getElementById('root');

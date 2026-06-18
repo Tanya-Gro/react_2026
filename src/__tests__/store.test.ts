@@ -1,4 +1,4 @@
-import { store } from 'app';
+import { store } from 'app/store';
 import { dataApi, detailsApi } from 'services';
 
 test('Store should be initialized with correct reducers and middleware', () => {

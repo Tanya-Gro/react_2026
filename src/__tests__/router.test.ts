@@ -1,4 +1,4 @@
-import { router } from 'app';
+import { router } from 'app/router';
 
 test('Router should be initialized with route tree', () => {
   expect(router).toBeDefined();
