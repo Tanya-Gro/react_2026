@@ -1,12 +1,35 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
   "compilerOptions": {
-    "types": ["vitest/globals"],
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "incremental": true,
+    "types": ["vitest/globals", "node"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+
+    /* Linting */
     "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowJs": true,
+    "noUncheckedSideEffectImports": true,
+    "strictPropertyInitialization": true,
+    "noImplicitAny": true,
+    "forceConsistentCasingInFileNames": true,
+    "plugins": [{ "name": "next" }],
     "paths": {
       "components": ["./src/components/index.ts"],
       "components/*": ["./src/components/*"],
@@ -24,5 +47,7 @@
       "app/constants": ["./src/app/constants.ts"],
       "src/*": ["./src/*"]
     }
-  }
+  },
+  "include": ["./src", "./dist/types/**/*.ts", "./next-env.d.ts"],
+  "exclude": ["./node_modules"]
 }
