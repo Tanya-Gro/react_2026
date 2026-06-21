@@ -1,6 +1,7 @@
+import { type JSX } from 'react';
 import { LINKS } from 'app/constants';
 
-export const About = (): React.JSX.Element => {
+const AboutPage = (): JSX.Element => {
   return (
     <main className="flex flex-1 flex-col bg-mist-50 text-mist-800">
       <section className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
@@ -31,3 +32,5 @@ export const About = (): React.JSX.Element => {
     </main>
   );
 };
+
+export default AboutPage;
