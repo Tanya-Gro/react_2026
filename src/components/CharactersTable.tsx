@@ -1,5 +1,7 @@
+'use client';
+
 import { type JSX } from 'react';
-import { Route } from 'routes';
+import { useSearchParams } from 'next/navigation';
 import { CARDS_PER_PAGE } from 'app/constants';
 import { Loader } from './Loader';
 import { Pagination } from './Pagination';
@@ -9,9 +11,17 @@ import { TABLE_HEADERS } from './constants';
 import { useGetDataQuery } from 'services';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import type { SerializedError } from '@reduxjs/toolkit/react';
+import type { Card } from 'app/types';
 
-export const CharactersTable = (): JSX.Element => {
-  const { search = '', page = 1 } = Route.useSearch();
+type CharactersTableProps = { cards: Card[] };
+
+export const CharactersTable = ({
+  cards,
+}: CharactersTableProps): JSX.Element => {
+  const searchParams = useSearchParams();
+
+  const search = searchParams.get('search') || '';
+  const page = searchParams.get('page') || '1';
 
   const { data, error, isLoading } = useGetDataQuery({
     search,
@@ -22,7 +32,7 @@ export const CharactersTable = (): JSX.Element => {
     ? Math.max(1, Math.ceil(data.count / CARDS_PER_PAGE))
     : 1;
 
-  const cards = data?.results ?? [];
+  // const cards = data?.results ?? [];
 
   if (error) {
     return <ShowError err={error} />;

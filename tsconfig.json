@@ -2,12 +2,17 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "incremental": true,
-    "types": ["vitest/globals", "node"],
+    "types": [
+      "node"
+    ],
     "skipLibCheck": true,
-
     /* Bundler mode */
     "moduleResolution": "bundler",
     "isolatedModules": true,
@@ -17,7 +22,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "resolveJsonModule": true,
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -29,25 +33,66 @@
     "strictPropertyInitialization": true,
     "noImplicitAny": true,
     "forceConsistentCasingInFileNames": true,
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
-      "components": ["./src/components/index.ts"],
-      "components/*": ["./src/components/*"],
-      "pages": ["./src/pages/index.ts"],
-      "routes": ["./src/routes/index.tsx"],
-      "app": ["./src/app/index.ts"],
-      "app/*": ["./src/app/*"],
-      "mocks": ["./src/mocks/index.ts"],
-      "helpers": ["./src/helpers/index.ts"],
-      "hooks": ["./src/hooks/index.ts"],
-      "features": ["./src/features/index.ts"],
-      "context": ["./src/context/index.ts"],
-      "layouts": ["./src/layouts/index.ts"],
-      "services": ["./src/services/index.ts"],
-      "app/constants": ["./src/app/constants.ts"],
-      "src/*": ["./src/*"]
+      "components": [
+        "./src/components/index.ts"
+      ],
+      "components/*": [
+        "./src/components/*"
+      ],
+      "routes": [
+        "./src/routes/index.tsx"
+      ],
+      "app": [
+        "./src/app/index.ts"
+      ],
+      "app/*": [
+        "./src/app/*"
+      ],
+      "mocks": [
+        "./src/mocks/index.ts"
+      ],
+      "helpers": [
+        "./src/helpers/index.ts"
+      ],
+      "hooks": [
+        "./src/hooks/index.ts"
+      ],
+      "features": [
+        "./src/features/index.ts"
+      ],
+      "context": [
+        "./src/context/index.ts"
+      ],
+      "layouts": [
+        "./src/layouts/index.ts"
+      ],
+      "services": [
+        "./src/services/index.ts"
+      ],
+      "app/constants": [
+        "./src/app/constants.ts"
+      ],
+      "src/*": [
+        "./src/*"
+      ]
     }
   },
-  "include": ["./src", "./dist/types/**/*.ts", "./next-env.d.ts"],
-  "exclude": ["./node_modules"]
+  "include": [
+    "./src",
+    "./dist/types/**/*.ts",
+    "./next-env.d.ts",
+    "dist/types/**/*.ts",
+    "dist/dev/types/**/*.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "./node_modules"
+  ]
 }
