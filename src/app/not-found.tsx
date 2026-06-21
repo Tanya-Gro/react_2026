@@ -1,12 +1,7 @@
-import { useNavigate } from '@tanstack/react-router';
+import Link from 'next/link';
+import type { JSX } from 'react';
 
-export const NotFound = (): React.JSX.Element => {
-  const navigate = useNavigate();
-
-  const handleClick: () => void = () => {
-    navigate({ to: '/' });
-  };
-
+const NotFound = (): JSX.Element => {
   return (
     <main className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-black/40 px-4 text-center text-mist-100">
       <div className="pointer-events-none absolute inset-0 bg-radial-[circle] from-transparent from-60% to-black/80" />
@@ -19,13 +14,14 @@ export const NotFound = (): React.JSX.Element => {
         This is not the page you&apos;re looking for...
       </p>
 
-      <button
-        type="button"
-        onClick={handleClick}
+      <Link
+        href="/"
         className="cursor-pointer rounded border border-mist-500 bg-mist-300 px-6 py-2 text-lg font-semibold text-mist-900 transition-all hover:bg-mist-400 hover:shadow-lg active:scale-95"
       >
         Back to base
-      </button>
+      </Link>
     </main>
   );
 };
+
+export default NotFound;
