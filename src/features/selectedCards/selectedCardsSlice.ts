@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { Card } from 'app';
+import type { Card } from 'app/types';
 
 export type StoredCards = Record<string, Card>;
 

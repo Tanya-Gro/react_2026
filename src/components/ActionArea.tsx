@@ -1,15 +1,28 @@
-import { useState, type JSX } from 'react';
+'use client';
+
+import { useState, useTransition, type JSX } from 'react';
 import { Flyout } from './Flyout';
 import { useDispatch } from 'react-redux';
 import { dataApi, detailsApi } from 'services';
-import { Route } from 'routes';
+import { refreshData } from 'app/actions/characters';
+import { useTranslations } from 'next-intl';
 
-export const ActionArea = (): JSX.Element => {
+type ActionAreaProps = {
+  search: string;
+  page: string;
+  detailsId: string | null;
+};
+
+export const ActionArea = ({
+  search,
+  page,
+  detailsId,
+}: ActionAreaProps): JSX.Element => {
   const [hasError, setHasError] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const t = useTranslations('ACTION_AREA');
 
   const dispatch = useDispatch();
-
-  const { details, search = '', page = 1 } = Route.useSearch();
 
   const handleRefreshButtonClick = (): void => {
     dispatch(
@@ -17,37 +30,37 @@ export const ActionArea = (): JSX.Element => {
         { type: 'Characters', id: `search:${search}, page:${page}` },
       ]),
     );
-    if (details) {
+    if (detailsId) {
       dispatch(
-        detailsApi.util.invalidateTags([{ type: 'Details', id: details }]),
+        detailsApi.util.invalidateTags([{ type: 'Details', id: detailsId }]),
       );
     }
+    startTransition(async () => {
+      await refreshData();
+    });
   };
 
   if (hasError) {
-    throw new Error('This is a test error.');
+    throw new Error(t('error_message'));
   }
-
-  const handleErrorButtonClick = (): void => {
-    setHasError(true);
-  };
 
   return (
     <div className="p-4 flex justify-end bg-mist-50 border-t-2 border-t-mist-300 gap-x-4">
       <Flyout />
       <button
         name="refresh-button"
+        disabled={isPending}
         onClick={handleRefreshButtonClick}
         className="bg-mist-300 hover:bg-mauve-300 cursor-pointer rounded h-10 w-30 border border-mist-500"
       >
-        Refresh
+        {isPending ? t('refresh_pending') : t('refresh')}
       </button>
       <button
         name="throw-error-button"
-        onClick={handleErrorButtonClick}
+        onClick={() => setHasError(true)}
         className="bg-mist-300 hover:bg-mauve-300 cursor-pointer rounded h-10 w-30 border border-mist-500"
       >
-        Throw Error
+        {t('throw_error')}
       </button>
     </div>
   );

@@ -1,0 +1,66 @@
+{
+  "METADATA": {
+    "title": "Реакт 2026",
+    "description": "Моё приложение — это образовательный проект для курса React 2026 в RS Школе."
+  },
+  "HOME_PAGE": {
+    "title": "Персонажи Звездных Войн"
+  },
+  "ABOUT_PAGE": {
+    "title": "Персонажи Звездных Войн",
+    "mission": "Задача: освоить возможности React, используя классовые компоненты, границы ошибок, тестирование, маршрутизацию и многое другое.",
+    "description_title": "Это приложение, поражающее масштабы галактики, было создано",
+    "description_author": "Татьяной Гросул",
+    "description_during": "во время обучения",
+    "description_school": "Rolling Scopes Школе",
+    "description_course": "на React 2026 Q2 курсе."
+  },
+  "NAVIGATION": {
+    "home": "Главная",
+    "about": "О нас"
+  },
+  "DETAILS": {
+    "failed": "Не удалось загрузить данные персонажа.",
+    "aria_label": "Детали персонажа",
+    "fields": {
+      "height": "Рост",
+      "mass": "Вес",
+      "gender": "Пол",
+      "species": "Расса",
+      "skinColor": "Цвет кожи",
+      "eyeColor": "Цвет глаз",
+      "hairColor": "Цвет волос",
+      "homeworld": "Родной мир",
+      "affiliations": "Организации",
+      "formerAffiliations": "Бывшие организации",
+      "masters": "Учителя",
+      "apprentices": "Ученики",
+      "equipment": "Экипировка"
+    }
+  },
+    "TABLE_HEADERS": {
+      "name": "Имя",
+      "gender": "Пол",
+      "height": "Рост",
+      "mass": "Вес",
+      "hair_color": "Цвет волос"
+  },
+  "SEARCH_AREA": {
+    "label": "Поиск персонажей:",
+    "placeholder": "Поиск...",
+    "button": "Найти",
+    "button_pending": "Поиск..."
+  },
+  "ACTION_AREA": {
+    "refresh": "Обновить",
+    "refresh_pending": "Обновление...",
+    "throw_error": "Вызвать ошибку",
+    "error_message": "Это тестовая ошибка."
+  },
+  "PAGINATION": {
+    "previous": "Предыдущая страница",
+    "next": "Следующая страница",
+    "page": "Страница",
+    "of": "из"
+  }
+}

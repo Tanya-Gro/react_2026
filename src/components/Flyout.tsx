@@ -1,11 +1,14 @@
-import type { RootState } from 'app';
+'use client';
+
+import type { JSX } from 'react';
+import type { RootState } from 'app/store';
 import { getBlob } from 'helpers';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'app/store';
 import { clearCards } from 'features';
 
-export const Flyout = (): React.JSX.Element | null => {
-  const dispatch = useDispatch();
-  const selectedCards = useSelector(
+export const Flyout = (): JSX.Element | null => {
+  const dispatch = useAppDispatch();
+  const selectedCards = useAppSelector(
     (state: RootState) => state.selectedCards.items,
   );
 

@@ -25,3 +25,6 @@ dist-ssr
 *.sw?
 coverage
 tsconfig.app.tsbuildinfo
+
+.next
+next-env.d.ts

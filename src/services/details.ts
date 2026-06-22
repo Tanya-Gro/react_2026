@@ -1,24 +1,20 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { Details } from 'app';
-import { LINKS } from 'app/constants';
-import { CACHE_TTL, FETCH_TIMEOUT_MS } from './constants';
+import type { Card } from 'app/types';
 
 export const detailsApi = createApi({
   reducerPath: 'detailsApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: LINKS.details,
-    timeout: FETCH_TIMEOUT_MS,
-  }),
   tagTypes: ['Details'],
+  baseQuery: fetchBaseQuery({
+    baseUrl:
+      process.env.NEXT_PUBLIC_API_URL ||
+      'https://akabab.github.io/starwars-api/api/',
+  }),
   endpoints: (builder) => ({
-    getDetails: builder.query<Details, number>({
-      query: (id) => ({
-        url: `${id}.json`,
-      }),
+    getDetails: builder.query<Card, string>({
+      query: (id) => `id/${id}.json/`,
       providesTags: (_result, _error, id) => [{ type: 'Details', id }],
     }),
   }),
-  keepUnusedDataFor: CACHE_TTL,
 });
 
 export const { useGetDetailsQuery } = detailsApi;

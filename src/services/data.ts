@@ -1,35 +1,29 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { DataType } from 'app';
-import { LINKS } from 'app/constants';
-import { CACHE_TTL, FETCH_TIMEOUT_MS } from './constants';
-
-type DataArgs = {
-  search: string;
-  page: number;
-};
+import type { DataArgs, DataType } from 'app/types';
 
 export const dataApi = createApi({
-  reducerPath: 'swapiApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: LINKS.characters,
-    timeout: FETCH_TIMEOUT_MS,
-  }),
+  reducerPath: 'dataApi',
   tagTypes: ['Characters'],
+  baseQuery: fetchBaseQuery({
+    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'https://swapi.py4e.com/api/',
+  }),
   endpoints: (builder) => ({
     getData: builder.query<DataType, DataArgs>({
       query: ({ search, page }) => ({
-        url: '',
+        url: 'people/',
         params: {
-          ...(search && { search }),
-          page,
+          search: search || undefined,
+          page: page || undefined,
         },
       }),
       providesTags: (_result, _error, arg) => [
-        { type: 'Characters', id: `search:${arg.search}, page:${arg.page}` },
+        {
+          type: 'Characters',
+          id: `search:${arg.search || ''}, page:${arg.page || '1'}`,
+        },
       ],
     }),
   }),
-  keepUnusedDataFor: CACHE_TTL,
 });
 
 export const { useGetDataQuery } = dataApi;
