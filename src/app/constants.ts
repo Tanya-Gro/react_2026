@@ -1,12 +1,13 @@
 import type { Url } from './types';
 
 export const LINKS: Url = {
-  characters: 'https://swapi.py4e.com/api/people/',
+  characters:
+    process.env.NEXT_PUBLIC_API_URL || 'https://swapi.py4e.com/api/people/',
+  details:
+    process.env.NEXT_PUBLIC_DETAILS_API_URL ||
+    'https://akabab.github.io/starwars-api/api/id/',
   RSS: 'https://rs.school/react/',
   GitHub: 'https://github.com/Tanya-Gro',
-  details: 'https://akabab.github.io/starwars-api/api/id/',
 };
-
-export const LS_KEY = 'wookieeSearchQuery';
 
 export const CARDS_PER_PAGE = 10;

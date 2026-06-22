@@ -31,6 +31,12 @@ export type DataType = {
   results: Card[];
 };
 
+export type DataArgs = {
+  search?: string;
+  details?: string;
+  page?: string | number;
+};
+
 export type Details = {
   id: number;
   name: string;
