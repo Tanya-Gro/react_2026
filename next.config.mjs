@@ -8,7 +8,13 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'akabab.github.io', 
+        port: '',
+        pathname: '/starwars-api/api/images/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'vignette.wikia.nocookie.net', 
         port: '',
         pathname: '/**',
       },

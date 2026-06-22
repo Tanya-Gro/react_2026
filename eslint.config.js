@@ -2,7 +2,6 @@ import js from '@eslint/js';
 import { defineConfig } from 'eslint/config';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
@@ -14,10 +13,16 @@ export default defineConfig([
   ...tseslint.configs.recommended,
   reactPlugin.configs.flat.recommended,
   reactHooks.configs.flat.recommended,
-  reactRefresh.configs.vite,
   eslintPluginUnicorn.configs.recommended,
   eslintConfigPrettier,
   eslintPluginPrettier,
+
+  // ГЛОБАЛЬНЫЕ НАСТРОЙКИ: Теперь они применятся ко всем правилам выше
+  {
+    settings: {
+      react: { version: 'detect' },
+    },
+  },
 
   {
     files: ['**/*.{ts,tsx}'],
@@ -38,10 +43,6 @@ export default defineConfig([
         },
       },
     },
-    settings: {
-      react: { version: 'detect' },
-    },
-    plugins: {},
     linterOptions: {
       noInlineConfig: true,
     },
@@ -149,16 +150,9 @@ export default defineConfig([
     },
   },
   {
-    files: ['**/*.test.ts', '**/*.test.tsx', '**/*setupTests.ts'],
+    files: ['src/app/**/*layout.tsx', 'src/app/**/*page.tsx'],
     rules: {
-      'max-lines-per-function': 'off',
-      '@typescript-eslint/consistent-type-assertions': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'off',
-      'unicorn/prefer-add-event-listener': 'off',
-      'unicorn/prefer-blob-reading-methods': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
+      'react-refresh/only-export-components': 'off',
     },
   },
   {
@@ -182,6 +176,8 @@ export default defineConfig([
       '**/*.d.ts',
       '*.config.js',
       '**/routeTree.gen.ts',
+      '**/request.ts',
+      '.next/**'
     ],
   },
 ]);
