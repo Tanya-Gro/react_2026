@@ -1,0 +1,66 @@
+{
+  "METADATA": {
+    "title": "React App 2026",
+    "description": "My App is an educational project for the React 2026 course at RS School."
+  },
+  "HOME_PAGE": {
+    "title": "Star Wars Characters"
+  },
+  "ABOUT_PAGE": {
+    "title": "Star Wars Characters",
+    "mission": "Task: master React features using class components, error boundaries, testing, routing and more.",
+    "description_title": "This galaxy-spanning application was created by",
+    "description_author": "Tatiana Grosul",
+    "description_during": "during her studies at the",
+    "description_school": "Rolling Scopes School",
+    "description_course": "React 2026 Q2 course."
+  },
+  "NAVIGATION": {
+    "home": "Home",
+    "about": "About"
+  },
+  "DETAILS": {
+    "failed": "Failed to load character details.",
+    "aria_label": "Character details",
+    "fields": {
+      "height": "Height",
+      "mass": "Mass",
+      "gender": "Gender",
+      "species": "Species",
+      "skinColor": "Skin Color",
+      "eyeColor": "Eye Color",
+      "hairColor": "Hair Color",
+      "homeworld": "Homeworld",
+      "affiliations": "Affiliations",
+      "formerAffiliations": "Former Affiliations",
+      "masters": "Masters",
+      "apprentices": "Apprentices",
+      "equipment": "Equipment"
+    }
+  },
+  "TABLE_HEADERS": {
+    "name": "Name",
+    "gender": "Gender",
+    "height": "Height",
+    "mass": "Mass",
+    "hair_color": "Hair Color"
+  },
+    "SEARCH_AREA": {
+    "label": "Search characters:",
+    "placeholder": "Search...",
+    "button": "Search",
+    "button_pending": "Searching..."
+  },
+  "ACTION_AREA": {
+    "refresh": "Refresh",
+    "refresh_pending": "Refreshing...",
+    "throw_error": "Throw Error",
+    "error_message": "This is a test error."
+  },
+  "PAGINATION": {
+    "previous": "Previous page",
+    "next": "Next page",
+    "page": "Page",
+    "of": "of"
+  }
+}
