@@ -1,119 +1,80 @@
-import type { JSX } from 'react';
-import { useNavigate } from '@tanstack/react-router';
-import { Route } from 'routes';
-import { Loader } from 'components';
+import { type JSX } from 'react';
+import Image from 'next/image';
+import { getTranslations } from 'next-intl/server';
 import { DetailField } from './DetailField';
-import type { Details } from 'app';
-import { useGetDetailsQuery } from 'services';
+import { getCharacterDetails } from 'lib/getCharacterDetails';
+import type { Details } from 'app/types';
+import type { Locale } from '@/i18n/config';
 
-type DetailFieldConfig = { title: string; key: keyof Details };
+type DetailFieldConfig = {
+  titleKey: string;
+  key: keyof Details;
+};
+
+type DetailProps = {
+  id: string;
+  locale: Locale;
+};
 
 const ASIDE_CLASSES =
   'flex flex-col w-80 max-h-dvh bg-mist-50 p-2 shadow-[inset_0_25px_50px_-12px_rgba(0,0,0,0.25)]';
 
 const DETAIL_FIELDS: readonly DetailFieldConfig[] = [
-  { title: 'Height', key: 'height' },
-  { title: 'Mass', key: 'mass' },
-  { title: 'Gender', key: 'gender' },
-  { title: 'Species', key: 'species' },
-  { title: 'Skin Color', key: 'skinColor' },
-  { title: 'Eye Color', key: 'eyeColor' },
-  { title: 'Hair Color', key: 'hairColor' },
-  { title: 'Homeworld', key: 'homeworld' },
-  { title: 'Affiliations', key: 'affiliations' },
-  { title: 'Former Affiliations', key: 'formerAffiliations' },
-  { title: 'Masters', key: 'masters' },
-  { title: 'Apprentices', key: 'apprentices' },
-  { title: 'Equipment', key: 'equipment' },
+  { titleKey: 'fields.height', key: 'height' },
+  { titleKey: 'fields.mass', key: 'mass' },
+  { titleKey: 'fields.gender', key: 'gender' },
+  { titleKey: 'fields.species', key: 'species' },
+  { titleKey: 'fields.skinColor', key: 'skinColor' },
+  { titleKey: 'fields.eyeColor', key: 'eyeColor' },
+  { titleKey: 'fields.hairColor', key: 'hairColor' },
+  { titleKey: 'fields.homeworld', key: 'homeworld' },
+  { titleKey: 'fields.affiliations', key: 'affiliations' },
+  { titleKey: 'fields.formerAffiliations', key: 'formerAffiliations' },
+  { titleKey: 'fields.masters', key: 'masters' },
+  { titleKey: 'fields.apprentices', key: 'apprentices' },
+  { titleKey: 'fields.equipment', key: 'equipment' },
 ];
 
-export const Detail = (): JSX.Element | null => {
-  const navigate = useNavigate({ from: '/' });
+export const Detail = async ({
+  id,
+  locale,
+}: DetailProps): Promise<JSX.Element | null> => {
+  const t = await getTranslations({ locale, namespace: 'DETAILS' });
 
-  const { details, page, search } = Route.useSearch();
+  try {
+    const data = await getCharacterDetails(id);
 
-  const { data, error, isLoading } = useGetDetailsQuery(details ?? 0, {
-    skip: !details,
-  });
-
-  if (!details) {
-    return null;
-  }
-
-  const handleClose = (): void => {
-    navigate({
-      to: '/',
-      search: {
-        search,
-        page,
-        details: undefined,
-      },
-    });
-  };
-
-  if (isLoading) {
     return (
-      <aside aria-label="Character details" className={ASIDE_CLASSES}>
-        <Loader />
+      <aside aria-label={t('aria_label')} className={ASIDE_CLASSES}>
+        <div className="p-2.5 flex items-start justify-between gap-4 border-b border-mist-400 my-0.5">
+          <h2 className="text-2xl font-bold text-mist-800">{data.name}</h2>
+        </div>
+
+        <div className="flex flex-col gap-2 px-2 items-center overflow-y-auto">
+          {data.image && (
+            <div className="relative w-60 h-80 min-h-80 shrink-0 overflow-hidden rounded-lg border border-mist-200 my-3">
+              <Image
+                src={data.image}
+                alt={data.name}
+                fill
+                sizes="280px"
+                priority
+                className="object-cover rounded-lg"
+              />
+            </div>
+          )}
+
+          {DETAIL_FIELDS.map(({ titleKey, key }) => (
+            <DetailField key={key} label={t(titleKey)} value={data[key]} />
+          ))}
+        </div>
+      </aside>
+    );
+  } catch {
+    return (
+      <aside aria-label={t('aria_label')} className={ASIDE_CLASSES}>
+        <p className="mt-10 text-xl text-mist-700 text-center">{t('failed')}</p>
       </aside>
     );
   }
-
-  if (!data || error) {
-    return (
-      <aside aria-label="Character details" className={ASIDE_CLASSES}>
-        <CloseButton onClose={handleClose} />
-        <p className="mt-10 text-xl text-mist-700">
-          {data
-            ? 'Failed to load character details.'
-            : 'Oops. Description not found...'}
-        </p>
-      </aside>
-    );
-  }
-
-  return (
-    <aside aria-label="Character details" className={ASIDE_CLASSES}>
-      <div className="p-2.5 flex items-start justify-between gap-4 border-b border-mist-400 my-0.5">
-        <h2 className="text-2xl font-bold text-mist-800">{data.name}</h2>
-        <CloseButton onClose={handleClose} />
-      </div>
-
-      <div className="flex flex-col gap-2 px-2 items-center overflow-y-auto">
-        <img src={data.image} alt={data.name} className="w-60" />
-
-        {DETAIL_FIELDS.map(({ title, key }) => (
-          <DetailField label={title} value={data[key]} key={key} />
-        ))}
-
-        <a
-          href={data.wiki}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 text-lg font-medium text-mauve-700 underline-offset-4 transition hover:underline"
-        >
-          More on Wookieepedia
-        </a>
-      </div>
-    </aside>
-  );
-};
-
-type CloseButtonProps = {
-  onClose: () => void;
-};
-
-const CloseButton = ({ onClose }: CloseButtonProps): React.JSX.Element => {
-  return (
-    <button
-      type="button"
-      onClick={onClose}
-      className="rounded border border-mist-400 bg-mist-200 px-2 transition hover:bg-mist-400 ml-auto"
-    >
-      <span aria-hidden="true" className="text-3xl">
-        &times;
-      </span>
-      <span className="sr-only">Close details</span>
-    </button>
-  );
 };
