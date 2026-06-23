@@ -1,4 +1,4 @@
-import type { Card } from 'app';
+import type { Card } from 'app/types';
 
 const escapeCSV = (value: string): string => `"${value.replaceAll('"', '""')}"`;
 
