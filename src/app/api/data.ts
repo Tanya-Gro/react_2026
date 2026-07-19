@@ -25,7 +25,10 @@ export const dataApi = createApi({
         },
       }),
       providesTags: (_result, _error, arg) => [
-        { type: 'Characters', id: `search:${arg.search}, page:${arg.page}` },
+        {
+          type: 'Characters',
+          id: `search:${arg.search}, page:${arg.page.toString()}`,
+        },
       ],
     }),
   }),

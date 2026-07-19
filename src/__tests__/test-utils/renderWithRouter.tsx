@@ -9,7 +9,7 @@ import { configureStore, type EnhancedStore } from '@reduxjs/toolkit';
 import { selectedCardsReducer } from 'features';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'context';
-import { dataApi, detailsApi } from 'services';
+import { dataApi, detailsApi } from 'api';
 import { ErrorBoundary } from 'components';
 
 type Options = {

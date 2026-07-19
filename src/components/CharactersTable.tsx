@@ -6,7 +6,7 @@ import { Pagination } from './Pagination';
 
 import { CharactersRow } from './CharactersRow';
 import { TABLE_HEADERS } from './constants';
-import { useGetDataQuery } from 'services';
+import { useGetDataQuery } from 'api';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import type { SerializedError } from '@reduxjs/toolkit/react';
 

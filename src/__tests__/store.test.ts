@@ -1,5 +1,5 @@
 import { store } from 'app/store';
-import { dataApi, detailsApi } from 'services';
+import { dataApi, detailsApi } from 'api';
 
 test('Store should be initialized with correct reducers and middleware', () => {
   const state = store.getState();

@@ -4,7 +4,7 @@ import { Route } from 'routes';
 import { Loader } from 'components';
 import { DetailField } from './DetailField';
 import type { Details } from 'app';
-import { useGetDetailsQuery } from 'services';
+import { useGetDetailsQuery } from 'api';
 
 type DetailFieldConfig = { title: string; key: keyof Details };
 
@@ -41,7 +41,7 @@ export const Detail = (): JSX.Element | null => {
   }
 
   const handleClose = (): void => {
-    navigate({
+    void navigate({
       to: '/',
       search: {
         search,

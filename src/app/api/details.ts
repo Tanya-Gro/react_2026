@@ -13,7 +13,7 @@ export const detailsApi = createApi({
   endpoints: (builder) => ({
     getDetails: builder.query<Details, number>({
       query: (id) => ({
-        url: `${id}.json`,
+        url: `${id.toString()}.json`,
       }),
       providesTags: (_result, _error, id) => [{ type: 'Details', id }],
     }),

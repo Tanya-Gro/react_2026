@@ -1,7 +1,7 @@
 import { useState, type JSX } from 'react';
 import { Flyout } from './Flyout';
 import { useDispatch } from 'react-redux';
-import { dataApi, detailsApi } from 'services';
+import { dataApi, detailsApi } from 'api';
 import { Route } from 'routes';
 
 export const ActionArea = (): JSX.Element => {
@@ -12,15 +12,22 @@ export const ActionArea = (): JSX.Element => {
   const { details, search = '', page = 1 } = Route.useSearch();
 
   const handleRefreshButtonClick = (): void => {
-    dispatch(
-      dataApi.util.invalidateTags([
-        { type: 'Characters', id: `search:${search}, page:${page}` },
-      ]),
-    );
-    if (details) {
+    {
       dispatch(
-        detailsApi.util.invalidateTags([{ type: 'Details', id: details }]),
+        dataApi.util.invalidateTags([
+          {
+            type: 'Characters',
+            id: `search:${search}, page:${page.toString()}`,
+          },
+        ]),
       );
+    }
+    if (details) {
+      {
+        dispatch(
+          detailsApi.util.invalidateTags([{ type: 'Details', id: details }]),
+        );
+      }
     }
   };
 
