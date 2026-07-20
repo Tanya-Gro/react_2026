@@ -25,11 +25,13 @@ export const CharactersRow = ({ card }: CharactersRowProps): JSX.Element => {
   const isSelected = id in selectedCards;
 
   const toggleSelect = (): void => {
-    dispatch(toggleCard({ id, card }));
+    {
+      dispatch(toggleCard({ id, card }));
+    }
   };
 
   const toggleShown = (): void => {
-    navigate({
+    void navigate({
       to: '/',
       search: {
         search,

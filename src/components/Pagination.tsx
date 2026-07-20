@@ -13,7 +13,7 @@ export const Pagination: (data: PaginationProps) => React.JSX.Element = ({
   const { details, search = '', page = 1 } = Route.useSearch();
 
   const onPageChange = (newPage: number): void => {
-    navigate({
+    void navigate({
       to: '/',
       search: {
         search: search,
@@ -51,7 +51,7 @@ export const Pagination: (data: PaginationProps) => React.JSX.Element = ({
         <span className="sr-only">Previous page</span>
       </button>
 
-      <output>{`Page ${page} of ${countPages}`}</output>
+      <output>{`Page ${page.toString()} of ${countPages.toString()}`}</output>
 
       <button
         type="button"

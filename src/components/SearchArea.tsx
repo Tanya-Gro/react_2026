@@ -24,7 +24,7 @@ export const SearchArea = (): JSX.Element => {
     const value = inputRef.current?.value.trim() ?? '';
     if (value !== search) {
       setLsSearch(value);
-      navigate({
+      void navigate({
         to: '/',
         search: {
           search: value,
