@@ -1,4 +1,4 @@
-import type { RootState } from 'app';
+import type { Card, RootState } from 'app';
 import { getBlob } from 'helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCards } from 'features';
@@ -9,7 +9,9 @@ export const Flyout = (): React.JSX.Element | null => {
     (state: RootState) => state.selectedCards.items,
   );
 
-  const cards = Object.entries(selectedCards);
+  const cards = Object.entries(selectedCards).filter(
+    (entry): entry is [string, Card] => entry[1] !== undefined,
+  );
   const countCards = cards.length;
 
   if (countCards === 0) {
@@ -26,7 +28,7 @@ export const Flyout = (): React.JSX.Element | null => {
 
     const tempLink = document.createElement('a');
     tempLink.href = url;
-    tempLink.download = `selected_cards_${countCards}_items.csv`;
+    tempLink.download = `selected_cards_${countCards.toString()}_items.csv`;
 
     tempLink.click();
     setTimeout(() => URL.revokeObjectURL(url), 0);
