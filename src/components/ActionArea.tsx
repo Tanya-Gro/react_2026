@@ -11,7 +11,7 @@ export const ActionArea = (): JSX.Element => {
 
   const { details, search = '', page = 1 } = Route.useSearch();
 
-  const handleRefreshButtonClick = (): void => {
+  const handleRefresh = (): void => {
     {
       dispatch(
         dataApi.util.invalidateTags([
@@ -35,7 +35,7 @@ export const ActionArea = (): JSX.Element => {
     throw new Error('This is a test error.');
   }
 
-  const handleErrorButtonClick = (): void => {
+  const handleError = (): void => {
     setHasError(true);
   };
 
@@ -44,14 +44,14 @@ export const ActionArea = (): JSX.Element => {
       <Flyout />
       <button
         name="refresh-button"
-        onClick={handleRefreshButtonClick}
+        onClick={handleRefresh}
         className="bg-mist-300 hover:bg-mauve-300 cursor-pointer rounded h-10 w-30 border border-mist-500"
       >
         Refresh
       </button>
       <button
         name="throw-error-button"
-        onClick={handleErrorButtonClick}
+        onClick={handleError}
         className="bg-mist-300 hover:bg-mauve-300 cursor-pointer rounded h-10 w-30 border border-mist-500"
       >
         Throw Error

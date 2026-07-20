@@ -19,7 +19,7 @@ export const SearchArea = (): JSX.Element => {
     }
   }, [search, setLsSearch]);
 
-  const handleFormSubmit = (e: SubmitEvent<HTMLFormElement>): void => {
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const value = inputRef.current?.value.trim() ?? '';
     if (value !== search) {
@@ -36,7 +36,7 @@ export const SearchArea = (): JSX.Element => {
 
   return (
     <form
-      onSubmit={handleFormSubmit}
+      onSubmit={handleSubmit}
       className="flex gap-2 bg-mist-50 p-4 border-b-2 border-b-mist-300"
     >
       <label htmlFor="search-input" className="self-center sr-only">

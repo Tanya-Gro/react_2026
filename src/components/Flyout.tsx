@@ -1,9 +1,10 @@
+import type { JSX } from 'react';
 import type { Card, RootState } from 'app';
 import { getBlob } from 'helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCards } from 'features';
 
-export const Flyout = (): React.JSX.Element | null => {
+export const Flyout = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const selectedCards = useSelector(
     (state: RootState) => state.selectedCards.items,
@@ -18,11 +19,11 @@ export const Flyout = (): React.JSX.Element | null => {
     return null;
   }
 
-  const handleUnselectAllButtonClick = () => {
+  const handleUnselect = () => {
     dispatch(clearCards());
   };
 
-  const handleDownloadButtonClick = () => {
+  const handleDownload = () => {
     const blob = getBlob(cards);
     const url = URL.createObjectURL(blob);
 
@@ -56,7 +57,7 @@ export const Flyout = (): React.JSX.Element | null => {
           <li>
             <button
               type="button"
-              onClick={handleUnselectAllButtonClick}
+              onClick={handleUnselect}
               className="rounded-lg border border-mist-300 bg-white px-4 py-2 text-sm font-medium text-mist-700 shadow-sm transition hover:bg-mist-100 cursor-pointer"
             >
               Unselect all
@@ -66,7 +67,7 @@ export const Flyout = (): React.JSX.Element | null => {
             <button
               type="button"
               className="inline-block rounded-lg bg-mauve-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-mauve-700 text-center cursor-pointer"
-              onClick={handleDownloadButtonClick}
+              onClick={handleDownload}
             >
               Download
             </button>
