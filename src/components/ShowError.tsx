@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import type { SerializedError } from '@reduxjs/toolkit/react';
+import type { SerializedError } from '@reduxjs/toolkit';
 
 type ShowErrorProps = {
   err: FetchBaseQueryError | SerializedError;

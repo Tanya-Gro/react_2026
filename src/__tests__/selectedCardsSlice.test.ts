@@ -26,7 +26,7 @@ describe('selectedCardsSlice', () => {
     expect(Object.keys(nextState.items).length).toBe(1);
   });
 
-  it('should remove a card from the state if it already exists (toggleCard)', () => {
+  it('should mark removed card in state if it already exists (toggleCard) as undefined', () => {
     const stateWithCard: CardState = {
       items: {
         '1': mockCard,
@@ -37,7 +37,7 @@ describe('selectedCardsSlice', () => {
     const nextState = selectedCardsReducer(stateWithCard, action);
 
     expect(nextState.items['1']).toBeUndefined();
-    expect(Object.keys(nextState.items).length).toBe(0);
+    expect(Object.keys(nextState.items).length).toBe(1);
   });
 
   it('should completely clear all selected cards (clearCards)', () => {
