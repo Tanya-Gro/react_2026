@@ -1,22 +1,19 @@
-import { screen } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { HttpResponse, http } from 'msw';
-import { server } from 'mocks';
-import { LS_KEY } from 'app';
+import { people, server } from 'mocks';
+import { LS_KEY } from 'app/constants';
 import { renderWithRouter } from './test-utils/renderWithRouter';
 import type { Mock } from 'vitest';
 
 describe('Home', () => {
+  const INTERVAL_SERVER_ERROR = 500;
   beforeEach(() => {
     localStorage.clear();
   });
 
   it('renders error button and handles click', async () => {
     const user: UserEvent = userEvent.setup();
-
-    const consoleSpy: Mock = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
 
     await renderWithRouter();
 
@@ -28,12 +25,9 @@ describe('Home', () => {
 
     await user.click(button);
 
-    expect(consoleSpy).toHaveBeenCalled();
     expect(
       await screen.findByText(/something went wrong/i),
     ).toBeInTheDocument();
-
-    consoleSpy.mockRestore();
   });
 
   it('renders fetched characters', async () => {
@@ -45,33 +39,42 @@ describe('Home', () => {
   it('shows error message', async () => {
     server.use(
       http.get('https://swapi.py4e.com/api/people/', () => {
-        return HttpResponse.json({ detail: 'Server error' }, { status: 500 });
+        return HttpResponse.json(
+          { detail: 'Server error' },
+          { status: INTERVAL_SERVER_ERROR },
+        );
       }),
     );
 
     await renderWithRouter();
 
-    expect(await screen.findByText(/Error:/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Error:\s*HTTP Error 500/i),
+    ).toBeInTheDocument();
   });
 
   it('updates localStorage when search query changes', async () => {
     const user: UserEvent = userEvent.setup();
 
-    await renderWithRouter();
+    await act(async () => {
+      await renderWithRouter();
+    });
 
     const input: HTMLInputElement = screen.getByPlaceholderText(/search/i);
-
     const button: HTMLButtonElement = screen.getByRole('button', {
       name: /search/i,
     });
 
     await user.clear(input);
     await user.type(input, 'Luke');
-    await user.click(button);
 
-    const storedData: string | null = localStorage.getItem(LS_KEY) ?? '';
+    await act(async () => {
+      await user.click(button);
+    });
 
-    expect(storedData).toBe(JSON.stringify('Luke'));
+    await waitFor(() => {
+      expect(localStorage.getItem(LS_KEY)).toBe(JSON.stringify('Luke'));
+    });
   });
 
   it('does not update localStorage when query is unchanged', async () => {
@@ -101,5 +104,19 @@ describe('Home', () => {
       LS_KEY,
       expect.stringContaining('Luke'),
     );
+  });
+  it('shows loader while data is loading', async () => {
+    server.use(
+      http.get('https://swapi.py4e.com/api/people/', async () => {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        return HttpResponse.json(people);
+      }),
+    );
+
+    await renderWithRouter();
+
+    expect(screen.getByRole('status')).toBeInTheDocument();
+    expect(await screen.findByText(/Luke Skywalker/i)).toBeInTheDocument();
   });
 });

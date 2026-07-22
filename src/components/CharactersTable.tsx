@@ -1,129 +1,30 @@
-import { useEffect, useReducer, type JSX } from 'react';
-import { useSelector } from 'react-redux';
+import { type JSX } from 'react';
 import { Route } from 'routes';
-import { getID, isFetchError } from 'helpers';
-import { CARDS_PER_PAGE, type Card } from 'app';
-import type { DataType, FetchError, RootState } from 'app';
+import { CARDS_PER_PAGE } from 'app/constants';
 import { Loader } from './Loader';
 import { Pagination } from './Pagination';
-import { getData } from 'api';
+
 import { CharactersRow } from './CharactersRow';
 import { TABLE_HEADERS } from './constants';
-
-type CharactersState = {
-  hasError: boolean;
-  errorMessage: string;
-  cards: Card[];
-  isLoading: boolean;
-  countPages: number;
-};
-
-type CharactersAction =
-  | { type: 'start_loading' }
-  | { type: 'fetch_success'; payload: { results: Card[]; count: number } }
-  | { type: 'fetch_failed'; payload: string };
-
-const reducer = (
-  state: CharactersState,
-  action: CharactersAction,
-): CharactersState => {
-  switch (action.type) {
-    case 'start_loading': {
-      return { ...state, isLoading: true, hasError: false, errorMessage: '' };
-    }
-    case 'fetch_success': {
-      return {
-        ...state,
-        isLoading: false,
-        cards: action.payload.results,
-        hasError: false,
-        countPages: Math.max(
-          1,
-          Math.ceil(action.payload.count / CARDS_PER_PAGE),
-        ),
-      };
-    }
-    case 'fetch_failed': {
-      return {
-        ...state,
-        isLoading: false,
-        hasError: true,
-        errorMessage: action.payload,
-        cards: [],
-      };
-    }
-    default: {
-      return state;
-    }
-  }
-};
-
-const initialState = {
-  hasError: false,
-  errorMessage: '',
-  cards: [],
-  isLoading: false,
-  countPages: 1,
-};
+import { useGetDataQuery } from 'api';
+import { ShowError } from './ShowError';
 
 export const CharactersTable = (): JSX.Element => {
   const { search = '', page = 1 } = Route.useSearch();
 
-  const [state, dispatchReducer] = useReducer(reducer, initialState);
+  const { data, error, isLoading } = useGetDataQuery({
+    search,
+    page,
+  });
 
-  const { cards, hasError, isLoading, errorMessage, countPages } = state;
+  const countPages = data
+    ? Math.max(1, Math.ceil(data.count / CARDS_PER_PAGE))
+    : 1;
 
-  useEffect(() => {
-    const controller = new AbortController();
+  const cards = data?.results ?? [];
 
-    const fetchData = async (): Promise<void> => {
-      dispatchReducer({
-        type: 'start_loading',
-      });
-
-      try {
-        const data: DataType | FetchError = await getData(
-          search,
-          page,
-          controller.signal,
-        );
-
-        if (isFetchError(data)) {
-          dispatchReducer({
-            type: 'fetch_failed',
-            payload: data.message,
-          });
-        } else {
-          dispatchReducer({
-            type: 'fetch_success',
-            payload: { results: data.results, count: data.count },
-          });
-        }
-      } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError') {
-          return;
-        }
-
-        dispatchReducer({
-          type: 'fetch_failed',
-          payload: String(error),
-        });
-      }
-    };
-
-    fetchData();
-
-    return (): void => {
-      controller.abort();
-    };
-  }, [search, page]);
-
-  const selectedCards = useSelector(
-    (state: RootState) => state.selectedCards.items,
-  );
-
-  if (hasError) {
-    return <p className="flex-1">Error: {errorMessage}</p>;
+  if (error) {
+    return <ShowError err={error} />;
   }
 
   if (isLoading) {
@@ -151,15 +52,7 @@ export const CharactersTable = (): JSX.Element => {
         <tbody>
           {cards.length ? (
             cards.map((card) => {
-              const id = getID(card.url);
-              return (
-                <CharactersRow
-                  key={id}
-                  id={id}
-                  card={card}
-                  isSelected={id in selectedCards}
-                />
-              );
+              return <CharactersRow key={card.url} card={card} />;
             })
           ) : (
             <tr>

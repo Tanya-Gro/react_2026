@@ -4,5 +4,7 @@ build/
 coverage/
 
 src/routeTree.gen.ts
+src/app/router.ts
+src/app/store.ts
 
 *.json

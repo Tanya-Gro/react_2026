@@ -1,7 +1,7 @@
 import type { Url } from './types';
 
 export const LINKS: Url = {
-  characters: 'https://swapi.py4e.com/api/people/?',
+  characters: 'https://swapi.py4e.com/api/people/',
   RSS: 'https://rs.school/react/',
   GitHub: 'https://github.com/Tanya-Gro',
   details: 'https://akabab.github.io/starwars-api/api/id/',

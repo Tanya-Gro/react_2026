@@ -2,11 +2,14 @@ import type { JSX } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Route } from 'routes';
 import { Loader } from 'components';
-import { useDetails } from 'hooks';
 import { DetailField } from './DetailField';
 import type { Details } from 'app';
+import { useGetDetailsQuery } from 'api';
 
 type DetailFieldConfig = { title: string; key: keyof Details };
+
+const ASIDE_CLASSES =
+  'flex flex-col w-80 max-h-dvh bg-mist-50 p-2 shadow-[inset_0_25px_50px_-12px_rgba(0,0,0,0.25)]';
 
 const DETAIL_FIELDS: readonly DetailFieldConfig[] = [
   { title: 'Height', key: 'height' },
@@ -29,16 +32,16 @@ export const Detail = (): JSX.Element | null => {
 
   const { details, page, search } = Route.useSearch();
 
-  const detailsId = details ? Number(details) : undefined;
-
-  const [card, isLoading] = useDetails(detailsId);
+  const { data, error, isLoading } = useGetDetailsQuery(details ?? 0, {
+    skip: !details,
+  });
 
   if (!details) {
     return null;
   }
 
   const handleClose = (): void => {
-    navigate({
+    void navigate({
       to: '/',
       search: {
         search,
@@ -48,52 +51,50 @@ export const Detail = (): JSX.Element | null => {
     });
   };
 
-  if (!card) {
+  if (isLoading) {
     return (
-      <aside
-        aria-label="Character details"
-        className="flex flex-col w-80 max-h-dvh bg-mist-50 p-2 shadow-[inset_0_25px_50px_-12px_rgba(0,0,0,0.25)]"
-      >
+      <aside aria-label="Character details" className={ASIDE_CLASSES}>
+        <Loader />
+      </aside>
+    );
+  }
+
+  if (!data || error) {
+    return (
+      <aside aria-label="Character details" className={ASIDE_CLASSES}>
         <CloseButton onClose={handleClose} />
         <p className="mt-10 text-xl text-mist-700">
-          Oops. Description not found...
+          {data
+            ? 'Failed to load character details.'
+            : 'Oops. Description not found...'}
         </p>
       </aside>
     );
   }
 
   return (
-    <aside
-      aria-label="Character details"
-      className="flex flex-col w-80 max-h-dvh bg-mist-50 p-2 shadow-[inset_0_25px_50px_-12px_rgba(0,0,0,0.25)]"
-    >
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <div className="p-2.5 flex items-start justify-between gap-4 border-b border-mist-400 my-0.5">
-            <h2 className="text-2xl font-bold text-mist-800">{card.name}</h2>
-            <CloseButton onClose={handleClose} />
-          </div>
+    <aside aria-label="Character details" className={ASIDE_CLASSES}>
+      <div className="p-2.5 flex items-start justify-between gap-4 border-b border-mist-400 my-0.5">
+        <h2 className="text-2xl font-bold text-mist-800">{data.name}</h2>
+        <CloseButton onClose={handleClose} />
+      </div>
 
-          <div className="flex flex-col gap-2 px-2 items-center overflow-y-auto">
-            <img src={card.image} alt={card.name} className="w-60" />
+      <div className="flex flex-col gap-2 px-2 items-center overflow-y-auto">
+        <img src={data.image} alt={data.name} className="w-60" />
 
-            {DETAIL_FIELDS.map(({ title, key }) => (
-              <DetailField label={title} value={card[key]} key={key} />
-            ))}
+        {DETAIL_FIELDS.map(({ title, key }) => (
+          <DetailField label={title} value={data[key]} key={key} />
+        ))}
 
-            <a
-              href={card.wiki}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 text-lg font-medium text-mauve-700 underline-offset-4 transition hover:underline"
-            >
-              More on Wookieepedia
-            </a>
-          </div>
-        </>
-      )}
+        <a
+          href={data.wiki}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 text-lg font-medium text-mauve-700 underline-offset-4 transition hover:underline"
+        >
+          More on Wookieepedia
+        </a>
+      </div>
     </aside>
   );
 };
@@ -107,9 +108,11 @@ const CloseButton = ({ onClose }: CloseButtonProps): React.JSX.Element => {
     <button
       type="button"
       onClick={onClose}
-      className="material-symbols-outlined rounded border border-mist-400 bg-mist-200 px-2 py-1 transition hover:bg-mist-400 ml-auto"
+      className="rounded border border-mist-400 bg-mist-200 px-2 transition hover:bg-mist-400 ml-auto"
     >
-      <span aria-hidden="true">close</span>
+      <span aria-hidden="true" className="text-3xl">
+        &times;
+      </span>
       <span className="sr-only">Close details</span>
     </button>
   );

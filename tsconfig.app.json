@@ -33,14 +33,16 @@
       "components/*": ["./src/components/*"],
       "pages": ["./src/pages/index.ts"],
       "routes": ["./src/routes/index.tsx"],
-      "api": ["./src/api/index.ts"],
       "app": ["./src/app/index.ts"],
+      "app/*": ["./src/app/*"],
       "mocks": ["./src/mocks/index.ts"],
       "helpers": ["./src/helpers/index.ts"],
       "hooks": ["./src/hooks/index.ts"],
       "features": ["./src/features/index.ts"],
       "context": ["./src/context/index.ts"],
       "layouts": ["./src/layouts/index.ts"],
+      "api": ["./src/app/api/index.ts"],
+      "app/constants": ["./src/app/constants.ts"],
       "src/*": ["./src/*"]
     }
   },

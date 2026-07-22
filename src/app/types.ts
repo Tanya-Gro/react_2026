@@ -5,11 +5,6 @@ export type Url = {
   readonly details: string;
 };
 
-export type FetchError = {
-  hasError: boolean;
-  message: string;
-};
-
 export type Card = {
   name: string;
   height: string;

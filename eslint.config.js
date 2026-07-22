@@ -3,21 +3,18 @@ import { defineConfig } from 'eslint/config';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import eslintConfigPrettier from 'eslint-config-prettier/flat';
-import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   js.configs.recommended,
-  ...tseslint.configs.recommended,
+  tseslint.configs.strictTypeChecked,
+  tseslint.configs.stylisticTypeChecked,
   reactPlugin.configs.flat.recommended,
   reactHooks.configs.flat.recommended,
   reactRefresh.configs.vite,
   eslintPluginUnicorn.configs.recommended,
-  eslintConfigPrettier,
-  eslintPluginPrettier,
 
   {
     files: ['**/*.{ts,tsx}'],
@@ -39,9 +36,10 @@ export default defineConfig([
       },
     },
     settings: {
-      react: { version: 'detect' },
+      'react': { version: 'detect' },
     },
-    plugins: {},
+    plugins: {
+    },
     linterOptions: {
       noInlineConfig: true,
     },
@@ -74,20 +72,11 @@ export default defineConfig([
 
       // 🟡 Good practices
       'no-console': ['warn', { allow: ['info', 'error'] }],
-      'no-magic-numbers': [
-        'error',
-        { ignore: [0, 1, 2, -1, 10, 100, 1000, 1000000] },
-      ],
+      'no-magic-numbers': ['error', { ignore: [0, 1, 2, -1, 10, 100, 1000, 1000000] }],
       'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
-      'max-lines-per-function': [
-        'warn',
-        { max: 40, skipBlankLines: true, skipComments: true },
-      ],
+      'max-lines-per-function': ['warn', { max: 40, skipBlankLines: true, skipComments: true }],
 
-      '@typescript-eslint/consistent-type-assertions': [
-        'error',
-        { assertionStyle: 'never' },
-      ],
+      '@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'never' }],
       '@typescript-eslint/consistent-type-definitions': ['warn', 'type'],
       '@typescript-eslint/consistent-type-imports': [
         'error',
@@ -142,14 +131,11 @@ export default defineConfig([
     files: ['**/*.tsx'],
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'off',
-      'max-lines-per-function': [
-        'warn',
-        { max: 80, skipBlankLines: true, skipComments: true },
-      ],
-    },
+      'max-lines-per-function': ['warn', { max: 80, skipBlankLines: true, skipComments: true }],
+    }
   },
   {
-    files: ['**/*.test.ts', '**/*.test.tsx', '**/*setupTests.ts'],
+    files: ['**/*.test.ts', '**/*.test.tsx'],
     rules: {
       'max-lines-per-function': 'off',
       '@typescript-eslint/consistent-type-assertions': 'off',
@@ -157,6 +143,21 @@ export default defineConfig([
       '@typescript-eslint/no-unsafe-member-access': 'off',
       'unicorn/prefer-add-event-listener': 'off',
       'unicorn/prefer-blob-reading-methods': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-empty-function': 'off'
+    },
+  },
+  {
+    files: ['**/renderWithRouter.tsx', '**/store.ts'],
+    rules: {
+      'unicorn/prefer-spread': 'off',
+    },
+  },
+  {
+    files: ['src/app/router.ts'],
+    rules: {
+      '@typescript-eslint/consistent-type-definitions': 'off',
     },
   },
   {
@@ -164,12 +165,10 @@ export default defineConfig([
       '**/node_modules/**',
       '**/dist/**',
       '**/build/**',
+      '**/coverage/**',
       '**/*.d.ts',
       '*.config.js',
       '**/routeTree.gen.ts',
-      '**/coverage/**',
-      'src/app/router.ts',
-      'src/features/selectedCards/selectedCardsSlice.ts',
     ],
   },
 ]);

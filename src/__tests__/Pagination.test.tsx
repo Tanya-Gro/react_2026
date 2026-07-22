@@ -40,7 +40,9 @@ describe('Pagination', () => {
     render(<Pagination countPages={COUNT_PAGES} />);
 
     expect(
-      screen.getByText(`Page ${mockSearchState.page} of ${COUNT_PAGES}`),
+      screen.getByText(
+        `Page ${mockSearchState.page.toString()} of ${COUNT_PAGES.toString()}`,
+      ),
     ).toBeInTheDocument();
 
     expect(

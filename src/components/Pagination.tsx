@@ -13,7 +13,7 @@ export const Pagination: (data: PaginationProps) => React.JSX.Element = ({
   const { details, search = '', page = 1 } = Route.useSearch();
 
   const onPageChange = (newPage: number): void => {
-    navigate({
+    void navigate({
       to: '/',
       search: {
         search: search,
@@ -37,29 +37,29 @@ export const Pagination: (data: PaginationProps) => React.JSX.Element = ({
   };
 
   const BUTTON_CLASSES =
-    'material-symbols-outlined cursor-pointer hover:text-amber-900 hover:underline disabled:text-mist-200 disabled:no-underline disabled:cursor-auto';
+    'text-mist-700 text-2xl cursor-pointer hover:text-amber-900 hover:underline disabled:text-mist-200 disabled:no-underline disabled:cursor-auto';
 
   return (
     <section className="flex items-center content-center place-content-center h-10 mb-2 mt-auto gap-3">
       <button
         type="button"
         disabled={page === 1}
-        className={BUTTON_CLASSES}
         onClick={prevPage}
+        className={BUTTON_CLASSES}
       >
-        <span aria-hidden="true">arrow_back</span>
+        <span aria-hidden="true">&#9668;</span>
         <span className="sr-only">Previous page</span>
       </button>
 
-      <output className="">{`Page ${page} of ${countPages}`}</output>
+      <output>{`Page ${page.toString()} of ${countPages.toString()}`}</output>
 
       <button
         type="button"
         disabled={page === countPages}
-        className={BUTTON_CLASSES}
         onClick={nextPage}
+        className={BUTTON_CLASSES}
       >
-        <span aria-hidden="true">arrow_forward</span>
+        <span aria-hidden="true">&#9658;</span>
         <span className="sr-only">Next page</span>
       </button>
     </section>

@@ -33,7 +33,7 @@ export class ErrorBoundary extends Component<
     }
   }
 
-  public handleDismissButtonClick = (): void => {
+  public handleDismiss = (): void => {
     this.setState({ shouldThrow: false, errorMessage: '' });
   };
 
@@ -52,7 +52,7 @@ export class ErrorBoundary extends Component<
           <div className="p-4 mt-10 justify-end">
             <button
               className="bg-olive-400 hover:bg-mist-400 cursor-pointer rounded h-10 w-30 border border-mist-500"
-              onClick={this.handleDismissButtonClick}
+              onClick={this.handleDismiss}
             >
               Dismiss
             </button>

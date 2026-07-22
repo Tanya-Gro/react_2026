@@ -1,4 +1,4 @@
-import { LINKS } from 'app';
+import { LINKS } from 'app/constants';
 
 export const About = (): React.JSX.Element => {
   return (

@@ -3,28 +3,32 @@ import {
   createMemoryHistory,
   createRouter,
 } from '@tanstack/react-router';
-import { render, type RenderResult } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { routeTree } from 'src/routeTree.gen';
 import { configureStore, type EnhancedStore } from '@reduxjs/toolkit';
 import { selectedCardsReducer } from 'features';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'context';
+import { dataApi, detailsApi } from 'api';
+import { ErrorBoundary } from 'components';
 
 type Options = {
   route?: string;
 };
 
-const createTestStore = (): EnhancedStore => {
+export const createTestStore = (): EnhancedStore => {
   return configureStore({
     reducer: {
       selectedCards: selectedCardsReducer,
+      [dataApi.reducerPath]: dataApi.reducer,
+      [detailsApi.reducerPath]: detailsApi.reducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(dataApi.middleware, detailsApi.middleware),
   });
 };
 
-export const renderWithRouter = async (
-  options: Options = {},
-): Promise<RenderResult> => {
+export const renderWithRouter = async (options: Options = {}) => {
   const store = createTestStore();
   const { route = '/' } = options;
 
@@ -37,11 +41,19 @@ export const renderWithRouter = async (
 
   await testRouter.load();
 
-  return render(
+  const renderResult = render(
     <Provider store={store}>
       <ThemeProvider>
-        <RouterProvider router={testRouter} />
+        <ErrorBoundary>
+          <RouterProvider router={testRouter} />
+        </ErrorBoundary>
       </ThemeProvider>
     </Provider>,
   );
+
+  return {
+    ...renderResult,
+    router: testRouter,
+    store,
+  };
 };

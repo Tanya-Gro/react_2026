@@ -1,12 +1,11 @@
-import '@fontsource/material-symbols-outlined';
 import { StrictMode } from 'react';
 import { RouterProvider } from '@tanstack/react-router';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'components';
-import { router } from 'app';
-import { store } from 'app';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'context';
+import { router } from 'app/router';
+import { store } from 'app/store';
 import './index.css';
 
 const rootElement: HTMLElement | null = document.getElementById('root');

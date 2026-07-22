@@ -4,7 +4,7 @@ export const NotFound = (): React.JSX.Element => {
   const navigate = useNavigate();
 
   const handleClick: () => void = () => {
-    navigate({ to: '/' });
+    void navigate({ to: '/' });
   };
 
   return (

@@ -1,16 +1,27 @@
-import type { RootState } from 'app';
+import type { JSX } from 'react';
+import type { Card, RootState } from 'app';
 import { getBlob } from 'helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCards } from 'features';
 
-export const Flyout = (): React.JSX.Element | null => {
+export const Flyout = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const selectedCards = useSelector(
     (state: RootState) => state.selectedCards.items,
   );
 
-  const cards = Object.entries(selectedCards);
+  const cards = Object.entries(selectedCards).filter(
+    (entry): entry is [string, Card] => entry[1] !== undefined,
+  );
   const countCards = cards.length;
+
+  if (countCards === 0) {
+    return null;
+  }
+
+  const handleUnselect = () => {
+    dispatch(clearCards());
+  };
 
   const handleDownload = () => {
     const blob = getBlob(cards);
@@ -18,15 +29,11 @@ export const Flyout = (): React.JSX.Element | null => {
 
     const tempLink = document.createElement('a');
     tempLink.href = url;
-    tempLink.download = `selected_cards_${countCards}_items.csv`;
+    tempLink.download = `selected_cards_${countCards.toString()}_items.csv`;
 
     tempLink.click();
     setTimeout(() => URL.revokeObjectURL(url), 0);
   };
-
-  if (countCards === 0) {
-    return null;
-  }
 
   return (
     <details
@@ -50,7 +57,7 @@ export const Flyout = (): React.JSX.Element | null => {
           <li>
             <button
               type="button"
-              onClick={() => dispatch(clearCards())}
+              onClick={handleUnselect}
               className="rounded-lg border border-mist-300 bg-white px-4 py-2 text-sm font-medium text-mist-700 shadow-sm transition hover:bg-mist-100 cursor-pointer"
             >
               Unselect all

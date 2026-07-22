@@ -2,7 +2,7 @@ import type { SubmitEvent, JSX } from 'react';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Route } from 'routes';
-import { LS_KEY } from 'app';
+import { LS_KEY } from 'app/constants';
 import { useLocalStorage } from 'hooks';
 
 export const SearchArea = (): JSX.Element => {
@@ -19,12 +19,12 @@ export const SearchArea = (): JSX.Element => {
     }
   }, [search, setLsSearch]);
 
-  const handleFormSubmit = (e: SubmitEvent<HTMLFormElement>): void => {
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const value = inputRef.current?.value.trim() ?? '';
     if (value !== search) {
       setLsSearch(value);
-      navigate({
+      void navigate({
         to: '/',
         search: {
           search: value,
@@ -36,7 +36,7 @@ export const SearchArea = (): JSX.Element => {
 
   return (
     <form
-      onSubmit={handleFormSubmit}
+      onSubmit={handleSubmit}
       className="flex gap-2 bg-mist-50 p-4 border-b-2 border-b-mist-300"
     >
       <label htmlFor="search-input" className="self-center sr-only">

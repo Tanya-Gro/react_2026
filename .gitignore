@@ -1,26 +1,31 @@
-# Logs
-logs
+# temp
+*.tmp
+*.temp
+
+# logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-coverage
 tsconfig.app.tsbuildinfo
+
+# dependencies
+node_modules/
+
+# test coverage
+coverage/
+
+# compiled output
+dist/
+build/
+
+# OS
+.DS_Store
+
+# ide settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# env
+.env
+.env.local

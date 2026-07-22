@@ -9,7 +9,7 @@
   --color-mist-100: oklch(96.3% 0.002 197.1);
   --color-mist-200: #e5e7eb;
   --color-mist-300: oklch(87.2% 0.007 219.6);
-  --color-mist-400: #d1d5db;
+  --color-mist-400: oklch(72.3% 0.014 214.4);
   --color-mist-500: #6b7280;
   --color-mist-600: #4b5563;
   --color-mist-700: #374151;
@@ -18,16 +18,16 @@
 
   --color-amber-900: #78350f;
 
-  --color-mauve-200: #f5f3ff;
-  --color-mauve-300: #ddd6fe;
+  --color-mauve-200: oklch(92.2% 0.005 325.62);
+  --color-mauve-300: oklch(86.5% 0.012 325.68);
 }
 
 .dark {
   --color-white: #0f172a;
   --color-black: #f8fafc;
 
-  --color-mauve-200: #361672;
-  --color-mauve-300: #4c1d95;
+  --color-mauve-200: oklch(32.016% 0.02911 262.865);
+  --color-mauve-300: oklch(35.103% 0.03435 262.049);
 
   --color-mist-50: #1e293b;
   --color-mist-100: #2e3c52;
@@ -66,20 +66,4 @@ h1,
 h2 {
   font-family: var(--heading);
   font-weight: 500;
-}
-
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined', sans-serif;
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
