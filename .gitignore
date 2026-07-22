@@ -5,6 +5,8 @@
 # logs
 *.log
 
+tsconfig.app.tsbuildinfo
+
 # dependencies
 node_modules/
 

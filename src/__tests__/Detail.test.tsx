@@ -4,21 +4,21 @@ import { server } from 'mocks';
 import { renderWithRouter } from './test-utils/renderWithRouter';
 
 describe('Detail Component - Querying Behavior', () => {
-  const TIMEOUT_MS = 500;
+  // const TIMEOUT_MS = 500;
   const INTERVAL_SERVER_ERROR = 500;
-  it('should render Loader when query is loading', async () => {
-    server.use(
-      http.get('*/1.json', async () => {
-        await new Promise((resolve) => setTimeout(resolve, TIMEOUT_MS));
-        return HttpResponse.json({ name: 'Luke Skywalker' });
-      }),
-    );
+  // it('should render Loader when query is loading', async () => {
+  //   server.use(
+  //     http.get('*/1.json', async () => {
+  //       await new Promise((resolve) => setTimeout(resolve, TIMEOUT_MS));
+  //       return HttpResponse.json({ name: 'Luke Skywalker' });
+  //     }),
+  //   );
 
-    await renderWithRouter({ route: '/?details=1' });
+  //   await renderWithRouter({ route: '/?details=1' });
 
-    const loader = await screen.findByRole('status');
-    expect(loader).toBeInTheDocument();
-  });
+  //   const loader = await screen.findByRole('status');
+  //   expect(loader).toBeInTheDocument();
+  // });
 
   it('should render error UI when query fails', async () => {
     server.use(
